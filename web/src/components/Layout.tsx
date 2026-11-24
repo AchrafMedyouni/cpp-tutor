@@ -14,16 +14,21 @@ export function Layout() {
   const dark = useIsDark();
   const loc = useLocation();
   const [open, setOpen] = useState<string | undefined>(ch);
+  const [mobileNav, setMobileNav] = useState(false);
   useEffect(() => {
     setOpen(ch);
   }, [ch]);
   useEffect(() => {
     window.scrollTo(0, 0);
+    setMobileNav(false);
   }, [loc.pathname]);
 
   return (
     <div className="flex min-h-screen">
-      <aside className="sticky top-0 hidden h-screen w-72 shrink-0 overflow-y-auto border-r border-zinc-200 bg-zinc-50/70 px-3 py-4 text-sm lg:block dark:border-zinc-800 dark:bg-zinc-900/40">
+      {mobileNav && <div className="fixed inset-0 z-30 bg-black/40 lg:hidden" onClick={() => setMobileNav(false)} />}
+      <aside
+        className={`${mobileNav ? "fixed inset-y-0 left-0 z-40 block bg-white dark:bg-zinc-950" : "hidden"} h-screen w-72 shrink-0 overflow-y-auto border-r border-zinc-200 bg-zinc-50/70 px-3 py-4 text-sm lg:sticky lg:top-0 lg:block dark:border-zinc-800 dark:bg-zinc-900/40`}
+      >
         <Link to="/" className="mb-4 flex items-center gap-2 px-2">
           <span className="rounded bg-[#004482] px-1.5 py-0.5 font-mono text-xs font-bold text-white">C++</span>
           <span className="font-semibold">CppLab</span>
@@ -97,6 +102,12 @@ export function Layout() {
         </div>
       </aside>
       <main className="min-w-0 flex-1">
+        <div className="sticky top-0 z-20 flex items-center gap-3 border-b border-zinc-200 bg-white/90 px-4 py-2 backdrop-blur lg:hidden dark:border-zinc-800 dark:bg-zinc-950/90">
+          <button onClick={() => setMobileNav(true)} className="rounded-md border border-zinc-300 px-2 py-1 text-sm dark:border-zinc-700" aria-label="Open navigation">
+            ☰
+          </button>
+          <Link to="/" className="font-semibold">CppLab</Link>
+        </div>
         {(capsErr || (caps && !caps.compiler) || caps?.error) && (
           <div className="border-b border-red-300 bg-red-50 px-6 py-3 text-sm text-red-800 dark:border-red-900 dark:bg-red-950/50 dark:text-red-300">
             <b>⚠️ Compiler problem:</b>{" "}

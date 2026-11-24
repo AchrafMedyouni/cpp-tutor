@@ -14,7 +14,8 @@ function which(cmd: string): string | null {
 }
 
 function resolveCompiler(): { path: string; version: string; family: "clang" | "gcc" | "unknown" } | null {
-  const candidates = [process.env.CXX, "g++", "clang++"].filter(Boolean) as string[];
+  // An explicit CXX must work: silently falling back to another compiler would be confusing.
+  const candidates = process.env.CXX ? [process.env.CXX] : ["g++", "clang++"];
   for (const c of candidates) {
     const p = c.includes("/") ? (existsSync(c) ? c : null) : which(c);
     if (!p) continue;
@@ -54,8 +55,9 @@ async function detect(): Promise<Capabilities> {
   if (!compiler) {
     return {
       compiler: null,
-      error:
-        "No C++ compiler found. Install one (macOS: `xcode-select --install`; Linux: `sudo apt install g++`) or set the CXX environment variable to its path.",
+      error: process.env.CXX
+        ? `The compiler set in CXX (${process.env.CXX}) was not found or does not run. Fix or unset CXX and restart \`npm run dev\`.`
+        : "No C++ compiler found. Install one (macOS: `xcode-select --install`; Linux: `sudo apt install g++`) or set the CXX environment variable to its path.",
       asanUbsan: false,
       tsan: false,
       par: { available: false, extraFlags: [] },

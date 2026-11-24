@@ -2,6 +2,18 @@
 
 A local web app that teaches CentraleSupélec's **C++ course (3MD1080, D. Marcadet)** in English. It follows the slides' order and examples, and every example can be edited and run with your real compiler. It also has quizzes, auto-graded exercises, step-by-step mini-projects (many themed around quantitative finance), a memory visualizer and progress tracking.
 
+## What's inside
+
+| Feature | Details |
+|---|---|
+| **8 chapters, 44 lessons** | slides 1–213 in order: intro and toolchain → basics → memory → classes → inheritance → operators → templates and the STL → parallelism |
+| **137 runnable examples** | editable in Monaco, with stdin, sanitizers and allocation tracking. Slide code is reproduced verbatim ("as on the slides"), and slide errata are pointed out |
+| **92 quiz questions** | "what does this print / does it compile / is it UB / which constructor", all machine-checked |
+| **53 exercises** | auto-graded with hidden doctest tests (behaviour, leaks, copy/move counts, TSan), progressive hints, reference solutions |
+| **10 mini-projects, 30 steps** | Portfolio v1/v2, Tableau v1→v4, financial instruments (Black–Scholes, book delta), Money, Vector/Matrix, TimeSeries\<T\>, limit order book, multithreaded Monte Carlo, market-data pipeline |
+| **Memory visualizer** | 10 step-through scenarios showing stack frames, heap blocks and pointer/reference arrows |
+| **Progress dashboard** | completion per chapter, "continue where you left off", reset |
+
 ## Quick start
 
 ```bash
@@ -22,7 +34,7 @@ Other commands:
 ## Requirements
 
 - **Node.js ≥ 20** (developed with Node 25).
-- A **C++20 compiler**: GCC ≥ 11 or Clang ≥ 15. The server uses `$CXX` if it is set, otherwise `g++`, otherwise `clang++`. On macOS, `g++` *is* Apple clang (install with `xcode-select --install`). The detected compiler and its capabilities are shown at the bottom of the sidebar. If no compiler is found, a red banner explains what to install.
+- A **C++20 compiler**: GCC ≥ 11 or Clang ≥ 15. The server uses `$CXX` if it is set (and reports an error if that compiler doesn't work, rather than silently picking another), otherwise `g++`, otherwise `clang++`. On macOS, `g++` *is* Apple clang (install with `xcode-select --install`). The detected compiler and its capabilities are shown at the bottom of the sidebar. If no compiler is found, a red banner explains what to install.
 - Optional: **oneTBB** (`brew install tbb` / `sudo apt install libtbb-dev`) for the oneTBB part of chapter 8. Lessons that need it show a notice when it's missing, and `verify-content` skips them.
 
 ## How code is run
@@ -102,3 +114,26 @@ Key fields of an example's `meta.json`: `title`, `files` (tab order), `stdin`, `
 - **Memory visualizer:** hand-authored JSON states rendered with custom SVG rather than React Flow. It gives full control over layout and readability and adds no dependency.
 - **Course PDFs** go in `course/` and are git-ignored (school material).
 - **No memory limit** on programs: macOS ignores `RLIMIT_AS`. Time and output caps still apply.
+
+## Adding or editing content
+
+Everything under `content/` is plain files. A typical workflow:
+
+1. Add an example: create `content/<chapter>/examples/<id>/main.cpp` and a `meta.json` (`{"title": "...", "expectedStdout": "..."}`), then reference it from a lesson with `::example{id="<id>"}`.
+2. Add an exercise: copy an existing exercise folder and edit `statement.md`, `starter/`, `solution/` and `tests/test.cpp`. The tests are doctest `TEST_CASE`s that `#include` the learner's header.
+3. Add a project step: add `steps/<n>/` (statement, tests, solution) and a matching entry in `project.json` `steps`.
+4. Run `npm run verify-content -- <chapter>`. It tells you if a solution fails, a starter already passes, an example warns, or a lesson references something that doesn't exist.
+
+The app reads content from disk on every request, so refreshing the page shows your changes.
+
+## Repository layout
+
+```
+server/            Express API (compile/run/grade/content/progress) + cpp-support/ (doctest, tracker, Tracked)
+web/               React app (pages/, components/, visualizer/)
+shared/api.ts      types shared by server, web and verify script
+content/           the course, as data
+scripts/verify-content.ts
+course/            the original slide decks (git-ignored)
+data/progress.json your progress (git-ignored)
+```

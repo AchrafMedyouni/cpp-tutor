@@ -1,4 +1,6 @@
 import { Link, useParams } from "react-router-dom";
+import { api } from "../lib/api";
+import { useAsync } from "../lib/useAsync";
 import { useCourse } from "../lib/course";
 import { useProgress } from "../lib/progress";
 import { chapterStats } from "../lib/stats";
@@ -8,7 +10,9 @@ export function ChapterPage() {
   const { ch } = useParams();
   const { course } = useCourse();
   const { progress } = useProgress();
+  const { data: viz } = useAsync(() => api.vizList(), []);
   const c = course?.chapters.find((x) => x.id === ch);
+  const chapterViz = viz?.filter((v) => v.chapter === ch) ?? [];
   if (!course) return null;
   if (!c) return <div>Unknown chapter.</div>;
   const st = chapterStats(c, progress);
@@ -56,6 +60,21 @@ export function ChapterPage() {
                   <span className="flex-1">{e.title}</span>
                   {e.requires.length > 0 && <span className="text-xs text-zinc-400">needs {e.requires.join(", ")}</span>}
                   {progress.exercises[`${c.id}/${e.id}`]?.passed && <span className="text-emerald-600">✓ passed</span>}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )}
+      {chapterViz.length > 0 && (
+        <Section title="🧠 Memory visualizer">
+          <ul className="space-y-1">
+            {chapterViz.map((v) => (
+              <li key={v.id}>
+                <Link to={`/visualizer/${v.id}`} className="flex items-center gap-3 rounded-md px-2 py-1.5 hover:bg-zinc-100 dark:hover:bg-zinc-900">
+                  <span className="flex-1">{v.title}</span>
+                  <span className="text-xs text-zinc-500">{v.steps} steps</span>
+                  {progress.vizSeen[v.id] && <span className="text-emerald-600">✓</span>}
                 </Link>
               </li>
             ))}

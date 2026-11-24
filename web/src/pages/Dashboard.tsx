@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+import { api } from "../lib/api";
+import { useAsync } from "../lib/useAsync";
 import { useCourse } from "../lib/course";
 import { useProgress } from "../lib/progress";
 import { chapterStats } from "../lib/stats";
@@ -6,6 +8,7 @@ import { chapterStats } from "../lib/stats";
 export function Dashboard() {
   const { course } = useCourse();
   const { progress, reset } = useProgress();
+  const { data: viz } = useAsync(() => api.vizList(), []);
   if (!course) return <div className="h-64 animate-pulse rounded-xl bg-zinc-100 dark:bg-zinc-900" />;
 
   const stats = course.chapters.map((c) => ({ c, s: chapterStats(c, progress) }));
@@ -34,12 +37,13 @@ export function Dashboard() {
         )}
       </header>
 
-      <section className="grid grid-cols-2 gap-3 md:grid-cols-5">
+      <section className="grid grid-cols-2 gap-3 md:grid-cols-6">
         <Stat label="Overall" value={`${overall}%`} />
         <Stat label="Lessons read" pair={sum("lessons")} />
         <Stat label="Quiz points (best)" pair={sum("quiz")} />
         <Stat label="Exercises passed" pair={sum("exercises")} />
         <Stat label="Project steps" pair={sum("projectSteps")} />
+        <Stat label="Visualizations" pair={[viz?.filter((v) => progress.vizSeen[v.id]).length ?? 0, viz?.length ?? 0]} />
       </section>
 
       <section className="space-y-3">
