@@ -4,6 +4,7 @@ import { useCaps } from "../lib/caps";
 import { useCourse } from "../lib/course";
 import { useProgress } from "../lib/progress";
 import { chapterStats } from "../lib/stats";
+import { fullscreenSupported, toggleFullscreen, useIsFullscreen } from "../lib/fullscreen";
 import { toggleTheme, useIsDark } from "../lib/theme";
 
 export function Layout() {
@@ -12,6 +13,7 @@ export function Layout() {
   const { progress } = useProgress();
   const ch = useMatch("/ch/:ch/*")?.params.ch;
   const dark = useIsDark();
+  const fullscreen = useIsFullscreen();
   const loc = useLocation();
   const [open, setOpen] = useState<string | undefined>(ch);
   const [mobileNav, setMobileNav] = useState(false);
@@ -25,6 +27,22 @@ export function Layout() {
 
   return (
     <div className="flex min-h-screen">
+      {fullscreenSupported() && (
+        <button
+          onClick={toggleFullscreen}
+          title={fullscreen ? "Exit full screen (Esc)" : "Full screen"}
+          aria-label={fullscreen ? "Exit full screen" : "Enter full screen"}
+          className="fixed top-2 right-3 z-20 rounded-md border border-zinc-300 bg-white/90 p-1.5 text-zinc-600 shadow-sm backdrop-blur hover:text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900/90 dark:text-zinc-300 dark:hover:text-white"
+        >
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+            {fullscreen ? (
+              <path d="M6 1.5V6H1.5M10 1.5V6h4.5M6 14.5V10H1.5M10 14.5V10h4.5" />
+            ) : (
+              <path d="M1.5 6V1.5H6M14.5 6V1.5H10M1.5 10v4.5H6M14.5 10v4.5H10" />
+            )}
+          </svg>
+        </button>
+      )}
       {mobileNav && <div className="fixed inset-0 z-30 bg-black/40 lg:hidden" onClick={() => setMobileNav(false)} />}
       <aside
         className={`${mobileNav ? "fixed inset-y-0 left-0 z-40 block bg-white dark:bg-zinc-950" : "hidden"} h-screen w-72 shrink-0 overflow-y-auto border-r border-zinc-200 bg-zinc-50/70 px-3 py-4 text-sm lg:sticky lg:top-0 lg:block dark:border-zinc-800 dark:bg-zinc-900/40`}
