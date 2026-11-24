@@ -1,0 +1,8 @@
+{
+  "title": "Constructors (slides 94–95)",
+  "expectedStdout": "(2, -5)\n(0, 0)\n(7, 0)",
+  "tryThis": [
+    "Delete the default constructor `Complexe()`: now `Complexe zero;` fails to compile.",
+    "Try `Complexe bad{ 2, -5 };` on the version **without** constructors but with private members: also rejected."
+  ]
+}

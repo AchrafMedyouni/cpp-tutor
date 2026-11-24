@@ -1,0 +1,7 @@
+{
+  "title": "Assignment copies the value",
+  "expectedStdout": "a = 1, b = 2\ns1 = \"AAPL\", s2 = \"AAPL.O\"",
+  "tryThis": [
+    "In Python, `l1 = [1]; l2 = l1; l2.append(2)` changes `l1` too. Here `s2 += \".O\"` leaves `s1` alone: `std::string` has value semantics, like `int`."
+  ]
+}

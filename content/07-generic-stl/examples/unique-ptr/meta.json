@@ -1,0 +1,9 @@
+{
+  "title": "std::unique_ptr: ownership and transfer (slide 179)",
+  "trackAllocs": true,
+  "expectedStdout": "book holds 3 instruments\nbond: 98.50\noption: 7.25\nfuture: 101.20\nmoved out the option: book[1] is null now\nowner prices it at 7.25",
+  "tryThis": [
+    "Try `auto copy = book[0];`: `unique_ptr` can't be copied (deleted copy constructor).",
+    "Remove `std::move` in `take_ownership(std::move(book[1]))`: a compile error again."
+  ]
+}

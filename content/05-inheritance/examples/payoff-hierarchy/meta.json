@@ -1,0 +1,5 @@
+{
+  "title": "An abstract Payoff with concrete options",
+  "trackAllocs": true,
+  "expectedStdout": "spot  Call(100)  Put(100)   Digital(105)\n90    0.00       10.00      0.00\n100   0.00       0.00       0.00\n110   10.00      0.00       1.00"
+}

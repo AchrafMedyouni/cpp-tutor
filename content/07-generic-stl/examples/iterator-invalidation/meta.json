@@ -1,0 +1,9 @@
+{
+  "title": "Iterator invalidated by push_back",
+  "expect": "ub",
+  "sanitizer": "asan_ubsan",
+  "tryThis": [
+    "Call `fills.reserve(100);` before taking `best`: no reallocation happens, so the iterator stays valid. Correct, but fragile.",
+    "Better: keep an *index* (`std::size_t best = 0;`) instead of an iterator."
+  ]
+}

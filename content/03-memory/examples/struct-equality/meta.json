@@ -1,0 +1,8 @@
+{
+  "title": "== is not defined for a struct (yet)",
+  "expect": "compile-error",
+  "tryThis": [
+    "Compare the members yourself: `a.real == b.real && a.imag == b.imag`.",
+    "Preview of chapter 6: inside the struct add `bool operator==(const Complexe&) const = default;` (C++20) and it compiles."
+  ]
+}

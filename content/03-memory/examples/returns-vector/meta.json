@@ -1,0 +1,4 @@
+{
+  "title": "Type aliases and a vector of returns",
+  "expectedStdout": "returns: 1.00% -0.99% 2.00% \ncumulative: 2.00%"
+}

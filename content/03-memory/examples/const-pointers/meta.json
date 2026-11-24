@@ -1,0 +1,7 @@
+{
+  "title": "const on the pointer vs on the pointee, and ->",
+  "expectedStdout": "i = 2, *b = 2\n(*pc).real = 2, pc->imag = -32.8432",
+  "tryThis": [
+    "Uncomment each `// error` line one at a time and read the compiler's explanation."
+  ]
+}

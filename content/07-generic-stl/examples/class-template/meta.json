@@ -1,0 +1,13 @@
+{
+  "title": "A generic Tableau<T> (slides 147–148)",
+  "trackAllocs": true,
+  "expectedStdout": "tab1[19] = 19\ntab2[0] = AAPL\ntab3[2][6] = 3\ntab3[2].taille() = 8",
+  "tryThis": [
+    "Uncomment `tab3[2] = tab2;`: a `Tableau<std::string>` is a different type from a `Tableau<double>`.",
+    "Instantiate `Tableau<Tableau<Tableau<int>>>`: the template composes."
+  ],
+  "files": [
+    "main.cpp",
+    "Tableau.hpp"
+  ]
+}

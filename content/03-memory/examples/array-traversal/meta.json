@@ -1,0 +1,4 @@
+{
+  "title": "Traversal by index and by pointer (slide 79)",
+  "expectedStdout": "0 0 0 0 0 0 0 0 0 0\n7 7 7 7 7 7 7 7 7 7"
+}

@@ -1,0 +1,4 @@
+{
+  "title": "Pointer to a function (slide 62, corrected)",
+  "expectedStdout": "(*pf)(3.5) = 3\npf(2.8) = 2\nfoo(9.99) = 9"
+}

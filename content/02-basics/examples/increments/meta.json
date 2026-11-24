@@ -1,0 +1,8 @@
+{
+  "title": "Pre- and post-increment (slide 33)",
+  "courseVersion": true,
+  "expectedStdout": "i = 5, j = 6, k = 6",
+  "tryThis": [
+    "Predict, then check: `int m{ i++ + ++i };`. Two unsequenced modifications of `i` in one expression is undefined behaviour before C++17. Don't write this."
+  ]
+}

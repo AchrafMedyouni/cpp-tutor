@@ -1,0 +1,8 @@
+{
+  "title": "No bounds checking: writing past the end",
+  "expect": "ub",
+  "sanitizer": "asan_ubsan",
+  "tryThis": [
+    "Replace the raw array with `std::vector<double> closes(5);` and use `closes.at(i)`: you now get a clean `std::out_of_range` exception instead of memory corruption."
+  ]
+}

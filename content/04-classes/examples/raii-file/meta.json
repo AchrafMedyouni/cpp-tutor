@@ -1,0 +1,4 @@
+{
+  "title": "RAII with files: no close() needed",
+  "expectedStdout": "wrote 3 trades\nread back: AAPL,100,189.5 | MSFT,50,410.2 | NVDA,10,950"
+}

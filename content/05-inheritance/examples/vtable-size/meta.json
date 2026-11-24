@@ -1,0 +1,7 @@
+{
+  "title": "The hidden vptr makes objects bigger",
+  "expectedStdout": "sizeof(Plain)   = 4\nsizeof(Virtual) = 16\nsame vtable for two Cercle objects: 1",
+  "tryThis": [
+    "Add more virtual functions: `sizeof` doesn't change, because the vtable is per class and the vptr is one pointer per object."
+  ]
+}

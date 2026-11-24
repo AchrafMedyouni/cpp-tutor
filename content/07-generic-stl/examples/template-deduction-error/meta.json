@@ -1,0 +1,8 @@
+{
+  "title": "Deduction conflict: max(1, 2.5)",
+  "expect": "compile-error",
+  "tryThis": [
+    "Specify the type explicitly: `max<double>( 1, 2.5 )` compiles.",
+    "Or give the template two type parameters. What should the return type be then?"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "title": "Tableau v1 and its test (slides 99–100)",
+  "courseVersion": true,
+  "expect": "leak",
+  "trackAllocs": true,
+  "stdin": "1 2 3 4 5 6 7 8 9 10\n",
+  "expectedStdout": "sum = 55",
+  "tryThis": [
+    "Add the destructor `~Tableau() { delete[] tab_; }` and run again: *no leaks*.",
+    "Call `test1()` in a loop 1000 times: the leak grows with every call."
+  ]
+}

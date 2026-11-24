@@ -1,0 +1,8 @@
+{
+  "title": "Slicing and partial assignment (slide 124)",
+  "expectedStdout": "f = c   -> f is a Forme centred at (9, 9)\n*pf = *pc -> c2: centre (9, 9), rayon still 1",
+  "tryThis": [
+    "Uncomment `c = f;`: a `Forme` can't be assigned to a `Cercle`.",
+    "Make `Forme::nom()` `virtual` (next lesson) and call `f.nom()`: still `Forme`, because slicing really made `f` a plain `Forme` object."
+  ]
+}

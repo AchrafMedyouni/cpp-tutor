@@ -1,0 +1,6 @@
+{
+  "title": "ProtectedInt with a mutex (slide 202)",
+  "verifyWith": "tsan",
+  "sanitizer": "tsan",
+  "expectedStdout": "n = 2000002"
+}

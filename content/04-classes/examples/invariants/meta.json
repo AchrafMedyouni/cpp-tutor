@@ -1,0 +1,7 @@
+{
+  "title": "A class that protects its invariants",
+  "expectedStdout": "balance: 100\nwithdraw 250 refused\nbalance: 100\nerror: deposit must be positive",
+  "tryThis": [
+    "Make `balance_` public and write `acc.balance_ = -1e9;` in `main`: nothing protects the invariant any more."
+  ]
+}

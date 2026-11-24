@@ -1,0 +1,7 @@
+{
+  "title": "Encapsulation pays off: switching to polar form",
+  "expectedStdout": "real = 3, imag = 4, module = 5\nreal = 3, imag = 4, module = 5",
+  "tryThis": [
+    "`print` is written once against the public interface and works with both classes. With public fields it would have to be rewritten."
+  ]
+}

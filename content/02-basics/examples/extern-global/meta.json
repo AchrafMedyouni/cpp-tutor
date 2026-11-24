@@ -1,0 +1,13 @@
+{
+  "title": "extern: declare in the header, define once",
+  "expectedStdout": "discount factor over 2y: 0.9246",
+  "tryThis": [
+    "Add `= 0.04` to the `extern` declaration in `config.hpp`: now the header *defines* the variable, and the link fails or warns.",
+    "Delete the definition in `config.cpp`: the linker reports an undefined symbol."
+  ],
+  "files": [
+    "main.cpp",
+    "config.hpp",
+    "config.cpp"
+  ]
+}

@@ -1,0 +1,4 @@
+{
+  "title": "A stateful function object: running VWAP",
+  "expectedStdout": "vwap after fill 1: 100.000\nvwap after fill 2: 100.667\nvwap after fill 3: 100.510"
+}

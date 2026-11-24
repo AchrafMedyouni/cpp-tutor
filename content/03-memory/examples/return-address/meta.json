@@ -1,0 +1,4 @@
+{
+  "title": "Returning the address of a static (slide 64)",
+  "expectedStdout": "0\n8\nnext order ids: 1 2 3"
+}

@@ -1,0 +1,5 @@
+{
+  "title": "Static, automatic and dynamic arrays (slide 76)",
+  "trackAllocs": true,
+  "expectedStdout": "auto: 0 10 20 30 40\ndynamic: 1 1 2 3 5 8 13 21"
+}

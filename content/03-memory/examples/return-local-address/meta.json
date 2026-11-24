@@ -1,0 +1,8 @@
+{
+  "title": "Returning the address of a local variable",
+  "expect": "warning",
+  "tryThis": [
+    "Run with **ASan + UBSan**: ASan reports a *stack-use-after-return*.",
+    "Fix: make `best` `static`, return it by value, or have the caller pass a pointer to write into."
+  ]
+}

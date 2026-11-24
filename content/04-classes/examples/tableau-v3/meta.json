@@ -1,0 +1,5 @@
+{
+  "title": "Tableau v3: a deep-copying copy constructor (slide 107)",
+  "trackAllocs": true,
+  "expectedStdout": "tab.get(0) = 0, tab2.get(0) = 42"
+}

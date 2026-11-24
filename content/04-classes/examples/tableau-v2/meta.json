@@ -1,0 +1,6 @@
+{
+  "title": "Tableau v2: a destructor (slide 102)",
+  "courseVersion": true,
+  "trackAllocs": true,
+  "expectedStdout": "constructing Tableau(3)\nt.get(2) = 4\n~Tableau(): releasing 3 doubles"
+}

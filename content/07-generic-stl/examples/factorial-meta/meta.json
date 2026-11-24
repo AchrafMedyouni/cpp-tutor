@@ -1,0 +1,8 @@
+{
+  "title": "Compile-time factorial (slide 152) and the modern constexpr way",
+  "expectedStdout": "Factorial<10>::value = 3628800\nfactorial(10) = 3628800",
+  "tryThis": [
+    "Change the `static_assert` to compare with a wrong value: compilation fails, which proves the value is computed by the compiler.",
+    "Remove the `Factorial<0>` specialisation: infinite template recursion, and the compiler gives up."
+  ]
+}

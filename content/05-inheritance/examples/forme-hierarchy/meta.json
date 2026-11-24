@@ -1,0 +1,4 @@
+{
+  "title": "Forme and Cercle, with base constructor calls (slides 122–125)",
+  "expectedStdout": "Forme(Point)\nCercle(Point, int)\nc at (1, 2), r = 3\nForme::deplace -> (5, 5)\nc at (5, 5), r = 3\nCopy:\nForme(const Forme&)\nCercle(const Cercle&)\n~Cercle\n~Forme\n~Cercle\n~Forme"
+}

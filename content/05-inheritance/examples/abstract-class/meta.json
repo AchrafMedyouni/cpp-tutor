@@ -1,0 +1,8 @@
+{
+  "title": "An abstract class can't be instantiated (slide 128)",
+  "expect": "compile-error",
+  "tryThis": [
+    "Remove `Forme f{};`: the rest compiles, since `Cercle` implements `dessine`.",
+    "Remove `Cercle::dessine`: now `Cercle` is abstract too."
+  ]
+}

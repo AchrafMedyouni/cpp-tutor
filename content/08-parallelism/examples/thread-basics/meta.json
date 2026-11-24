@@ -1,0 +1,9 @@
+{
+  "title": "Starting threads: function, reference, functor, lambda (slide 193)",
+  "verifyWith": "tsan",
+  "expectedStdout": "n1 = 5 (copy changed only), n2 = 0 (modified by reference), F3 ran, lambda sum = 15",
+  "tryThis": [
+    "Remove one `.join()`: the program aborts (`std::terminate`) when an unjoined thread is destroyed.",
+    "Print from inside each thread: the lines interleave differently from run to run."
+  ]
+}

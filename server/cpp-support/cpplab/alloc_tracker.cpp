@@ -36,7 +36,8 @@ struct ExitReport {
       std::fprintf(stderr, "\n[cpplab] no leaks (%ld allocations, all released)\n", g_total.load());
   }
 };
-// Constructed before (and so destroyed after) ordinary globals.
+// Destroyed after the user's globals because CppLab links this object file first
+// (on Mach-O, init_priority is not honoured across translation units; link order is).
 __attribute__((init_priority(101))) ExitReport g_report;
 }  // namespace
 

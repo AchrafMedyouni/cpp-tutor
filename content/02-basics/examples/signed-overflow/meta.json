@@ -1,0 +1,10 @@
+{
+  "title": "Signed overflow is undefined behaviour",
+  "expect": "ub",
+  "sanitizer": "asan_ubsan",
+  "stdin": "2147483647",
+  "tryThis": [
+    "Run with *No sanitizer*: you probably see a negative number. That's one possible outcome of UB, not a guarantee.",
+    "Make `x` an `unsigned` and read `4294967295`: unsigned wrap-around is well defined and gives 0."
+  ]
+}

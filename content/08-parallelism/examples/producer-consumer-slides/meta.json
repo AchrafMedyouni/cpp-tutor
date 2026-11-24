@@ -1,0 +1,6 @@
+{
+  "title": "One-slot mailbox (slides 206–208, with while)",
+  "verifyWith": "tsan",
+  "sanitizer": "tsan",
+  "expectedStdout": "consumed 1 2 3 4 5 6 7 8 9 10\nsum = 55"
+}

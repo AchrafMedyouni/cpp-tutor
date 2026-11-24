@@ -1,0 +1,8 @@
+{
+  "title": "std::sort needs random-access iterators",
+  "expect": "compile-error",
+  "tryThis": [
+    "Use the member `l.sort();` instead: lists sort themselves by relinking nodes.",
+    "Read the (long) error: look for `random_access_iterator` or `operator-`, which list iterators don't have."
+  ]
+}

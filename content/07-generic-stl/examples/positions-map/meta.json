@@ -1,0 +1,8 @@
+{
+  "title": "Positions and average cost with std::map",
+  "expectedStdout": "AAPL  qty 150  avg 186.67\nMSFT  qty -20  avg 0.00\nNVDA  qty 10  avg 950.00",
+  "tryThis": [
+    "Switch to `std::unordered_map`: the output order is no longer alphabetical.",
+    "`positions[\"TSLA\"]` creates an entry if absent. Use `positions.find(\"TSLA\")` or `.contains(\"TSLA\")` (C++20) to only look."
+  ]
+}

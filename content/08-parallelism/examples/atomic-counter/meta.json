@@ -1,0 +1,9 @@
+{
+  "title": "std::atomic_int (slide 203), with timing",
+  "verifyWith": "tsan",
+  "sanitizer": "tsan",
+  "expectedStdout": "atomic total = 2000002",
+  "tryThis": [
+    "Run with *No sanitizer* (TSan slows everything down) and compare the timing with the mutex version."
+  ]
+}

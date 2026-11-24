@@ -1,0 +1,9 @@
+{
+  "title": "Use after free",
+  "expect": "ub",
+  "sanitizer": "asan_ubsan",
+  "tryThis": [
+    "Read ASan's report from the top: it shows where the memory was **freed** and where it was **used**.",
+    "Set `p = nullptr;` right after `delete p;`. The bug becomes a null dereference, which fails loudly and reliably."
+  ]
+}

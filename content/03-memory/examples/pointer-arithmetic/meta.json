@@ -1,0 +1,4 @@
+{
+  "title": "Pointer arithmetic and array decay (slides 77–78)",
+  "expectedStdout": "p2 - p1 = 5\n*(tab + 3) == tab[3] ? 1\nsizeof(tab) = 40, sizeof(p1) = 8\ninside f: n = 10, sizeof(a) = 8\nbytes between p1 and p1 + 1: 4"
+}

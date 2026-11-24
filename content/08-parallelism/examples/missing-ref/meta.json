@@ -1,0 +1,7 @@
+{
+  "title": "Passing a reference without std::ref",
+  "expect": "compile-error",
+  "tryThis": [
+    "Wrap the argument: `std::thread t{ reset, std::ref( pnl ) };`."
+  ]
+}

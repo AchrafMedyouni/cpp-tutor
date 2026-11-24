@@ -1,0 +1,6 @@
+{
+  "number": 6,
+  "title": "Operator overloading",
+  "slides": "135–145",
+  "summary": "Giving your own types natural syntax: operator properties and evaluation order, member vs free (friend) operators, building + from +=, indexing with [], stream insertion and extraction, and C++20 comparisons with <=>."
+}

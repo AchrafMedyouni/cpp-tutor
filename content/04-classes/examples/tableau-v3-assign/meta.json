@@ -1,0 +1,10 @@
+{
+  "title": "Tableau v3 + assignment = leak and double destruction (slide 108)",
+  "courseVersion": true,
+  "expect": "ub",
+  "sanitizer": "asan_ubsan",
+  "trackAllocs": true,
+  "tryThis": [
+    "Comment out `tab2 = tab;`: the program is clean again. The default assignment is the culprit."
+  ]
+}

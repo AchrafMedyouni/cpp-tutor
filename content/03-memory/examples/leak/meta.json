@@ -1,0 +1,10 @@
+{
+  "title": "A memory leak",
+  "expect": "leak",
+  "trackAllocs": true,
+  "expectedStdout": "processed 3 orders",
+  "tryThis": [
+    "Add the missing `delete o;` at the end of the loop body: the tracker reports *no leaks*.",
+    "Untick *Track allocations*: the program still \"works\". Leaks are silent until a long-running process runs out of memory."
+  ]
+}

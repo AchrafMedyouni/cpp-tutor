@@ -1,0 +1,9 @@
+{
+  "title": "Complexe with methods (slides 86–91)",
+  "expectedStdout": "|c| = 5\nthis-> form: 5\nafter ajoute: (4, 6)\n|c2| = 7.2111",
+  "files": [
+    "main.cpp",
+    "Complexe.hpp",
+    "Complexe.cpp"
+  ]
+}

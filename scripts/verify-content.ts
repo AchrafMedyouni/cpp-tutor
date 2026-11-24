@@ -115,7 +115,9 @@ async function checkExample(ch: string, id: string): Promise<string | null | { s
   if (!compile.ok) return `does not compile:\n${clip(compile.raw)}`;
   const warns = warningsOf(compile);
   if (m.expect === "warning") return warns.length ? null : "expected a compiler warning, got none";
-  if (warns.length) return `compiler warnings (must be clean with -Wall -Wextra -pedantic):\n${warns.join("\n")}`;
+  // Bug demonstrations (ub/leak/race) may legitimately trigger warnings too: only "clean" examples must be warning-free.
+  if (warns.length && m.expect === "clean")
+    return `compiler warnings (must be clean with -Wall -Wextra -pedantic):\n${warns.join("\n")}`;
   if (!run) return "no run";
   if (run.timedOut) return "timed out";
   switch (m.expect) {

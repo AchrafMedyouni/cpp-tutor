@@ -1,0 +1,8 @@
+{
+  "title": "operator<< and operator>> for Complexe (slides 144–145)",
+  "stdin": "(1,2) (3,-4) oops (5,6)",
+  "expectedStdout": "carré de (1,2) = (-3,4)\ncarré de (3,-4) = (-7,-24)\nstopped: bad input",
+  "tryThis": [
+    "Feed `( 1 , 2 )` with spaces: does the parser cope? `>>` into a `char` skips whitespace, so it does."
+  ]
+}

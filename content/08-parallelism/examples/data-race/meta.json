@@ -1,0 +1,9 @@
+{
+  "title": "Two threads increment a shared int (slide 194)",
+  "expect": "race",
+  "sanitizer": "tsan",
+  "tryThis": [
+    "Run with *No sanitizer* a few times: the total is usually **below** 2,000,000. Those are lost updates.",
+    "Fix 1: make `n` a `std::atomic_int`. Fix 2: protect `x += 1` with a mutex. (The next examples do both.)"
+  ]
+}

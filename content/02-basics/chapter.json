@@ -1,0 +1,6 @@
+{
+  "number": 2,
+  "title": "Variables, expressions, control flow, functions",
+  "slides": "26–54",
+  "summary": "The core language: how variables hold data, primitive types, expressions and casts, strings and constants, the control structures, functions (passing, returning, overloading, defaults), function types and lambdas."
+}

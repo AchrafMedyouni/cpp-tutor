@@ -1,0 +1,7 @@
+{
+  "title": "Reading an uninitialised variable",
+  "expect": "warning",
+  "tryThis": [
+    "The compiler only *warns*: reading `total` is undefined behaviour, so the program may print anything. Fix it with `int total{};`."
+  ]
+}

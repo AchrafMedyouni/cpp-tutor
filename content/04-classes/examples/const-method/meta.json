@@ -1,0 +1,8 @@
+{
+  "title": "A non-const getter can't be called on a const object",
+  "expect": "compile-error",
+  "tryThis": [
+    "Add `const` after `notional()` (and nothing else): it compiles.",
+    "The error appears where the object is `const`. `print` takes a `const Position&`, which is how most real code passes objects."
+  ]
+}

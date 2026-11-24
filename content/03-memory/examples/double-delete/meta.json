@@ -1,0 +1,5 @@
+{
+  "title": "Double delete",
+  "expect": "ub",
+  "sanitizer": "asan_ubsan"
+}

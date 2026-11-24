@@ -1,0 +1,8 @@
+{
+  "title": "Pass by reference (slide 72) and swap",
+  "expectedStdout": "f3 saw 8\nj = 3\na = 2, b = 1\nposition 150, cash -1500",
+  "tryThis": [
+    "Uncomment `f3( 5 );`: the error message says a non-const lvalue reference cannot bind to a temporary.",
+    "Compare `apply_buy` with the pointer version from the previous lesson: no `&` at the call site and no `*` in the body."
+  ]
+}

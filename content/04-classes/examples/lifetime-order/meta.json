@@ -1,0 +1,8 @@
+{
+  "title": "When do destructors run?",
+  "expectedStdout": "+ global\nmain starts\n+ a\n+ b\n+ inner\n- inner\n+ heap\n- heap\nmain ends\n- b\n- a\n- global",
+  "tryThis": [
+    "Remove `delete h;`: `- heap` disappears. A dynamic object is destroyed only when you `delete` it.",
+    "Throw an exception inside the inner block and catch it in `main`: `- inner` still prints. Destructors run during stack unwinding, which is what makes RAII exception-safe."
+  ]
+}

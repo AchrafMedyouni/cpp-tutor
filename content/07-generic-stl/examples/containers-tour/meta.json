@@ -1,0 +1,4 @@
+{
+  "title": "vector, deque, list, set, unordered_map, adaptors",
+  "expectedStdout": "deque: 0 1 2\nlist after insert: 1 99 2 3\nset (sorted, unique): AAPL MSFT NVDA\nunordered_map: EURUSD -> 1.08\nstack top: 3, queue front: 1\nreversed: 3 2 1\nback_inserter copy: 3 2 1"
+}

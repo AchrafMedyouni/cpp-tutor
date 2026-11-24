@@ -1,0 +1,8 @@
+{
+  "title": "& and * (slides 59–60)",
+  "nondeterministic": true,
+  "tryThis": [
+    "Print `p` before and after `p = &j;` for a second variable `j`.",
+    "Remove the initialisation of `p` and dereference it, then run with **ASan**. (An uninitialised pointer points anywhere.)"
+  ]
+}

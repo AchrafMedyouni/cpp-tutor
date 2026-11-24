@@ -1,0 +1,9 @@
+{
+  "title": "virtual and override (slide 127)",
+  "trackAllocs": true,
+  "expectedStdout": "Cercle(r=2) area 12.57\nRectangle(3x4) area 12.00\nCercle(r=1) area 3.14\ntotal area: 27.71",
+  "tryThis": [
+    "Misspell `aire` as `air` in `Rectangle` but keep `override`: compile error. Without `override`, it would silently not override anything.",
+    "Remove `virtual` from `~Forme`: clang warns that you `delete` through a base pointer with a non-virtual destructor."
+  ]
+}

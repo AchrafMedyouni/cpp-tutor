@@ -1,0 +1,8 @@
+{
+  "title": "Forgetting break: fall-through",
+  "expectedStdout": "BUY -> buy side\nCANCEL -> cancel request\nunknown!\nAMEND -> cancel request\nunknown!",
+  "tryThis": [
+    "Add the missing `break;` after the `CANCEL` case.",
+    "When falling through is intended, C++17 lets you say so with `[[fallthrough]];`."
+  ]
+}

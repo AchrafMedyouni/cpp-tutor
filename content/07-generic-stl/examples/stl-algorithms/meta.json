@@ -1,0 +1,4 @@
+{
+  "title": "The STL on a price series",
+  "expectedStdout": "max close 104.5 on day 3\nmin close 98 on day 5\nup days: 3\nall positive: 1\nmean: 101.286\nreturns %: 1.50 -0.49 3.47 -0.48 -5.77 2.04\nsorted: 98 100 100 101 101.5 104 104.5\nfirst >= 103: 104"
+}

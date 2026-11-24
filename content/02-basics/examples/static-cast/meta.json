@@ -1,0 +1,4 @@
+{
+  "title": "Forcing a floating-point division",
+  "expectedStdout": "integer mean: 2\ndouble mean: 2.5"
+}

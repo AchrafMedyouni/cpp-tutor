@@ -1,0 +1,10 @@
+{
+  "title": "Tableau v2 + copy = double destruction (slide 104)",
+  "courseVersion": true,
+  "expect": "ub",
+  "sanitizer": "asan_ubsan",
+  "tryThis": [
+    "Read the ASan report: *attempting double-free*. The two stack traces show where the block was freed first (`~Tableau` of `tab2`) and second (`~Tableau` of `tab`).",
+    "Before fixing it, predict what `tab2.get(0) = 42;` would do to `tab`."
+  ]
+}

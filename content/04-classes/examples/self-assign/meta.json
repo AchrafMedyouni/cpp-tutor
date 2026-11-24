@@ -1,0 +1,7 @@
+{
+  "title": "real = real; assigns the parameter to itself",
+  "expect": "warning",
+  "tryThis": [
+    "Fix it with `this->real = real;`, or better, rename the members `real_` and `imag_`."
+  ]
+}

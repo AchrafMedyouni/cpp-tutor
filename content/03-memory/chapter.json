@@ -1,0 +1,6 @@
+{
+  "number": 3,
+  "title": "Aggregates, derived types, dynamic allocation",
+  "slides": "55–81",
+  "summary": "Building your own types with struct and enum; pointers and references; where data lives (static, automatic, dynamic storage) and how new/delete work; lvalues and rvalues; raw arrays and pointer arithmetic, then std::array and std::vector."
+}

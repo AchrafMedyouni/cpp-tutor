@@ -1,0 +1,7 @@
+{
+  "title": "a + b is just operator+(a, b)",
+  "expectedStdout": "EUR/USD\nEUR/USD\nsize via member call: 7\n42",
+  "tryThis": [
+    "Replace `<< \"\\n\"` on the last line by `.operator<<( \"\\n\" )`: it prints an **address**. The *member* `operator<<` has no `const char*` overload, so the string converts to `const void*`. The free `operator<<(ostream&, const char*)` is the one that prints text."
+  ]
+}

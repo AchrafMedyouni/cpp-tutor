@@ -1,0 +1,8 @@
+{
+  "title": "std::vector (slide 80)",
+  "expectedStdout": "size 10, tab[5] = -2\nafter resize: 20\nat(25) threw: out_of_range\ncopies are independent: 0 vs 99\nequal? 0",
+  "tryThis": [
+    "Write `std::vector<int> v{ 10 };` and print `v.size()`: braces call the *initializer-list* constructor, giving one element equal to 10.",
+    "Use `push_back` to append values one at a time, like Python's `append`."
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "title": "Pass by const reference (slide 73)",
+  "expectedStdout": "5 8 10\nportfolio of 3 tickers: AAPL MSFT NVDA",
+  "tryThis": [
+    "Uncomment `i = 3;` inside `f4`: modifying through a `const&` is rejected.",
+    "Change `print_all` to take `std::string s` by value: same output, but every call copies the strings."
+  ]
+}

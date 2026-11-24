@@ -1,0 +1,5 @@
+{
+  "title": "dynamic_cast with pointers and references (slides 132–133)",
+  "trackAllocs": true,
+  "expectedStdout": "circle of radius 2\nnot a circle\nreference cast failed: std::bad_cast\ntypeid: Rectangle"
+}

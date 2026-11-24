@@ -1,0 +1,8 @@
+{
+  "title": "Sizes and ranges on this machine",
+  "nondeterministic": true,
+  "tryThis": [
+    "Add a row for `std::int64_t` (include `<cstdint>`).",
+    "Print `std::numeric_limits<double>::epsilon()`: the gap between 1.0 and the next double."
+  ]
+}

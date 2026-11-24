@@ -1,0 +1,12 @@
+{
+  "title": "seq vs par on a large transform-reduce",
+  "requires": [
+    "par"
+  ],
+  "verifyWith": "asan_ubsan",
+  "expectedStdout": "results equal: 1",
+  "tryThis": [
+    "Look at the timings (stderr): the speed-up depends on your core count and on the work per element.",
+    "Make the lambda write to a shared `double total` instead of using `transform_reduce`: that's a data race, as forbidden as with raw threads."
+  ]
+}

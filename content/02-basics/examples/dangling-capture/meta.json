@@ -1,0 +1,9 @@
+{
+  "title": "A lambda that outlives what it captured by reference",
+  "expect": "ub",
+  "sanitizer": "asan_ubsan",
+  "tryThis": [
+    "Capture `fee` by value (`[fee]`) instead: the bug disappears.",
+    "Run with *No sanitizer*: the output may look plausible. That is UB at its most dangerous."
+  ]
+}

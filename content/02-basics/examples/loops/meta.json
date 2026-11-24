@@ -1,0 +1,5 @@
+{
+  "title": "while, do…while, break, continue",
+  "stdin": "-3 0 5\n",
+  "expectedStdout": "5! = 120\nskipping 3\nfirst multiple of 7 above 50: 56"
+}

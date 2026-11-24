@@ -1,0 +1,8 @@
+{
+  "title": "Braces reject narrowing conversions",
+  "expect": "compile-error",
+  "tryThis": [
+    "Replace `int qty{ 3.7 };` by `int qty = 3.7;`: it compiles (with a warning) and silently truncates to 3. That's why braces are recommended.",
+    "`int qty{ static_cast<int>(3.7) };` states the conversion explicitly and compiles."
+  ]
+}

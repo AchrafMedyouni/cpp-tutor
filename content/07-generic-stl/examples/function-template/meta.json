@@ -1,0 +1,7 @@
+{
+  "title": "A function template and a specialisation (slides 150–151)",
+  "expectedStdout": "max(5, 3) = 5\nmax(\"bid\", \"ask\") = bid\nmax(c1, c2) = (1, 6)",
+  "tryThis": [
+    "Remove the `::` in `::max( std::string...)`: the call becomes ambiguous with `std::max`. Because the arguments are `std::` types, the compiler also searches namespace `std` (*argument-dependent lookup*)."
+  ]
+}

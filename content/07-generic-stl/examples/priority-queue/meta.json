@@ -1,0 +1,4 @@
+{
+  "title": "Best bid with std::priority_queue",
+  "expectedStdout": "best bid: 100.25 x 300\nafter matching it: 100.10 x 500\nasks, best first: 100.30 100.40 100.55"
+}

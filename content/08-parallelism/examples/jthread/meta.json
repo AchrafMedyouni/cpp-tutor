@@ -1,0 +1,5 @@
+{
+  "title": "std::jthread joins automatically (C++20)",
+  "verifyWith": "tsan",
+  "expectedStdout": "partial sums: 5050 15050\ntotal: 20100"
+}

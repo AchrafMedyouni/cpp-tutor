@@ -1,0 +1,8 @@
+{
+  "title": "Tableau v4: copy-and-swap assignment (slides 111–112)",
+  "trackAllocs": true,
+  "expectedStdout": "tab2.get(3) = 3, tab3.get(3) = 3\nafter tab3.get(3) = -1: tab2.get(3) = 3\nself-assignment ok: 3",
+  "tryThis": [
+    "Self-assignment (`tab2 = same;`, where `same` aliases `tab2`) is handled correctly by copy-and-swap, with no special case. Writing `tab2 = tab2;` directly also works, but clang warns because it is almost always a typo."
+  ]
+}

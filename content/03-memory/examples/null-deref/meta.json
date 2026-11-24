@@ -1,0 +1,8 @@
+{
+  "title": "Dereferencing a null pointer",
+  "expect": "ub",
+  "sanitizer": "asan_ubsan",
+  "tryThis": [
+    "Guard the access: `if (best) std::cout << best->price;`. In C++ the null check is your job: there is no `NoneType` exception."
+  ]
+}

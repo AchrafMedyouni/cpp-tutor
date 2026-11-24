@@ -1,0 +1,6 @@
+{
+  "title": "The conditional operator (slide 34)",
+  "courseVersion": true,
+  "stdin": "41\n",
+  "expectedStdout": "41 est un nombre impair"
+}

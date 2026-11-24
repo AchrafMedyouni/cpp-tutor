@@ -1,0 +1,5 @@
+{
+  "title": "switch on a month number (slide 41, corrected)",
+  "stdin": "12\n",
+  "expectedStdout": "décembre"
+}

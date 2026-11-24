@@ -1,0 +1,5 @@
+{
+  "title": "How many hardware threads does this machine have?",
+  "nondeterministic": true,
+  "verifyWith": "tsan"
+}

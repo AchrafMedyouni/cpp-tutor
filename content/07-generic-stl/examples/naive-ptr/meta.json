@@ -1,0 +1,5 @@
+{
+  "title": "A minimal smart pointer (slide 175)",
+  "trackAllocs": true,
+  "expectedStdout": "*p1 = 1\nf1->aire() = 12.5664\n~Cercle\n(no delete needed)"
+}

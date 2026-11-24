@@ -1,0 +1,8 @@
+{
+  "title": "Defaulted and custom <=>",
+  "expectedStdout": "1.2 < 1.10 ? 1\n1.10 == 1.10 ? 1\nbids by priority:\n  #3 101.00 @ t=5\n  #1 100.50 @ t=1\n  #4 100.50 @ t=7\n  #2 99.75 @ t=2",
+  "tryThis": [
+    "Default `Bid`'s `<=>` instead: the order is then by `id` first, which is meaningless here.",
+    "Make `price` a `double` and look at the return type of `<=>`: it becomes `std::partial_ordering`."
+  ]
+}

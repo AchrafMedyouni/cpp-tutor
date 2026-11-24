@@ -1,0 +1,4 @@
+{
+  "title": "struct Complexe (slides 56–57)",
+  "expectedStdout": "c = (1.3, -5.2)\nr = 1.3, c.imag = -3.2\nafter c = c_nul: (0, 0)\nAAPL BUY 100 @ 189.5"
+}

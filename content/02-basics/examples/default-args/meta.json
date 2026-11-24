@@ -1,0 +1,7 @@
+{
+  "title": "Default arguments (slide 48) and future value",
+  "expectedStdout": "dix = 10, deux = 2, seize = 16\nFV annual:  1628.89\nFV monthly: 1647.01",
+  "tryThis": [
+    "Give `rate` a default value but not `years`: the compiler rejects it."
+  ]
+}

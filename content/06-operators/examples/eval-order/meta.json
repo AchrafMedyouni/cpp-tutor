@@ -1,0 +1,7 @@
+{
+  "title": "Evaluation order: what's defined and what isn't",
+  "nondeterministic": true,
+  "tryThis": [
+    "Which line's output could legally differ with another compiler? (The function-argument one.)"
+  ]
+}

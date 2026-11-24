@@ -1,0 +1,10 @@
+{
+  "title": "A deadlock, caught with timed locks",
+  "verifyWith": "tsan",
+  "sanitizer": "tsan",
+  "expectedStdout": "t1 holds A, wants B: gave up after timeout\nt2 holds B, wants A: gave up after timeout\nboth threads waited for each other: deadlock (circular wait)",
+  "tryThis": [
+    "Make both threads lock `A` first, then `B`: both succeed. A single global lock order removes the circular wait.",
+    "Replace the timed locks by plain `std::mutex` + `lock()`: the program hangs until CppLab kills it after 10 s."
+  ]
+}

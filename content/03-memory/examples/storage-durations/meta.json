@@ -1,0 +1,8 @@
+{
+  "title": "Addresses in each region",
+  "nondeterministic": true,
+  "tryThis": [
+    "Compare the magnitudes: the stack addresses are far from the heap and the globals.",
+    "Call `counter()` several times: the `static` local keeps its value between calls, an automatic one wouldn't."
+  ]
+}

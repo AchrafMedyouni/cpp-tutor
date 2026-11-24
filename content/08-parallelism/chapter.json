@@ -1,0 +1,6 @@
+{
+  "number": 8,
+  "title": "Parallelism & synchronization",
+  "slides": "180–213",
+  "summary": "Concurrency on a shared-memory machine: processes and threads, std::thread, data races and why they happen, mutexes, lock guards and atomics, producer–consumer with condition variables, parallel STL algorithms and an introduction to oneTBB."
+}

@@ -1,0 +1,9 @@
+{
+  "title": "Tableau with move operations (slide 173), and why noexcept matters",
+  "trackAllocs": true,
+  "expectedStdout": "make_series: 0 copies, 0 moves (return value elided)\nt2 = std::move(t1): t1.taille() = 0, t2.taille() = 1000\nvector growth with noexcept moves: 0 copies, 31 moves",
+  "tryThis": [
+    "Remove `noexcept` from the move constructor: `vector` growth now **copies** every element instead of moving it.",
+    "Return `std::move(t)` in `make_series`: it compiles, but it prevents the copy elision and adds a move."
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "title": "The intruder: Tableau t3(); (slide 113)",
+  "expect": "warning",
+  "tryThis": [
+    "Uncomment `t3.taille();`: the error says `t3` is a function, not an object.",
+    "Replace `t3()` by `t3{}`: problem solved."
+  ]
+}

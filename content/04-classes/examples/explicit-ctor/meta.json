@@ -1,0 +1,8 @@
+{
+  "title": "Implicit conversions through constructors (slide 118)",
+  "expectedStdout": "foo(Nombre 3)\nsending order at 100.5 for 7 shares",
+  "tryThis": [
+    "Add `explicit` to `Price(double)`: the call with the arguments swapped no longer compiles, which catches the bug.",
+    "Add `explicit` to `Nombre(int)`: `foo( 3 )` fails, and you must write `foo( Nombre{ 3 } )`."
+  ]
+}

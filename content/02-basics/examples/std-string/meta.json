@@ -1,0 +1,7 @@
+{
+  "title": "std::string basics",
+  "expectedStdout": "Hello world! (12 chars)\nequal: 1\nticker: EURUSD, base: EUR, quote: USD\nfound '/' at 3\nless: 1",
+  "tryThis": [
+    "Compare `\"apple\" < \"banana\"` written as two `std::string`s, then as two raw literals: the latter compares *addresses*, so don't."
+  ]
+}

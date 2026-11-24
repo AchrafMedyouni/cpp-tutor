@@ -1,0 +1,9 @@
+{
+  "title": "An unchecked downcast to the wrong type",
+  "expect": "ub",
+  "sanitizer": "asan_ubsan",
+  "tryThis": [
+    "Make `forme` really point to a `Cercle` (`new Cercle{...}`): the same cast is now correct, but the compiler can't tell the two cases apart.",
+    "Next lesson: `dynamic_cast<Cercle*>(forme)` returns `nullptr` instead of lying."
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "title": "Copying the naive ptr: double delete",
+  "expect": "ub",
+  "sanitizer": "asan_ubsan",
+  "tryThis": [
+    "Add `ptr( const ptr & ) = delete;` and `ptr & operator=( const ptr & ) = delete;`: the copy no longer compiles. That is exactly what `std::unique_ptr` does."
+  ]
+}

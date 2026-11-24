@@ -1,0 +1,9 @@
+{
+  "title": "Capture by value vs by reference (slide 54)",
+  "courseVersion": true,
+  "expectedStdout": "3\n4",
+  "tryThis": [
+    "Change the capture to `[&i, &j]`: the second call prints 5.",
+    "Change it to `[i, j]` and add `++j;` in the body: it fails to compile, because captured copies are `const` unless the lambda is declared `mutable`."
+  ]
+}

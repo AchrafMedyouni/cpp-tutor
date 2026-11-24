@@ -53,7 +53,8 @@ export function detectSanitizer(stderr: string): SanitizerReport | undefined {
     const where = firstUserFrame(stderr);
     return { kind: "tsan", summary: `ThreadSanitizer: ${tsan[1].trim()}${where ? ` in ${where}` : ""}` };
   }
-  const asan = /ERROR: AddressSanitizer: ([\w-]+)/.exec(stderr);
+  // "heap-use-after-free on address 0x…", "attempting double-free on 0x…", "SEGV on unknown address 0x…"
+  const asan = /ERROR: AddressSanitizer: (.+?)(?: on (?:unknown )?(?:address )?0x[0-9a-f]+|\n|$)/.exec(stderr);
   if (asan) {
     const where = firstUserFrame(stderr);
     if (where) return { kind: "asan", summary: `AddressSanitizer: ${asan[1]} in ${where}` };

@@ -1,0 +1,4 @@
+{
+  "title": "Return by reference (slide 74)",
+  "expectedStdout": "5\n8\nbook[1] = 101.5"
+}

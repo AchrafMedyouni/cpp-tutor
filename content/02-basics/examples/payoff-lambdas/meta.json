@@ -1,0 +1,4 @@
+{
+  "title": "Option payoffs as lambdas capturing the strike",
+  "expectedStdout": "spot   call   put    straddle\n80     0.00   20.00  20.00\n100    0.00   0.00   0.00\n120    20.00  0.00   20.00"
+}

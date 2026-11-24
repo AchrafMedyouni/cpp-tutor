@@ -1,0 +1,9 @@
+{
+  "title": "const, constexpr and #define",
+  "stdin": "3\n",
+  "expectedStdout": "weekly fee: 21\nyears: 3, compound factor: 1.15763\nbad macro: 5 vs good: 9",
+  "tryThis": [
+    "Try `days = 8;`: assigning to a `const` is a compile error.",
+    "Make `growth` `constexpr` and read the year count from stdin: it can't be computed at compile time anymore, so `constexpr` fails, while `const` would be fine."
+  ]
+}

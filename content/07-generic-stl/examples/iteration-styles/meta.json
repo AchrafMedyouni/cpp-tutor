@@ -1,0 +1,4 @@
+{
+  "title": "Five ways to traverse (slides 153–157)",
+  "expectedStdout": "1 1 1\n2 2 2\n3 3 3\n4 4 4\n5 5 5\nlist: 1.5 2.5"
+}

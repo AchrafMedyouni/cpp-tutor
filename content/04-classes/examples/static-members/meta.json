@@ -1,0 +1,4 @@
+{
+  "title": "Static attributes and methods (slide 119)",
+  "expectedStdout": "0\n2\n3\n2\norders: 1 2 3"
+}

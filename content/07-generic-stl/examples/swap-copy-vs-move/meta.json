@@ -1,0 +1,9 @@
+{
+  "title": "swap: 3 copies vs 3 moves (slides 170–171)",
+  "trackAllocs": true,
+  "expectedStdout": "copy swap: 1 copy ctor, 2 copy assign, 0 move ctor, 0 move assign, 1 allocations\nmove swap: 0 copy ctor, 0 copy assign, 1 move ctor, 2 move assign, 0 allocations",
+  "tryThis": [
+    "Only **1** allocation for the copy-swap? `std::vector`'s copy *assignment* reuses the destination's buffer when it is big enough. Only the copy-*constructed* `tmp` allocates. It still copies 3 × 1,000,000 doubles, while the move version copies none.",
+    "Make the two vectors different sizes (`a{ 10 }`, `b{ 1'000'000 }`) and count again."
+  ]
+}

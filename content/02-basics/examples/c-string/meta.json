@@ -1,0 +1,8 @@
+{
+  "title": "C strings: char arrays with a '\\0' sentinel",
+  "expectedStdout": "length 12, sizeof 13\nstrcmp == 0 → equal contents\ncopied: Hello world!\nas std::string: Hello world!",
+  "tryThis": [
+    "Write `s == t` instead of `std::strcmp(s, t) == 0`: the compiler warns, because that compares two addresses, which always differ.",
+    "Make `buf` only 5 chars long and run with **ASan**: `strcpy` overflows the buffer (a classic security bug)."
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "title": "Deleting through a base pointer without a virtual destructor",
+  "expect": "leak",
+  "trackAllocs": true,
+  "tryThis": [
+    "Make `~Forme` virtual: `~Polygone` runs and the leak disappears.",
+    "Rule of thumb: a class with any virtual function gets a virtual destructor."
+  ]
+}

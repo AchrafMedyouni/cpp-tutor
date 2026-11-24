@@ -1,0 +1,8 @@
+{
+  "title": "= delete: a non-copyable order-ID generator",
+  "expect": "compile-error",
+  "tryThis": [
+    "Remove the line `OrderIdGenerator copy{ gen };`: it compiles, and IDs stay unique.",
+    "Why forbid the copy? Two copies would hand out the same IDs twice."
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "title": "A member operator+ isn't symmetric",
+  "expect": "compile-error",
+  "tryThis": [
+    "Turn `operator+` into a free `friend` function taking two `const Money&`: both lines compile."
+  ]
+}

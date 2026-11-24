@@ -1,0 +1,8 @@
+{
+  "title": "A shared_ptr cycle leaks; weak_ptr breaks it (slide 178)",
+  "expect": "leak",
+  "trackAllocs": true,
+  "tryThis": [
+    "Change `std::shared_ptr<Desk> desk;` in `Trader` to `std::weak_ptr<Desk> desk;` and use `desk.lock()` in `desk_name()`. The leak disappears and both destructors run."
+  ]
+}

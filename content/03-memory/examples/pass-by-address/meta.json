@@ -1,0 +1,4 @@
+{
+  "title": "Pass by address (slide 63)",
+  "expectedStdout": "j before: 8\nf2 saw 8\nj after: 3\nposition 150, cash -1500"
+}

@@ -1,0 +1,8 @@
+{
+  "title": "enum class vs C enum (slide 58)",
+  "expectedStdout": "green -> 1\nmoyen -> 10\nSELL",
+  "tryThis": [
+    "Write `int x{ Color::green };`: rejected, since an `enum class` doesn't convert implicitly.",
+    "Write `Niveau n2{ 3 };`: also rejected. You can't assign an int to a C enum without a cast either."
+  ]
+}

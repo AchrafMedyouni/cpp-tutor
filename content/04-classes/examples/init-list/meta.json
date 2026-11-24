@@ -1,0 +1,9 @@
+{
+  "title": "const members need the initialiser list (slides 116–117)",
+  "trackAllocs": true,
+  "expectedStdout": "taille 5, last 4\norder: AAPL x 100 (id 7)",
+  "tryThis": [
+    "Move the initialisations into the constructor body (`taille_ = taille;`): compile errors, because you can't assign a `const`.",
+    "In `Order`, swap the order of `symbol_` and `id_` in the class definition: the compiler warns (`-Wreorder`) that the list order doesn't match the initialisation order."
+  ]
+}

@@ -1,0 +1,4 @@
+{
+  "title": "Carre : public Rectangle breaks a Rectangle promise",
+  "expectedStdout": "Rectangle: area 6 -> 12 (expected x2: ok)\nCarre: area 9 -> 36 (expected x2: VIOLATED)"
+}

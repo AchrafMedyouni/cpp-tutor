@@ -1,0 +1,5 @@
+{
+  "title": "operator[] with const and non-const overloads (slide 143)",
+  "trackAllocs": true,
+  "expectedStdout": "sum = 285\nout of range: Tableau::operator[]"
+}

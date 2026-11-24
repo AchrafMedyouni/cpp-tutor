@@ -1,0 +1,6 @@
+{
+  "number": 4,
+  "title": "Classes",
+  "slides": "82–119",
+  "summary": "Binding data and behaviour: methods, this, const, access control and constructors. Then the heart of the course: managing a resource with the Tableau class, from v1 (leaks) through RAII, copy constructor and copy-and-swap assignment, to the canonical form, explicit and static members."
+}

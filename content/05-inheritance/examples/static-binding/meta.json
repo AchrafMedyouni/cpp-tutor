@@ -1,0 +1,7 @@
+{
+  "title": "Without virtual: the static type decides (slide 126)",
+  "expectedStdout": "c.dessine():   Cercle::dessine\npf->dessine(): Forme::dessine",
+  "tryThis": [
+    "Add `virtual` before `void dessine()` in `Forme` and run again."
+  ]
+}

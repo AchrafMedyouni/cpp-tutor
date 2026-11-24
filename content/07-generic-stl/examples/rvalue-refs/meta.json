@@ -1,0 +1,8 @@
+{
+  "title": "What binds to T&& (slides 168–169)",
+  "expectedStdout": "crg = 8, rd = 8, k3 = 10, k4 = 10\nf5 got temporary 5\nf5 got temporary 10\nf5 got std::move(j) 8",
+  "tryThis": [
+    "Uncomment `f5( j );`: an lvalue doesn't bind to `int&&`.",
+    "`std::move(j)` compiles, but `j` is an `int`, so \"moving\" it just copies it. Moves only pay off for types that own resources."
+  ]
+}

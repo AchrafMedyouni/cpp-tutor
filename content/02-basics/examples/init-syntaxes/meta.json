@@ -1,0 +1,8 @@
+{
+  "title": "Initialisation syntaxes and auto",
+  "expectedStdout": "j = 5, k = 0\nl = 2021 (unsigned long: 1)\nf = -0.002129 (float: 1)\nv is an initializer_list: 1",
+  "tryThis": [
+    "Change `auto l{ 2021ul }` to `auto l{ 2021 }` and look at the type check: `int` now.",
+    "Hover over `l` or `v` in the editor: Monaco has no type information, but your compiler does. Try `int x = v;` to read the type in the error message."
+  ]
+}

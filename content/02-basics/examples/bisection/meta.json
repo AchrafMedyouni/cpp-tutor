@@ -1,0 +1,7 @@
+{
+  "title": "Bisection: solve f(y) = 0 for a bond yield",
+  "expectedStdout": "price at 5%: 100.0000\nyield for price 95: 6.1932%",
+  "tryThis": [
+    "Pass a different `std::function` to `bisect`, e.g. `[](double x) { return x * x - 2; }` on [0, 2], to get √2. Lambdas are the next lesson."
+  ]
+}

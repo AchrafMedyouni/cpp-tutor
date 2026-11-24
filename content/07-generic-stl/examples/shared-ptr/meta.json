@@ -1,0 +1,5 @@
+{
+  "title": "std::shared_ptr and its reference count (slides 176\u2013177)",
+  "trackAllocs": true,
+  "expectedStdout": "p2 use_count = 1\nafter copy: 2\nafter scope: 1\n~Cercle(1)\nf1 = c1: c1.use_count() = 2\n~Cercle(5)"
+}

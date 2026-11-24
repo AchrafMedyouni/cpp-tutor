@@ -1,0 +1,6 @@
+{
+  "number": 5,
+  "title": "Inheritance",
+  "slides": "120–134",
+  "summary": "Base and derived classes with the Forme/Cercle/Rectangle hierarchy: slicing, base-class constructors, virtual functions and dynamic binding, virtual destructors, abstract classes, the Liskov substitution principle, how vtables work, RTTI and C++'s cast operators."
+}

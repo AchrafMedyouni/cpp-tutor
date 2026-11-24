@@ -1,0 +1,8 @@
+{
+  "title": "Overloading max (slide 47)",
+  "expectedStdout": "max(int, int) -> 7\nmax(double, double) -> 2.5\nmax(double, double) -> 2.5",
+  "tryThis": [
+    "Remove the explicit `static_cast<double>` in the third call: `max(1, 2.5)` becomes ambiguous, because both overloads need one conversion.",
+    "Add `long max(long, long)` and call `max(3L, 4L)`."
+  ]
+}

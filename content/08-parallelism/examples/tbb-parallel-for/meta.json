@@ -1,0 +1,8 @@
+{
+  "title": "oneTBB parallel_for (slides 211–213)",
+  "requires": [
+    "tbb"
+  ],
+  "verifyWith": "none",
+  "expectedStdout": "serial == functor: 1\nserial == lambda: 1"
+}

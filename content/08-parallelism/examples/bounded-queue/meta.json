@@ -1,0 +1,10 @@
+{
+  "title": "A bounded queue feeding a moving-average strategy",
+  "verifyWith": "tsan",
+  "sanitizer": "tsan",
+  "expectedStdout": "ticks consumed: 200\nsignals: 5 BUY, 6 SELL\nlast SMA(5) = 100.34",
+  "tryThis": [
+    "Shrink the capacity to 1: still correct, but the producer blocks on nearly every push.",
+    "Replace the predicate form of `wait` with a plain `wait(lock)` inside an `if` and run several times under TSan."
+  ]
+}

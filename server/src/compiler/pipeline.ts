@@ -115,16 +115,20 @@ export async function build(dir: string, files: SourceFile[], opts: BuildOptions
 
   if (ok) {
     const objFlags = [...BASE_FLAGS, ...sanFlags, `-I${SUPPORT_DIR}`];
+    // The tracker must be linked FIRST: static objects are initialised in link order and destroyed in
+    // reverse, so its exit report then runs after every user global (e.g. a global std::string) is gone.
+    const firstObjs: string[] = [];
     const extraObjs: string[] = [];
     try {
-      if (opts.trackAllocs) extraObjs.push(await cachedObject(cxx, path.join(SUPPORT_DIR, "cpplab/alloc_tracker.cpp"), objFlags));
+      firstObjs.push(await cachedObject(cxx, path.join(SUPPORT_DIR, "cpplab/runtime.cpp"), objFlags));
+      if (opts.trackAllocs) firstObjs.push(await cachedObject(cxx, path.join(SUPPORT_DIR, "cpplab/alloc_tracker.cpp"), objFlags));
       if (opts.doctestMain) extraObjs.push(await cachedObject(cxx, path.join(SUPPORT_DIR, "doctest_main.cpp"), objFlags));
     } catch (e) {
       return { compile: { ok: false, diagnostics: [], raw: String(e), durationMs: Date.now() - start } };
     }
     const link = await exec(
       cxx,
-      [...BASE_FLAGS, ...sanFlags, ...units.map((_, i) => `__obj${i}.o`), ...extraObjs, ...capFlags.link, "-o", "prog"],
+      [...BASE_FLAGS, ...sanFlags, ...firstObjs, ...units.map((_, i) => `__obj${i}.o`), ...extraObjs, ...capFlags.link, "-o", "prog"],
       { cwd: realDir, timeoutMs: LIMITS.compileTimeoutMs },
     );
     raw += link.stderr + link.stdout;

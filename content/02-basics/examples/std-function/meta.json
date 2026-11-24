@@ -1,0 +1,4 @@
+{
+  "title": "std::function holding a function (slide 50)",
+  "expectedStdout": "foo(2.5) = 2\nfoo(-2.5) = -2\nbar: f(7.9) = 7\nnow foo rounds: 3"
+}

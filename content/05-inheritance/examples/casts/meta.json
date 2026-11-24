@@ -1,0 +1,4 @@
+{
+  "title": "The named casts (slide 134)",
+  "expectedStdout": "static_cast<int>(2.7) = 2\nconst_cast: 2\nfirst byte of 1: 1 (little-endian)\nC cast (int)2.7 = 2, int(2.7) = 2"
+}

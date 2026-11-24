@@ -1,0 +1,7 @@
+{
+  "title": "A size as a template parameter (slide 149)",
+  "expectedStdout": "sizes: 100 3\nsizeof(Tableau<double, 3>) = 24\nlast 3 closes: 101 102 103",
+  "tryThis": [
+    "`Tableau<double, 3>` and `Tableau<double, 4>` are different types: try assigning one to the other."
+  ]
+}

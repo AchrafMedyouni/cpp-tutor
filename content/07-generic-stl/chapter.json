@@ -1,0 +1,6 @@
+{
+  "number": 7,
+  "title": "Genericity & the standard library",
+  "slides": "146–179",
+  "summary": "Templates (classes, functions, non-type parameters, specialisation, compile-time computation), then the STL: containers, iterators, algorithms and function objects. Finally move semantics and smart pointers (unique_ptr, shared_ptr, weak_ptr)."
+}
