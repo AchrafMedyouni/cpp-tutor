@@ -1,0 +1,25 @@
+{
+  "title": "Portfolio v2: RAII and the rule of three",
+  "summary": "Refactor chapter 3's struct-and-functions portfolio into a class that owns its array: constructor, destructor, private growth, then deep copies. Client code can no longer forget to release memory.",
+  "sanitizer": "asan_ubsan",
+  "editable": [
+    "Portfolio.hpp"
+  ],
+  "steps": [
+    {
+      "title": "A class that cleans up after itself",
+      "hints": [
+        "Private members: `int size_, capacity_; Position* positions_;`. Allocate in the constructor, `delete[]` in the destructor.",
+        "Keep `grow()` private: it's an implementation detail.",
+        "`find` is const and returns `const Position*`."
+      ]
+    },
+    {
+      "title": "Copyable portfolios",
+      "hints": [
+        "Copy constructor: allocate `capacity_` positions and copy the `size_` used ones.",
+        "Assignment: copy-and-swap, as in Tableau v4."
+      ]
+    }
+  ]
+}

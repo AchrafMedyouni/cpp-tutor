@@ -1,0 +1,1 @@
+**v3** (slides 104–107): with only a destructor, `Tableau t2{ t1 };` copies the **pointer** and both objects delete the same buffer (ASan: *double-free*). Write the **copy constructor** so that a copy owns its own buffer.

@@ -1,0 +1,2 @@
+- `T max_drawdown(const TimeSeries<T>& prices)`: the largest peak-to-trough fall, as a fraction
+- `T annualized_volatility(const TimeSeries<T>& returns, int periods_per_year = 252)`: the sample standard deviation of the returns × √periods (0 if fewer than 2 returns)

@@ -1,0 +1,1 @@
+A strategy wants to **snapshot** the portfolio before trying hypothetical fills. Add the copy constructor and copy assignment (copy-and-swap). After a copy, the two portfolios must be completely independent, and nothing may leak.

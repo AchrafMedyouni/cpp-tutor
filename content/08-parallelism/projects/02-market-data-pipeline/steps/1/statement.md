@@ -1,0 +1,1 @@
+Feed lines look like `AAPL,189.52,300`. Write `std::optional<Tick> parse_tick(const std::string& line)`. It returns `std::nullopt` for anything malformed: a missing field, an empty symbol, a non-numeric or trailing-garbage number (`12.5x`), or a price or size that isn't positive.

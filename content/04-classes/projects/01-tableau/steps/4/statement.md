@@ -1,0 +1,1 @@
+**v4** (slides 108–112): `t2 = t1;` with the default assignment leaks `t2`'s buffer and shares `t1`'s. Write `Tableau& operator=(const Tableau&)` with the **copy-and-swap** idiom. It must handle self-assignment, and change size if needed.

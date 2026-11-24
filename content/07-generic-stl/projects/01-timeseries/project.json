@@ -1,0 +1,32 @@
+{
+  "title": "TimeSeries<T> with STL-compatible iterators",
+  "summary": "A generic container of observations that plugs into the standard algorithms, then the classic analytics written with them: returns, moving averages, drawdown and volatility.",
+  "sanitizer": "asan_ubsan",
+  "editable": [
+    "timeseries.hpp"
+  ],
+  "steps": [
+    {
+      "title": "A container with iterators",
+      "hints": [
+        "Wrap a `std::vector<T>` and forward `begin()`/`end()` (const and non-const overloads).",
+        "Expose `using value_type = T;` and the iterator types: algorithms and range-for need them.",
+        "The iterator-pair constructor is itself a template: `template <typename It> TimeSeries(It first, It last)`."
+      ]
+    },
+    {
+      "title": "Returns and moving average",
+      "hints": [
+        "`std::transform` with two input ranges: `(p.begin() + 1, p.end())` and `p.begin()`.",
+        "Moving average in O(n): keep a running sum, add the new value and subtract the one leaving the window."
+      ]
+    },
+    {
+      "title": "Drawdown and volatility",
+      "hints": [
+        "Running peak with `std::partial_sum` and a max lambda, as in the chapter's exercise.",
+        "Annualised vol = sample stdev × √periods."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "title": "A market-data pipeline: feed → queue → strategy",
+  "summary": "A producer thread parses raw feed lines into ticks and pushes them through a bounded blocking queue. The consumer runs a moving-average crossover strategy. This is producer–consumer from slides 204–208, as trading systems use it.",
+  "sanitizer": "tsan",
+  "editable": [
+    "pipeline.hpp"
+  ],
+  "steps": [
+    {
+      "title": "Parse feed lines",
+      "hints": [
+        "`std::getline(in, field, ',')` splits on commas.",
+        "`std::stod(s, &used)` throws on garbage; check `used == s.size()` to reject trailing junk like `12.5x`.",
+        "Wrap the conversions in `try { ... } catch (...) { return std::nullopt; }`."
+      ]
+    },
+    {
+      "title": "Producer and consumer threads",
+      "hints": [
+        "The producer is a `std::thread` that pushes parsed ticks, then calls `queue.close()`.",
+        "The calling thread pops with `while (auto t = queue.pop())` until the queue is closed and drained.",
+        "Only read the producer's counters after `join()`: join is a synchronisation point."
+      ]
+    },
+    {
+      "title": "SMA crossover strategy",
+      "hints": [
+        "Keep, per symbol, a `std::deque<double>` of the last `slow` prices and the last sign of `fast SMA − slow SMA`.",
+        "Emit a signal only when the sign **changes** (not at the first comparison)."
+      ]
+    }
+  ]
+}

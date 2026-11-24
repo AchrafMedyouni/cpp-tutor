@@ -1,0 +1,33 @@
+{
+  "title": "Vector and Matrix with operators",
+  "summary": "A small linear-algebra library with natural syntax, a + b, M * v, m(i, j), stream output, used to compute a portfolio's variance wᵀΣw.",
+  "sanitizer": "asan_ubsan",
+  "editable": [
+    "linalg.hpp"
+  ],
+  "steps": [
+    {
+      "title": "Vector",
+      "hints": [
+        "Store a `std::vector<double>`: copy, assignment and destructor come for free (the rule of zero).",
+        "Two `operator[]` overloads, const and non-const. `v_.at(i)` gives bounds checking.",
+        "Accept a brace list with a constructor taking `std::initializer_list<double>`."
+      ]
+    },
+    {
+      "title": "Matrix",
+      "hints": [
+        "Store the elements row-major in one `std::vector<double>`: element (i, j) is at `i * cols + j`.",
+        "Use `operator()(i, j)` for indexing. `operator[]` with two arguments is only allowed from C++23.",
+        "Matrix × matrix: three nested loops, `out(i, j) += a(i, k) * b(k, j)`."
+      ]
+    },
+    {
+      "title": "Printing and portfolio variance",
+      "hints": [
+        "`operator<<` must be a free function: `os << '[' << ... << ']'`.",
+        "`portfolio_variance(cov, w) = dot(w, cov * w)`."
+      ]
+    }
+  ]
+}

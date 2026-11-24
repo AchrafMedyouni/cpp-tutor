@@ -1,0 +1,32 @@
+{
+  "title": "Portfolio v1: manual memory management",
+  "summary": "Track positions in a dynamically allocated array that you grow, search and release yourself, with new[]/delete[] and pointers. In chapter 4 you'll rebuild it as a RAII class.",
+  "sanitizer": "asan_ubsan",
+  "editable": [
+    "portfolio.hpp"
+  ],
+  "steps": [
+    {
+      "title": "Allocate and release",
+      "hints": [
+        "`p.positions = new Position[capacity];`, and `delete[] p.positions;` in `destroy`.",
+        "Reset the fields in `destroy` so a destroyed portfolio is clearly empty."
+      ]
+    },
+    {
+      "title": "Fills, lookup and growth",
+      "hints": [
+        "`find`: walk with a pointer from `p.positions` to `p.positions + p.size`.",
+        "When `size == capacity`, allocate a twice-as-big array, copy the positions, `delete[]` the old one.",
+        "Average cost only changes on buys: `(old_qty * old_avg + qty * price) / new_qty`."
+      ]
+    },
+    {
+      "title": "Valuation and P&L",
+      "hints": [
+        "`market_value`: for each position, look up its mark in the parallel arrays `symbols`/`marks`.",
+        "Unrealised P&L = `qty * (mark - avg_price)`."
+      ]
+    }
+  ]
+}

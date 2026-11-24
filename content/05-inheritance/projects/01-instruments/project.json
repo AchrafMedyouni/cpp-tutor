@@ -1,0 +1,34 @@
+{
+  "title": "A hierarchy of financial instruments",
+  "summary": "The course's Forme/Cercle/Rectangle, applied to finance: an abstract Instrument with a virtual price(), concrete Bond, EuropeanOption (Black–Scholes) and Future, and a Book that values and risk-manages them polymorphically.",
+  "sanitizer": "asan_ubsan",
+  "editable": [
+    "instruments.hpp"
+  ],
+  "steps": [
+    {
+      "title": "Instrument and Bond",
+      "hints": [
+        "`Instrument` stores the name, has a virtual destructor and `virtual double price(const Market& m) const = 0;`.",
+        "`Bond` calls `Instrument{ std::move(name) }` in its initialiser list.",
+        "Bond price: `Σ coupon·face/(1+r)^t + face/(1+r)^n`."
+      ]
+    },
+    {
+      "title": "European option (Black–Scholes)",
+      "hints": [
+        "`N(x) = 0.5 * std::erfc(-x / std::sqrt(2.0))`.",
+        "`d1 = (ln(S/K) + (r + σ²/2)T) / (σ√T)`, `d2 = d1 − σ√T`.",
+        "Call = `S·N(d1) − K·e^{−rT}·N(d2)`; put = `K·e^{−rT}·N(−d2) − S·N(−d1)`."
+      ]
+    },
+    {
+      "title": "Future and a polymorphic Book",
+      "hints": [
+        "`Book` stores `std::vector<Instrument*>` and quantities, and `delete`s everything in its destructor (it owns them).",
+        "Delete the copy operations: copying a Book would double-delete.",
+        "Delta by central difference: bump `m.spot` up and down by `h`."
+      ]
+    }
+  ]
+}

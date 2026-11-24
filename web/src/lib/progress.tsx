@@ -8,7 +8,10 @@ export interface Progress {
     string,
     { passed: boolean; attempts: number; code?: SourceFile[]; hintsShown?: number; solutionShown?: boolean }
   >; // "ch/id"
-  projects: Record<string, { stepsDone: number; current?: number; code?: SourceFile[]; hintsShown?: Record<number, number> }>;
+  projects: Record<
+    string,
+    { stepsDone: number; current?: number; code?: SourceFile[]; hintsShown?: Record<number, number>; attempts?: Record<number, number> }
+  >;
   vizSeen: Record<string, boolean>;
   last?: { route: string; title: string; at: number };
 }

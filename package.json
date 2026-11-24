@@ -3,15 +3,20 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "workspaces": ["server", "web"],
+  "workspaces": [
+    "server",
+    "web"
+  ],
   "scripts": {
     "dev": "concurrently -k -n server,web -c blue,magenta \"npm -w server run dev\" \"npm -w web run dev\"",
     "build": "npm -w web run build",
     "start": "npm -w server run start",
-    "verify-content": "tsx scripts/verify-content.ts",
+    "verify-content": "CPPLAB_RUN_TIMEOUT_MS=${CPPLAB_RUN_TIMEOUT_MS:-30000} CPPLAB_COMPILE_TIMEOUT_MS=${CPPLAB_COMPILE_TIMEOUT_MS:-60000} tsx scripts/verify-content.ts",
     "typecheck": "tsc -p server && tsc -p web --noEmit"
   },
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "devDependencies": {
     "concurrently": "^9.2.0",
     "tsx": "^4.20.0",

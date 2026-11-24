@@ -1,0 +1,33 @@
+{
+  "title": "A limit order book",
+  "summary": "The core data structure of every exchange: resting orders sorted by price with std::map, FIFO queues per price level, price-time priority matching, cancellations, and clear ownership through std::unique_ptr.",
+  "sanitizer": "asan_ubsan",
+  "editable": [
+    "order_book.hpp"
+  ],
+  "steps": [
+    {
+      "title": "Resting orders and best prices",
+      "hints": [
+        "Bids sorted from highest price: `std::map<long, std::deque<Order*>, std::greater<long>>`. Asks: a plain `std::map` (lowest first).",
+        "Own the orders in `std::unordered_map<long, std::unique_ptr<Order>>`, and keep non-owning `Order*` in the price levels.",
+        "`best_bid()` is `bids_.begin()->first`, or `std::nullopt` when empty."
+      ]
+    },
+    {
+      "title": "Matching with price-time priority",
+      "hints": [
+        "A buy at price P matches asks while `best_ask <= P`; a sell matches bids while `best_bid >= P`.",
+        "Always take the **front** of the best level's deque (oldest order) and trade at the **resting** order's price.",
+        "Remove fully filled orders from their level and from the owning map. Erase empty levels."
+      ]
+    },
+    {
+      "title": "Cancels and market orders",
+      "hints": [
+        "`cancel`: find the order through the owning map, remove its pointer from the level's deque, erase the empty level, then erase the `unique_ptr` (which deletes the order).",
+        "A market order is a limit order that accepts any price and never rests: reuse the matching loop."
+      ]
+    }
+  ]
+}

@@ -15,7 +15,7 @@ Other commands:
 
 | Command | What it does |
 |---|---|
-| `npm run verify-content` | Compiles and tests **all** course content (see below). `-- 03-memory` restricts it to one chapter; `--only=examples,exercises,projects,quizzes,viz,lessons` restricts the kind; `-j 8` sets parallelism. |
+| `npm run verify-content` | Compiles and tests **all** course content (see below). It uses longer limits than the interactive server (30 s run, 60 s compile) so that a loaded machine doesn't cause spurious timeouts. `-- 03-memory` restricts it to one chapter; `--only=examples,exercises,projects,quizzes,viz,lessons` restricts the kind; `-j 8` sets parallelism. |
 | `npm run build && npm start` | Production build, served by the backend alone on http://127.0.0.1:5174 |
 | `npm run typecheck` | TypeScript checks for server and web |
 

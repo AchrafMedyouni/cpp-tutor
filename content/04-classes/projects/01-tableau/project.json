@@ -1,0 +1,36 @@
+{
+  "title": "Tableau v1 → v4",
+  "summary": "Rebuild the course's Tableau class step by step, exactly as in slides 99–112. Each step adds one of the canonical-form members, and the tests show why it's needed.",
+  "sanitizer": "asan_ubsan",
+  "editable": [
+    "Tableau.hpp"
+  ],
+  "steps": [
+    {
+      "title": "v1: constructor and get",
+      "hints": [
+        "Members: `unsigned taille_; double* tab_;`, allocated with `new double[taille]{}` (the `{}` zero-initialises).",
+        "`get` returns a `double&` so that `t.get(i) = x` writes into the array; throw `std::out_of_range` when `indice >= taille_`."
+      ]
+    },
+    {
+      "title": "v2: destructor",
+      "hints": [
+        "`~Tableau() { delete[] tab_; }`: `delete[]` because the buffer was allocated with `new[]`."
+      ]
+    },
+    {
+      "title": "v3: copy constructor",
+      "hints": [
+        "`Tableau(const Tableau& t)`: allocate a **new** buffer of `t.taille_` doubles and copy the elements one by one."
+      ]
+    },
+    {
+      "title": "v4: assignment",
+      "hints": [
+        "Copy-and-swap: `Tableau tmp{ t }; swap(tmp); return *this;`.",
+        "`swap` exchanges `taille_` and `tab_` with `std::swap`."
+      ]
+    }
+  ]
+}

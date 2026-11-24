@@ -1,0 +1,33 @@
+{
+  "title": "Multithreaded Monte Carlo option pricing",
+  "summary": "Price a European call by simulation, check it against Black–Scholes, then parallelise it three ways: per-thread partial sums, a mutex-protected total and an atomic total. TSan checks every version.",
+  "sanitizer": "tsan",
+  "editable": [
+    "monte_carlo.hpp"
+  ],
+  "steps": [
+    {
+      "title": "Sequential pricer",
+      "hints": [
+        "`std::mt19937_64 rng{ seed };` then `payoff_sum(p, paths, rng)` (given in `mc_core.hpp`).",
+        "Discount the average payoff: `exp(-r·T) · sum / paths`."
+      ]
+    },
+    {
+      "title": "One RNG and one slot per thread",
+      "hints": [
+        "Never share an RNG between threads: give thread `t` its own `std::mt19937_64 rng{ seed + t }`.",
+        "Split the paths as evenly as possible; each thread writes `partial[t]` only.",
+        "Join all threads before reading `partial`."
+      ]
+    },
+    {
+      "title": "Mutex vs atomic accumulation",
+      "hints": [
+        "Mutex: compute a batch's sum without the lock, then lock only for `total += s`.",
+        "`std::atomic<double>` has no portable `+=` before C++20. Use `compare_exchange_weak` in a loop.",
+        "Locking once per path would serialise everything: batch the updates."
+      ]
+    }
+  ]
+}

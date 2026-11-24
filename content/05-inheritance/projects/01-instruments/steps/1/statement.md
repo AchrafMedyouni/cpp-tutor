@@ -1,0 +1,2 @@
+- `class Instrument`: constructed from a name, `const std::string& name() const`, a **virtual destructor**, and the pure virtual `double price(const Market& m) const`
+- `class Bond : public Instrument`: `Bond(name, face, coupon, years)` with an annual coupon, priced by discounting at `m.rate` used as an annual yield: `Σ_{t=1..n} c·F/(1+r)^t + F/(1+r)^n`

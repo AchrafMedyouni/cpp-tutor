@@ -1,0 +1,32 @@
+{
+  "title": "A Money type with full operator support",
+  "summary": "Exact monetary arithmetic in integer cents with currency safety: arithmetic and <=>, stream I/O, then fair allocation (splitting without losing a cent) and basis-point fees.",
+  "sanitizer": "asan_ubsan",
+  "editable": [
+    "Money.hpp"
+  ],
+  "steps": [
+    {
+      "title": "Arithmetic and comparisons",
+      "hints": [
+        "Members `+=`, `-=`, `*=` return `*this`; free `+`, `-`, `*` are built from them.",
+        "Every binary operation between two `Money` values checks the currencies first.",
+        "`std::strong_ordering operator<=>(const Money&) const` (it throws on a mismatch), plus a defaulted `==`."
+      ]
+    },
+    {
+      "title": "Stream input and output",
+      "hints": [
+        "Read two tokens with `is >> amount >> ccy`, then parse the amount by hand: sign, units, optional `.` and 1–2 decimals.",
+        "On any problem, call `is.setstate(std::ios::failbit)` and leave `m` unchanged."
+      ]
+    },
+    {
+      "title": "Allocation and fees",
+      "hints": [
+        "`split`: `base = cents / n`, `rest = cents % n`; the first `|rest|` parts get one extra cent (or one less, for negative amounts).",
+        "`apply_bps`: `std::lround(cents * bps / 10000.0)` rounds half away from zero."
+      ]
+    }
+  ]
+}

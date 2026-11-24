@@ -23,15 +23,21 @@ export function parseDoctestXml(xml: string, crashReason?: string): TestResult[]
   while ((m = caseRe.exec(xml))) {
     const [, name, body, close] = m;
     const failures: string[] = [];
-    const exprRe = /<Expression success="false"[^>]*>([\s\S]*?)<\/Expression>/g;
+    const exprRe = /<Expression success="false"([^>]*)>([\s\S]*?)<\/Expression>/g;
     let e: RegExpExecArray | null;
     while ((e = exprRe.exec(body))) {
-      const orig = /<Original>\s*([\s\S]*?)\s*<\/Original>/.exec(e[1])?.[1] ?? "";
-      const exp = /<Expanded>\s*([\s\S]*?)\s*<\/Expanded>/.exec(e[1])?.[1];
-      const exc = /<Exception[^>]*>\s*([\s\S]*?)\s*<\/Exception>/.exec(e[1])?.[1];
+      const type = /type="([^"]*)"/.exec(e[1])?.[1] ?? "";
+      const orig = /<Original>\s*([\s\S]*?)\s*<\/Original>/.exec(e[2])?.[1] ?? "";
+      const exp = /<Expanded>\s*([\s\S]*?)\s*<\/Expanded>/.exec(e[2])?.[1];
+      const exc = /<Exception[^>]*>\s*([\s\S]*?)\s*<\/Exception>/.exec(e[2])?.[1];
+      const expected = /<ExpectedException>\s*([\s\S]*?)\s*<\/ExpectedException>/.exec(e[2])?.[1];
       let msg = decodeXml(orig);
       if (exp && decodeXml(exp) !== msg) msg += `  →  ${decodeXml(exp)}`;
-      if (exc) msg += `  (threw: ${decodeXml(exc)})`;
+      if (/THROWS_AS/.test(type))
+        msg += exc ? `  (threw the wrong exception: ${decodeXml(exc)})` : `  (expected ${expected ? decodeXml(expected) : "an exception"} to be thrown, nothing was thrown)`;
+      else if (/NOTHROW/.test(type)) msg += `  (should not throw, but threw${exc ? `: ${decodeXml(exc)}` : ""})`;
+      else if (/THROWS/.test(type)) msg += "  (expected an exception, nothing was thrown)";
+      else if (exc) msg += `  (threw: ${decodeXml(exc)})`;
       failures.push(msg);
     }
     const infoRe = /<Info>\s*([\s\S]*?)\s*<\/Info>/g;
