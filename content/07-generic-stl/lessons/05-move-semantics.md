@@ -57,6 +57,8 @@ The **rule of five**: a resource-owning class defines (or `= delete`s) the destr
 
 ::example{id="tableau-move"}
 
+::visualize{id="move-semantics"}
+
 :::course
 Slide 172 notes: "only define move assignment if the copy assignment takes its argument by const reference". With copy-and-swap **by value** (`Tableau & operator=( Tableau tab )`), that single operator already handles both cases: the parameter is copy- or move-constructed depending on the argument.
 :::

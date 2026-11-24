@@ -43,12 +43,16 @@ C++ has **no garbage collector**, unlike Java, C# and Python. Every `new` needs 
 
 ::example{id="new-delete"}
 
+::visualize{id="new-delete-leak"}
+
 
 ::example{id="leak"}
 
 ::example{id="use-after-free"}
 
 ::example{id="double-delete"}
+
+::visualize{id="dangling"}
 
 
 :::modern

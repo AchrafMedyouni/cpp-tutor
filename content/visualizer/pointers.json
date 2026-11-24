@@ -1,0 +1,193 @@
+{
+  "title": "Pointers: & and *",
+  "chapter": "03-memory",
+  "summary": "Slides 59–60: taking an address, dereferencing, pointer to pointer, nullptr.",
+  "code": "int main() {\n  int i{ 5 };\n  int *p{ &i };\n  *p = -7;\n  int **q{ &p };\n  **q = 3;\n  int *n{ nullptr };\n}",
+  "steps": [
+    {
+      "line": 2,
+      "note": "`i` is an automatic variable: it lives in `main`'s stack frame.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "i",
+              "value": "5",
+              "kind": "value",
+              "type": "int",
+              "id": "i",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": []
+    },
+    {
+      "line": 3,
+      "note": "`&i` is the **address** of `i`. `p` stores it: `p` *points to* `i`.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "i",
+              "value": "5",
+              "kind": "value",
+              "type": "int",
+              "id": "i"
+            },
+            {
+              "name": "p",
+              "kind": "pointer",
+              "ref": "i",
+              "type": "int*",
+              "id": "p",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": []
+    },
+    {
+      "line": 4,
+      "note": "`*p` **is** `i`: writing through the pointer modifies `i`.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "i",
+              "value": "-7",
+              "kind": "value",
+              "type": "int",
+              "id": "i",
+              "highlight": true
+            },
+            {
+              "name": "p",
+              "kind": "pointer",
+              "ref": "i",
+              "type": "int*",
+              "id": "p"
+            }
+          ]
+        }
+      ],
+      "heap": []
+    },
+    {
+      "line": 5,
+      "note": "A pointer is itself a variable with an address: `q` points to `p`.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "i",
+              "value": "-7",
+              "kind": "value",
+              "type": "int",
+              "id": "i"
+            },
+            {
+              "name": "p",
+              "kind": "pointer",
+              "ref": "i",
+              "type": "int*",
+              "id": "p"
+            },
+            {
+              "name": "q",
+              "kind": "pointer",
+              "ref": "p",
+              "type": "int**",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": []
+    },
+    {
+      "line": 6,
+      "note": "`**q` follows two arrows: `q` → `p` → `i`.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "i",
+              "value": "3",
+              "kind": "value",
+              "type": "int",
+              "id": "i",
+              "highlight": true
+            },
+            {
+              "name": "p",
+              "kind": "pointer",
+              "ref": "i",
+              "type": "int*",
+              "id": "p"
+            },
+            {
+              "name": "q",
+              "kind": "pointer",
+              "ref": "p",
+              "type": "int**"
+            }
+          ]
+        }
+      ],
+      "heap": []
+    },
+    {
+      "line": 7,
+      "note": "`nullptr` points to nothing. Dereferencing `n` would be undefined behaviour.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "i",
+              "value": "3",
+              "kind": "value",
+              "type": "int",
+              "id": "i"
+            },
+            {
+              "name": "p",
+              "kind": "pointer",
+              "ref": "i",
+              "type": "int*",
+              "id": "p"
+            },
+            {
+              "name": "q",
+              "kind": "pointer",
+              "ref": "p",
+              "type": "int**"
+            },
+            {
+              "name": "n",
+              "kind": "pointer",
+              "value": "nullptr",
+              "type": "int*",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": []
+    },
+    {
+      "line": 8,
+      "note": "End of `main`: the frame and all its variables disappear.",
+      "stack": [],
+      "heap": []
+    }
+  ]
+}

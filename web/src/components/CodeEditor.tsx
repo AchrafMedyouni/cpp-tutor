@@ -32,6 +32,7 @@ export function CodeEditor({
   jumpTo,
 }: Props) {
   const [active, setActive] = useState(files[0]?.name ?? "");
+  const [mounted, setMounted] = useState(false);
   const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
   const decorations = useRef<string[]>([]);
   const dark = useIsDark();
@@ -93,7 +94,7 @@ export function CodeEditor({
         : [],
     );
     if (activeLine) ed.revealLineInCenterIfOutsideViewport(activeLine);
-  }, [activeLine, current?.name]);
+  }, [activeLine, current?.name, mounted]);
 
   const lines = Math.max(...files.map((f) => f.content.split("\n").length), minLines);
   const h = height ?? Math.min(Math.max(lines, minLines), maxLines) * 19 + 16;
@@ -132,6 +133,7 @@ export function CodeEditor({
           value={current.content}
           onMount={(ed) => {
             editorRef.current = ed;
+            setMounted(true);
           }}
           onChange={(v) => {
             if (fileReadOnly || !onChange) return;

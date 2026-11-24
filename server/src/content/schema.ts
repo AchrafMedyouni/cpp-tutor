@@ -138,7 +138,7 @@ export const vizScenario = z.object({
       z.object({
         line: z.number().int().min(1),
         note: z.string(),
-        stack: z.array(z.object({ frame: z.string(), vars: z.array(vizVar) })),
+        stack: z.array(z.object({ frame: z.string(), vars: z.array(vizVar), dead: z.boolean().optional() })),
         heap: z
           .array(
             z.object({

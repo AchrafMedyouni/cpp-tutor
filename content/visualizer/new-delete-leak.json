@@ -1,0 +1,312 @@
+{
+  "title": "new, delete and a memory leak",
+  "chapter": "03-memory",
+  "summary": "Slide 68: heap objects live until you delete them, even when the pointer variable is long gone.",
+  "code": "struct Order { int id; double price; };\n\nint main() {\n  int *p{ new int{} };\n  *p = 5;\n  delete p;\n  for (int id = 1; id <= 2; ++id) {\n    Order *o = new Order{ id, 100.0 + id };\n    // forgot: delete o;\n  }\n}",
+  "steps": [
+    {
+      "line": 4,
+      "note": "`new int{}` creates an `int` **on the heap** (value-initialised to 0). `p`, on the stack, holds its address.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "p",
+              "kind": "pointer",
+              "ref": "h1",
+              "type": "int*",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "h1",
+          "type": "int",
+          "cells": [
+            {
+              "name": "value",
+              "value": "0",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        }
+      ]
+    },
+    {
+      "line": 5,
+      "note": "Writing through `p` changes the heap object.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "p",
+              "kind": "pointer",
+              "ref": "h1",
+              "type": "int*"
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "h1",
+          "type": "int",
+          "cells": [
+            {
+              "name": "value",
+              "value": "5",
+              "kind": "value",
+              "highlight": true
+            }
+          ],
+          "state": "live"
+        }
+      ]
+    },
+    {
+      "line": 6,
+      "note": "`delete p` **releases** the memory. `p` still holds the old address: it is now **dangling**.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "p",
+              "kind": "pointer",
+              "ref": "h1",
+              "type": "int*",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "h1",
+          "type": "int",
+          "cells": [
+            {
+              "name": "value",
+              "value": "5",
+              "kind": "value"
+            }
+          ],
+          "state": "freed"
+        }
+      ]
+    },
+    {
+      "line": 8,
+      "note": "Loop iteration 1: a new `Order` on the heap; `o` points to it.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "p",
+              "kind": "pointer",
+              "ref": "h1",
+              "type": "int*"
+            },
+            {
+              "name": "id",
+              "value": "1",
+              "kind": "value",
+              "type": "int"
+            },
+            {
+              "name": "o",
+              "kind": "pointer",
+              "ref": "o1",
+              "type": "Order*",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "h1",
+          "type": "int",
+          "cells": [
+            {
+              "name": "value",
+              "value": "5",
+              "kind": "value"
+            }
+          ],
+          "state": "freed"
+        },
+        {
+          "id": "o1",
+          "type": "Order",
+          "cells": [
+            {
+              "name": "id",
+              "value": "1",
+              "kind": "value"
+            },
+            {
+              "name": "price",
+              "value": "101",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        }
+      ]
+    },
+    {
+      "line": 10,
+      "note": "End of the iteration: `o` is destroyed, **not the Order**. Nothing points to it any more, so it can never be freed: a **leak**.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "p",
+              "kind": "pointer",
+              "value": "(dangling)"
+            },
+            {
+              "name": "id",
+              "value": "2",
+              "kind": "value",
+              "type": "int"
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "o1",
+          "type": "Order",
+          "cells": [
+            {
+              "name": "id",
+              "value": "1",
+              "kind": "value"
+            },
+            {
+              "name": "price",
+              "value": "101",
+              "kind": "value"
+            }
+          ],
+          "state": "leaked"
+        }
+      ]
+    },
+    {
+      "line": 8,
+      "note": "Iteration 2 allocates another Order.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "p",
+              "kind": "pointer",
+              "value": "(dangling)"
+            },
+            {
+              "name": "id",
+              "value": "2",
+              "kind": "value",
+              "type": "int"
+            },
+            {
+              "name": "o",
+              "kind": "pointer",
+              "ref": "o2",
+              "type": "Order*",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "o1",
+          "type": "Order",
+          "cells": [
+            {
+              "name": "id",
+              "value": "1",
+              "kind": "value"
+            },
+            {
+              "name": "price",
+              "value": "101",
+              "kind": "value"
+            }
+          ],
+          "state": "leaked"
+        },
+        {
+          "id": "o2",
+          "type": "Order",
+          "cells": [
+            {
+              "name": "id",
+              "value": "2",
+              "kind": "value"
+            },
+            {
+              "name": "price",
+              "value": "102",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        }
+      ]
+    },
+    {
+      "line": 11,
+      "note": "`main` returns: two Orders were never deleted. Run the lesson's example with *Track allocations* to see `2 leaked allocation(s)`.",
+      "stack": [],
+      "heap": [
+        {
+          "id": "o1",
+          "type": "Order",
+          "cells": [
+            {
+              "name": "id",
+              "value": "1",
+              "kind": "value"
+            },
+            {
+              "name": "price",
+              "value": "101",
+              "kind": "value"
+            }
+          ],
+          "state": "leaked"
+        },
+        {
+          "id": "o2",
+          "type": "Order",
+          "cells": [
+            {
+              "name": "id",
+              "value": "2",
+              "kind": "value"
+            },
+            {
+              "name": "price",
+              "value": "102",
+              "kind": "value"
+            }
+          ],
+          "state": "leaked"
+        }
+      ]
+    }
+  ]
+}

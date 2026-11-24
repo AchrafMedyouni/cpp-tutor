@@ -56,6 +56,8 @@ Forme & rf{ c };      // ✓ a reference to the base, bound to a derived object
 
 ::example{id="slicing"}
 
+::visualize{id="slicing"}
+
 ::example{id="bad-downcast"}
 
 :::course

@@ -17,6 +17,8 @@ The slides call the name **abusive**, because this is really *pass-by-value of a
 
 ::example{id="pass-by-address"}
 
+::visualize{id="pass-by"}
+
 
 A function can also **return an address**, but the object pointed to **must still exist after the function returns**. A `static` local does: it lives for the whole program. An ordinary local variable doesn't. Returning its address hands the caller a **dangling pointer**.
 

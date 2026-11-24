@@ -34,6 +34,8 @@ f4( 5 ); f4( j ); f4( j + 2 );       // ✓ all fine
 
 ::example{id="pass-by-reference"}
 
+::visualize{id="pass-by"}
+
 ::example{id="const-ref"}
 
 ## Returning a reference

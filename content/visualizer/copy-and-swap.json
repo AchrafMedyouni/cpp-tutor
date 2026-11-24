@@ -1,0 +1,590 @@
+{
+  "title": "Deep copy and copy-and-swap: Tableau v3/v4",
+  "chapter": "04-classes",
+  "summary": "Slides 107 and 111: a copy constructor that duplicates the buffer, and an assignment that copies into a temporary and swaps.",
+  "code": "Tableau( const Tableau & t )\n  : taille_{ t.taille_ }, tab_{ new double[t.taille_] } { /* copy elements */ }\n\nTableau & operator=( const Tableau & t ) {\n  Tableau tmp{ t };     // 1. copy\n  swap( tmp );          // 2. exchange representations\n  return *this;\n}                       // 3. tmp dies with our OLD buffer\n\nint main() {\n  Tableau a{ 2 };\n  Tableau b{ a };       // deep copy\n  Tableau c{ 3 };\n  c = a;                // copy-and-swap\n}",
+  "steps": [
+    {
+      "line": 11,
+      "note": "`a` owns buffer A.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "a.tab_",
+              "kind": "pointer",
+              "ref": "A",
+              "type": "double*",
+              "id": "a",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "A",
+          "type": "double[2]",
+          "cells": [
+            {
+              "name": "[0]",
+              "value": "1.5",
+              "kind": "value"
+            },
+            {
+              "name": "[1]",
+              "value": "2.5",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        }
+      ]
+    },
+    {
+      "line": 12,
+      "note": "The v3 copy constructor allocates a **new** buffer B and copies the elements: `a` and `b` are independent.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "a.tab_",
+              "kind": "pointer",
+              "ref": "A",
+              "type": "double*",
+              "id": "a"
+            },
+            {
+              "name": "b.tab_",
+              "kind": "pointer",
+              "ref": "B",
+              "type": "double*",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "A",
+          "type": "double[2]",
+          "cells": [
+            {
+              "name": "[0]",
+              "value": "1.5",
+              "kind": "value"
+            },
+            {
+              "name": "[1]",
+              "value": "2.5",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        },
+        {
+          "id": "B",
+          "type": "double[2]",
+          "cells": [
+            {
+              "name": "[0]",
+              "value": "1.5",
+              "kind": "value"
+            },
+            {
+              "name": "[1]",
+              "value": "2.5",
+              "kind": "value"
+            }
+          ],
+          "state": "live",
+          "label": "deep copy"
+        }
+      ]
+    },
+    {
+      "line": 13,
+      "note": "`c` owns buffer C (3 elements).",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "a.tab_",
+              "kind": "pointer",
+              "ref": "A",
+              "type": "double*",
+              "id": "a"
+            },
+            {
+              "name": "b.tab_",
+              "kind": "pointer",
+              "ref": "B",
+              "type": "double*"
+            },
+            {
+              "name": "c.tab_",
+              "kind": "pointer",
+              "ref": "C",
+              "type": "double*",
+              "id": "c",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "A",
+          "type": "double[2]",
+          "cells": [
+            {
+              "name": "[0]",
+              "value": "1.5",
+              "kind": "value"
+            },
+            {
+              "name": "[1]",
+              "value": "2.5",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        },
+        {
+          "id": "B",
+          "type": "double[2]",
+          "cells": [
+            {
+              "name": "[0]",
+              "value": "1.5",
+              "kind": "value"
+            },
+            {
+              "name": "[1]",
+              "value": "2.5",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        },
+        {
+          "id": "C",
+          "type": "double[3]",
+          "cells": [
+            {
+              "name": "[0]",
+              "value": "0",
+              "kind": "value"
+            },
+            {
+              "name": "[1]",
+              "value": "0",
+              "kind": "value"
+            },
+            {
+              "name": "[2]",
+              "value": "0",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        }
+      ]
+    },
+    {
+      "line": 5,
+      "note": "`c = a` calls `operator=`. `t` is a reference to `a`, `this` points to `c`. **Step 1**: `tmp` is a deep copy of `t` (buffer D).",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "a.tab_",
+              "kind": "pointer",
+              "ref": "A",
+              "type": "double*",
+              "id": "a"
+            },
+            {
+              "name": "b.tab_",
+              "kind": "pointer",
+              "ref": "B",
+              "type": "double*"
+            },
+            {
+              "name": "c.tab_",
+              "kind": "pointer",
+              "ref": "C",
+              "type": "double*",
+              "id": "c"
+            }
+          ]
+        },
+        {
+          "frame": "operator=",
+          "vars": [
+            {
+              "name": "this",
+              "kind": "pointer",
+              "ref": "c",
+              "type": "Tableau*"
+            },
+            {
+              "name": "t",
+              "kind": "reference",
+              "ref": "a",
+              "type": "const Tableau&"
+            },
+            {
+              "name": "tmp.tab_",
+              "kind": "pointer",
+              "ref": "D",
+              "type": "double*",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "A",
+          "type": "double[2]",
+          "cells": [
+            {
+              "name": "[0]",
+              "value": "1.5",
+              "kind": "value"
+            },
+            {
+              "name": "[1]",
+              "value": "2.5",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        },
+        {
+          "id": "B",
+          "type": "double[2]",
+          "cells": [
+            {
+              "name": "[0]",
+              "value": "1.5",
+              "kind": "value"
+            },
+            {
+              "name": "[1]",
+              "value": "2.5",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        },
+        {
+          "id": "C",
+          "type": "double[3]",
+          "cells": [
+            {
+              "name": "[0]",
+              "value": "0",
+              "kind": "value"
+            },
+            {
+              "name": "[1]",
+              "value": "0",
+              "kind": "value"
+            },
+            {
+              "name": "[2]",
+              "value": "0",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        },
+        {
+          "id": "D",
+          "type": "double[2]",
+          "cells": [
+            {
+              "name": "[0]",
+              "value": "1.5",
+              "kind": "value"
+            },
+            {
+              "name": "[1]",
+              "value": "2.5",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        }
+      ]
+    },
+    {
+      "line": 6,
+      "note": "**Step 2**: `swap` exchanges the pointers (and sizes). `c` now owns D, and `tmp` holds the old C.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "a.tab_",
+              "kind": "pointer",
+              "ref": "A",
+              "type": "double*",
+              "id": "a"
+            },
+            {
+              "name": "b.tab_",
+              "kind": "pointer",
+              "ref": "B",
+              "type": "double*"
+            },
+            {
+              "name": "c.tab_",
+              "kind": "pointer",
+              "ref": "D",
+              "type": "double*",
+              "id": "c",
+              "highlight": true
+            }
+          ]
+        },
+        {
+          "frame": "operator=",
+          "vars": [
+            {
+              "name": "this",
+              "kind": "pointer",
+              "ref": "c",
+              "type": "Tableau*"
+            },
+            {
+              "name": "t",
+              "kind": "reference",
+              "ref": "a",
+              "type": "const Tableau&"
+            },
+            {
+              "name": "tmp.tab_",
+              "kind": "pointer",
+              "ref": "C",
+              "type": "double*",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "A",
+          "type": "double[2]",
+          "cells": [
+            {
+              "name": "[0]",
+              "value": "1.5",
+              "kind": "value"
+            },
+            {
+              "name": "[1]",
+              "value": "2.5",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        },
+        {
+          "id": "B",
+          "type": "double[2]",
+          "cells": [
+            {
+              "name": "[0]",
+              "value": "1.5",
+              "kind": "value"
+            },
+            {
+              "name": "[1]",
+              "value": "2.5",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        },
+        {
+          "id": "C",
+          "type": "double[3]",
+          "cells": [
+            {
+              "name": "[0]",
+              "value": "0",
+              "kind": "value"
+            },
+            {
+              "name": "[1]",
+              "value": "0",
+              "kind": "value"
+            },
+            {
+              "name": "[2]",
+              "value": "0",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        },
+        {
+          "id": "D",
+          "type": "double[2]",
+          "cells": [
+            {
+              "name": "[0]",
+              "value": "1.5",
+              "kind": "value"
+            },
+            {
+              "name": "[1]",
+              "value": "2.5",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        }
+      ]
+    },
+    {
+      "line": 8,
+      "note": "**Step 3**: leaving `operator=` destroys `tmp`, and its destructor frees the **old** buffer C. No leak, no sharing, and if step 1 had thrown, `c` would be untouched.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "a.tab_",
+              "kind": "pointer",
+              "ref": "A",
+              "type": "double*",
+              "id": "a"
+            },
+            {
+              "name": "b.tab_",
+              "kind": "pointer",
+              "ref": "B",
+              "type": "double*"
+            },
+            {
+              "name": "c.tab_",
+              "kind": "pointer",
+              "ref": "D",
+              "type": "double*",
+              "id": "c"
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "A",
+          "type": "double[2]",
+          "cells": [
+            {
+              "name": "[0]",
+              "value": "1.5",
+              "kind": "value"
+            },
+            {
+              "name": "[1]",
+              "value": "2.5",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        },
+        {
+          "id": "B",
+          "type": "double[2]",
+          "cells": [
+            {
+              "name": "[0]",
+              "value": "1.5",
+              "kind": "value"
+            },
+            {
+              "name": "[1]",
+              "value": "2.5",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        },
+        {
+          "id": "C",
+          "type": "double[3]",
+          "cells": [
+            {
+              "name": "[0]",
+              "value": "0",
+              "kind": "value"
+            },
+            {
+              "name": "[1]",
+              "value": "0",
+              "kind": "value"
+            },
+            {
+              "name": "[2]",
+              "value": "0",
+              "kind": "value"
+            }
+          ],
+          "state": "freed"
+        },
+        {
+          "id": "D",
+          "type": "double[2]",
+          "cells": [
+            {
+              "name": "[0]",
+              "value": "1.5",
+              "kind": "value"
+            },
+            {
+              "name": "[1]",
+              "value": "2.5",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        }
+      ]
+    },
+    {
+      "line": 15,
+      "note": "End of `main`: each object frees its own buffer exactly once.",
+      "stack": [],
+      "heap": [
+        {
+          "id": "A",
+          "type": "double[2]",
+          "cells": [],
+          "state": "freed"
+        },
+        {
+          "id": "B",
+          "type": "double[2]",
+          "cells": [],
+          "state": "freed"
+        },
+        {
+          "id": "D",
+          "type": "double[2]",
+          "cells": [],
+          "state": "freed"
+        }
+      ]
+    }
+  ]
+}

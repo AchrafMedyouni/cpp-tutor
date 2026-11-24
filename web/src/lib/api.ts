@@ -108,7 +108,7 @@ export interface VizVar {
 export interface VizStep {
   line: number;
   note: string;
-  stack: { frame: string; vars: VizVar[] }[];
+  stack: { frame: string; vars: VizVar[]; dead?: boolean }[];
   heap: { id: string; type: string; cells: VizVar[]; state: "live" | "freed" | "leaked"; label?: string }[];
   output?: string;
 }

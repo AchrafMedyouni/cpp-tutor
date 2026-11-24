@@ -1,0 +1,248 @@
+{
+  "title": "std::unique_ptr: one owner",
+  "chapter": "07-generic-stl",
+  "summary": "Slide 179: a unique_ptr owns its object alone. Ownership moves; it is never copied. Deletion is automatic.",
+  "code": "struct Order { int id; double price; };\n\nint main() {\n  auto a = std::make_unique<Order>( 1, 100.5 );\n  std::unique_ptr<Order> b;\n  // auto c = a;          // error: copy is deleted\n  b = std::move( a );     // ownership moves\n  b.reset();              // delete now\n  auto c = std::make_unique<Order>( 2, 99.0 );\n}                         // c deletes its Order",
+  "steps": [
+    {
+      "line": 4,
+      "note": "`make_unique` allocates the Order. `a` is its **only** owner.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "a",
+              "kind": "pointer",
+              "ref": "o1",
+              "type": "unique_ptr<Order>",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "o1",
+          "type": "Order",
+          "cells": [
+            {
+              "name": "id",
+              "value": "1",
+              "kind": "value"
+            },
+            {
+              "name": "price",
+              "value": "100.5",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        }
+      ]
+    },
+    {
+      "line": 5,
+      "note": "An empty `unique_ptr`.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "a",
+              "kind": "pointer",
+              "ref": "o1",
+              "type": "unique_ptr<Order>"
+            },
+            {
+              "name": "b",
+              "kind": "pointer",
+              "value": "nullptr",
+              "type": "unique_ptr<Order>",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "o1",
+          "type": "Order",
+          "cells": [
+            {
+              "name": "id",
+              "value": "1",
+              "kind": "value"
+            },
+            {
+              "name": "price",
+              "value": "100.5",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        }
+      ]
+    },
+    {
+      "line": 7,
+      "note": "Moving **transfers** ownership: `b` takes the pointer and `a` becomes null. A copy would give two owners and a double delete, which is why it doesn't compile.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "a",
+              "kind": "pointer",
+              "value": "nullptr",
+              "type": "unique_ptr<Order>",
+              "highlight": true
+            },
+            {
+              "name": "b",
+              "kind": "pointer",
+              "ref": "o1",
+              "type": "unique_ptr<Order>",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "o1",
+          "type": "Order",
+          "cells": [
+            {
+              "name": "id",
+              "value": "1",
+              "kind": "value"
+            },
+            {
+              "name": "price",
+              "value": "100.5",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        }
+      ]
+    },
+    {
+      "line": 8,
+      "note": "`reset()` deletes the Order right now.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "a",
+              "kind": "pointer",
+              "value": "nullptr",
+              "type": "unique_ptr<Order>"
+            },
+            {
+              "name": "b",
+              "kind": "pointer",
+              "value": "nullptr",
+              "type": "unique_ptr<Order>",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "o1",
+          "type": "Order",
+          "cells": [
+            {
+              "name": "id",
+              "value": "1",
+              "kind": "value"
+            },
+            {
+              "name": "price",
+              "value": "100.5",
+              "kind": "value"
+            }
+          ],
+          "state": "freed"
+        }
+      ]
+    },
+    {
+      "line": 9,
+      "note": "A second Order, owned by `c`.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "a",
+              "kind": "pointer",
+              "value": "nullptr",
+              "type": "unique_ptr<Order>"
+            },
+            {
+              "name": "b",
+              "kind": "pointer",
+              "value": "nullptr",
+              "type": "unique_ptr<Order>"
+            },
+            {
+              "name": "c",
+              "kind": "pointer",
+              "ref": "o2",
+              "type": "unique_ptr<Order>",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "o2",
+          "type": "Order",
+          "cells": [
+            {
+              "name": "id",
+              "value": "2",
+              "kind": "value"
+            },
+            {
+              "name": "price",
+              "value": "99",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        }
+      ]
+    },
+    {
+      "line": 10,
+      "note": "End of scope: `c`'s destructor deletes its Order. No `delete` anywhere in the code, and no leak.",
+      "stack": [],
+      "heap": [
+        {
+          "id": "o2",
+          "type": "Order",
+          "cells": [
+            {
+              "name": "id",
+              "value": "2",
+              "kind": "value"
+            },
+            {
+              "name": "price",
+              "value": "99",
+              "kind": "value"
+            }
+          ],
+          "state": "freed"
+        }
+      ]
+    }
+  ]
+}

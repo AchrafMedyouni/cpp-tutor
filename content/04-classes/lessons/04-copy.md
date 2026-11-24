@@ -9,6 +9,8 @@ Copy construction (`Tableau tab2{ tab };`) is allowed for every class, because C
 
 ::example{id="tableau-v2-copy"}
 
+::visualize{id="shallow-copy"}
+
 ## The copy constructor
 
 The **copy constructor** initialises a new object as a copy of another. It is also what the compiler uses to initialise a **by-value parameter** and a **by-value return value**. So its parameter *can't* be passed by value (`Tableau( Tableau tab )` would need to copy in order to copy, forever). It takes a **reference**, normally const:
@@ -52,3 +54,5 @@ void swap( Tableau & tab ) {
 It is correct for self-assignment (`t = t;`), exception-safe, and short.
 
 ::example{id="tableau-v4"}
+
+::visualize{id="copy-and-swap"}

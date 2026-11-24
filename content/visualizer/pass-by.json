@@ -1,0 +1,273 @@
+{
+  "title": "Pass by value, by address, by reference",
+  "chapter": "03-memory",
+  "summary": "Slides 44, 63 and 72: what the callee actually receives, and whether the caller's variable changes.",
+  "code": "void f1( int i )   { i = 3; }\nvoid f2( int * i ) { *i = 3; }\nvoid f3( int & i ) { i = 3; }\n\nint main() {\n  int j{ 8 };\n  f1( j );\n  f2( &j );\n  j = 8;\n  f3( j );\n}",
+  "steps": [
+    {
+      "line": 6,
+      "note": "`j` lives in `main`'s frame.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "j",
+              "value": "8",
+              "kind": "value",
+              "type": "int",
+              "id": "j",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": []
+    },
+    {
+      "line": 1,
+      "note": "**By value**: `f1` gets its own frame with a **copy** of `j`.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "j",
+              "value": "8",
+              "kind": "value",
+              "type": "int",
+              "id": "j"
+            }
+          ]
+        },
+        {
+          "frame": "f1(int i)",
+          "vars": [
+            {
+              "name": "i",
+              "value": "8",
+              "kind": "value",
+              "type": "int",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": []
+    },
+    {
+      "line": 1,
+      "note": "`i = 3` changes the copy only.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "j",
+              "value": "8",
+              "kind": "value",
+              "type": "int",
+              "id": "j"
+            }
+          ]
+        },
+        {
+          "frame": "f1(int i)",
+          "vars": [
+            {
+              "name": "i",
+              "value": "3",
+              "kind": "value",
+              "type": "int",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": []
+    },
+    {
+      "line": 8,
+      "note": "Back in `main`: `j` is still 8. The copy died with `f1`'s frame.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "j",
+              "value": "8",
+              "kind": "value",
+              "type": "int",
+              "id": "j",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": []
+    },
+    {
+      "line": 2,
+      "note": "**By address**: `f2` receives a copy of the **address** of `j`.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "j",
+              "value": "8",
+              "kind": "value",
+              "type": "int",
+              "id": "j"
+            }
+          ]
+        },
+        {
+          "frame": "f2(int* i)",
+          "vars": [
+            {
+              "name": "i",
+              "kind": "pointer",
+              "ref": "j",
+              "type": "int*",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": []
+    },
+    {
+      "line": 2,
+      "note": "`*i = 3` follows the pointer and writes into `main`'s `j`.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "j",
+              "value": "3",
+              "kind": "value",
+              "type": "int",
+              "id": "j",
+              "highlight": true
+            }
+          ]
+        },
+        {
+          "frame": "f2(int* i)",
+          "vars": [
+            {
+              "name": "i",
+              "kind": "pointer",
+              "ref": "j",
+              "type": "int*"
+            }
+          ]
+        }
+      ],
+      "heap": []
+    },
+    {
+      "line": 9,
+      "note": "Reset `j` to 8.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "j",
+              "value": "8",
+              "kind": "value",
+              "type": "int",
+              "id": "j",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": []
+    },
+    {
+      "line": 3,
+      "note": "**By reference**: `i` is another **name** for `j`. No copy; the dashed arrow shows the alias.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "j",
+              "value": "8",
+              "kind": "value",
+              "type": "int",
+              "id": "j"
+            }
+          ]
+        },
+        {
+          "frame": "f3(int& i)",
+          "vars": [
+            {
+              "name": "i",
+              "kind": "reference",
+              "ref": "j",
+              "type": "int&",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": []
+    },
+    {
+      "line": 3,
+      "note": "`i = 3` *is* `j = 3`, without any `*` or `&` at the call site.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "j",
+              "value": "3",
+              "kind": "value",
+              "type": "int",
+              "id": "j",
+              "highlight": true
+            }
+          ]
+        },
+        {
+          "frame": "f3(int& i)",
+          "vars": [
+            {
+              "name": "i",
+              "kind": "reference",
+              "ref": "j",
+              "type": "int&"
+            }
+          ]
+        }
+      ],
+      "heap": []
+    },
+    {
+      "line": 11,
+      "note": "`j == 3`. Only the address and reference versions could modify it.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "j",
+              "value": "3",
+              "kind": "value",
+              "type": "int",
+              "id": "j"
+            }
+          ]
+        }
+      ],
+      "heap": []
+    }
+  ]
+}

@@ -19,11 +19,15 @@ A `unique_ptr` (header `<memory>`) **owns** its object alone. It is **non-copyab
 
 ::example{id="unique-ptr"}
 
+::visualize{id="unique-ptr"}
+
 ## `std::shared_ptr<T>`: shared ownership
 
 A `shared_ptr` keeps a **reference count** in a separate control block. Copying increments it and destroying decrements it, and the object is deleted when the count reaches 0. That's what Python does for every object. Create one with `std::make_shared<T>(args...)` (one allocation for the object and the count together). A `shared_ptr<Cercle>` converts to a `shared_ptr<Forme>`.
 
 ::example{id="shared-ptr"}
+
+::visualize{id="shared-ptr"}
 
 ## `std::weak_ptr<T>`: observe without owning
 

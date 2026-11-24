@@ -15,6 +15,8 @@ p = &i;        // p points to i
 
 ::example{id="pointer-basics"}
 
+::visualize{id="pointers"}
+
 
 - **`nullptr`** is the null pointer. No object ever has that address, and dereferencing it is illegal (UB, usually a crash).
 - Pointers to pointers: `int ** q{ &p }; **q = 3;`.

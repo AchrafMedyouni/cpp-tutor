@@ -1,0 +1,191 @@
+{
+  "title": "Shallow copy: Tableau v2",
+  "chapter": "04-classes",
+  "summary": "Slide 104: the compiler-generated copy constructor copies the pointer, so two objects share one buffer and both delete it.",
+  "code": "class Tableau {             // v2: destructor, but no copy constructor\n  unsigned taille_;\n  double * tab_;\npublic:\n  Tableau( unsigned n ) : taille_{ n }, tab_{ new double[n]{} } {}\n  ~Tableau() { delete[] tab_; }\n};\n\nint main() {\n  Tableau tab{ 3 };\n  Tableau tab2{ tab };      // member-wise copy\n}                           // ~tab2, then ~tab",
+  "steps": [
+    {
+      "line": 10,
+      "note": "The constructor allocates a buffer of 3 doubles. `tab` owns it through `tab_`.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "tab.taille_",
+              "value": "3",
+              "kind": "value"
+            },
+            {
+              "name": "tab.tab_",
+              "kind": "pointer",
+              "ref": "buf",
+              "type": "double*",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "buf",
+          "type": "double[3]",
+          "cells": [
+            {
+              "name": "[0]",
+              "value": "0",
+              "kind": "value"
+            },
+            {
+              "name": "[1]",
+              "value": "0",
+              "kind": "value"
+            },
+            {
+              "name": "[2]",
+              "value": "0",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        }
+      ]
+    },
+    {
+      "line": 11,
+      "note": "The **default** copy constructor copies each member, including the **pointer**. Both objects now point to the same buffer.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "tab.taille_",
+              "value": "3",
+              "kind": "value"
+            },
+            {
+              "name": "tab.tab_",
+              "kind": "pointer",
+              "ref": "buf",
+              "type": "double*"
+            },
+            {
+              "name": "tab2.taille_",
+              "value": "3",
+              "kind": "value"
+            },
+            {
+              "name": "tab2.tab_",
+              "kind": "pointer",
+              "ref": "buf",
+              "type": "double*",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "buf",
+          "type": "double[3]",
+          "cells": [
+            {
+              "name": "[0]",
+              "value": "0",
+              "kind": "value"
+            },
+            {
+              "name": "[1]",
+              "value": "0",
+              "kind": "value"
+            },
+            {
+              "name": "[2]",
+              "value": "0",
+              "kind": "value"
+            }
+          ],
+          "state": "live",
+          "label": "shared!"
+        }
+      ]
+    },
+    {
+      "line": 12,
+      "note": "End of scope: `~tab2` runs first (reverse order) and frees the buffer. `tab.tab_` now dangles.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "tab.taille_",
+              "value": "3",
+              "kind": "value"
+            },
+            {
+              "name": "tab.tab_",
+              "kind": "pointer",
+              "ref": "buf",
+              "type": "double*",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "buf",
+          "type": "double[3]",
+          "cells": [
+            {
+              "name": "[0]",
+              "value": "0",
+              "kind": "value"
+            },
+            {
+              "name": "[1]",
+              "value": "0",
+              "kind": "value"
+            },
+            {
+              "name": "[2]",
+              "value": "0",
+              "kind": "value"
+            }
+          ],
+          "state": "freed"
+        }
+      ]
+    },
+    {
+      "line": 12,
+      "note": "`~tab` runs `delete[] tab_` on **already freed** memory: a double free. ASan aborts here. The fix is a copy constructor that allocates its own buffer (v3).",
+      "stack": [],
+      "heap": [
+        {
+          "id": "buf",
+          "type": "double[3]",
+          "cells": [
+            {
+              "name": "[0]",
+              "value": "0",
+              "kind": "value"
+            },
+            {
+              "name": "[1]",
+              "value": "0",
+              "kind": "value"
+            },
+            {
+              "name": "[2]",
+              "value": "0",
+              "kind": "value"
+            }
+          ],
+          "state": "freed",
+          "label": "freed twice"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,408 @@
+{
+  "title": "std::shared_ptr and weak_ptr: reference counting",
+  "chapter": "07-generic-stl",
+  "summary": "Slides 176–178: every shared_ptr copy increments a counter in the control block; the object dies when it reaches 0. A weak_ptr observes without owning.",
+  "code": "struct Quote { double px; };\n\nint main() {\n  auto p = std::make_shared<Quote>( 101.5 );\n  {\n    auto q = p;                   // shared ownership\n    std::weak_ptr<Quote> w = p;   // observer\n  }\n  std::weak_ptr<Quote> w2 = p;\n  p.reset();                      // last owner gone\n  bool alive = !w2.expired();     // false\n}",
+  "steps": [
+    {
+      "line": 4,
+      "note": "`make_shared` allocates the Quote and a **control block** holding the counts (in one allocation). `use_count = 1`.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "p",
+              "kind": "pointer",
+              "ref": "q1",
+              "type": "shared_ptr<Quote>",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "cb",
+          "type": "control block",
+          "cells": [
+            {
+              "name": "use_count",
+              "value": "1",
+              "kind": "value",
+              "highlight": true
+            },
+            {
+              "name": "weak_count",
+              "value": "0",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        },
+        {
+          "id": "q1",
+          "type": "Quote",
+          "cells": [
+            {
+              "name": "px",
+              "value": "101.5",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        }
+      ]
+    },
+    {
+      "line": 6,
+      "note": "Copying `p` adds an owner: `use_count = 2`. Both point to the same Quote.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "p",
+              "kind": "pointer",
+              "ref": "q1",
+              "type": "shared_ptr<Quote>"
+            }
+          ]
+        },
+        {
+          "frame": "{ block }",
+          "vars": [
+            {
+              "name": "q",
+              "kind": "pointer",
+              "ref": "q1",
+              "type": "shared_ptr<Quote>",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "cb",
+          "type": "control block",
+          "cells": [
+            {
+              "name": "use_count",
+              "value": "2",
+              "kind": "value",
+              "highlight": true
+            },
+            {
+              "name": "weak_count",
+              "value": "0",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        },
+        {
+          "id": "q1",
+          "type": "Quote",
+          "cells": [
+            {
+              "name": "px",
+              "value": "101.5",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        }
+      ]
+    },
+    {
+      "line": 7,
+      "note": "A `weak_ptr` increments only the **weak** count: it doesn't keep the Quote alive.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "p",
+              "kind": "pointer",
+              "ref": "q1",
+              "type": "shared_ptr<Quote>"
+            }
+          ]
+        },
+        {
+          "frame": "{ block }",
+          "vars": [
+            {
+              "name": "q",
+              "kind": "pointer",
+              "ref": "q1",
+              "type": "shared_ptr<Quote>"
+            },
+            {
+              "name": "w",
+              "kind": "pointer",
+              "ref": "q1",
+              "type": "weak_ptr<Quote>",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "cb",
+          "type": "control block",
+          "cells": [
+            {
+              "name": "use_count",
+              "value": "2",
+              "kind": "value"
+            },
+            {
+              "name": "weak_count",
+              "value": "1",
+              "kind": "value",
+              "highlight": true
+            }
+          ],
+          "state": "live"
+        },
+        {
+          "id": "q1",
+          "type": "Quote",
+          "cells": [
+            {
+              "name": "px",
+              "value": "101.5",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        }
+      ]
+    },
+    {
+      "line": 8,
+      "note": "Leaving the block destroys `q` and `w`: back to `use_count = 1`.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "p",
+              "kind": "pointer",
+              "ref": "q1",
+              "type": "shared_ptr<Quote>"
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "cb",
+          "type": "control block",
+          "cells": [
+            {
+              "name": "use_count",
+              "value": "1",
+              "kind": "value",
+              "highlight": true
+            },
+            {
+              "name": "weak_count",
+              "value": "0",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        },
+        {
+          "id": "q1",
+          "type": "Quote",
+          "cells": [
+            {
+              "name": "px",
+              "value": "101.5",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        }
+      ]
+    },
+    {
+      "line": 9,
+      "note": "A new observer `w2`.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "p",
+              "kind": "pointer",
+              "ref": "q1",
+              "type": "shared_ptr<Quote>"
+            },
+            {
+              "name": "w2",
+              "kind": "pointer",
+              "ref": "q1",
+              "type": "weak_ptr<Quote>",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "cb",
+          "type": "control block",
+          "cells": [
+            {
+              "name": "use_count",
+              "value": "1",
+              "kind": "value"
+            },
+            {
+              "name": "weak_count",
+              "value": "1",
+              "kind": "value",
+              "highlight": true
+            }
+          ],
+          "state": "live"
+        },
+        {
+          "id": "q1",
+          "type": "Quote",
+          "cells": [
+            {
+              "name": "px",
+              "value": "101.5",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        }
+      ]
+    },
+    {
+      "line": 10,
+      "note": "`p.reset()`: `use_count` drops to 0, so the Quote is **destroyed**. The control block survives while a `weak_ptr` refers to it.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "p",
+              "kind": "pointer",
+              "value": "nullptr",
+              "type": "shared_ptr<Quote>",
+              "highlight": true
+            },
+            {
+              "name": "w2",
+              "kind": "pointer",
+              "ref": "q1",
+              "type": "weak_ptr<Quote>"
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "cb",
+          "type": "control block",
+          "cells": [
+            {
+              "name": "use_count",
+              "value": "0",
+              "kind": "value",
+              "highlight": true
+            },
+            {
+              "name": "weak_count",
+              "value": "1",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        },
+        {
+          "id": "q1",
+          "type": "Quote",
+          "cells": [
+            {
+              "name": "px",
+              "value": "101.5",
+              "kind": "value"
+            }
+          ],
+          "state": "freed"
+        }
+      ]
+    },
+    {
+      "line": 11,
+      "note": "`w2.expired()` is true and `w2.lock()` would return an empty `shared_ptr`. That's how a `weak_ptr` safely detects that the object is gone, where a raw pointer would just dangle.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "p",
+              "kind": "pointer",
+              "value": "nullptr",
+              "type": "shared_ptr<Quote>"
+            },
+            {
+              "name": "w2",
+              "kind": "pointer",
+              "ref": "q1",
+              "type": "weak_ptr<Quote>"
+            },
+            {
+              "name": "alive",
+              "value": "false",
+              "kind": "value",
+              "type": "bool",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "cb",
+          "type": "control block",
+          "cells": [
+            {
+              "name": "use_count",
+              "value": "0",
+              "kind": "value"
+            },
+            {
+              "name": "weak_count",
+              "value": "1",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        },
+        {
+          "id": "q1",
+          "type": "Quote",
+          "cells": [
+            {
+              "name": "px",
+              "value": "101.5",
+              "kind": "value"
+            }
+          ],
+          "state": "freed"
+        }
+      ]
+    }
+  ]
+}

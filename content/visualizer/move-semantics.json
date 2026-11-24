@@ -1,0 +1,298 @@
+{
+  "title": "Move semantics",
+  "chapter": "07-generic-stl",
+  "summary": "Slides 171–173: moving transfers the buffer instead of copying it, and leaves the source empty but valid.",
+  "code": "Tableau make_series( unsigned n ) {\n  Tableau t{ n };\n  return t;                     // no copy: elided / moved\n}\n\nint main() {\n  Tableau t1 = make_series( 4 );\n  Tableau t2{ std::move( t1 ) };   // move constructor\n  Tableau t3{ 2 };\n  t3 = std::move( t2 );            // move assignment (swap)\n}",
+  "steps": [
+    {
+      "line": 2,
+      "note": "Inside `make_series`, `t` allocates buffer X.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": []
+        },
+        {
+          "frame": "make_series(4)",
+          "vars": [
+            {
+              "name": "t.taille_",
+              "value": "4",
+              "kind": "value"
+            },
+            {
+              "name": "t.tab_",
+              "kind": "pointer",
+              "ref": "X",
+              "type": "double*",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "X",
+          "type": "double[4]",
+          "cells": [
+            {
+              "name": "…",
+              "value": "",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        }
+      ]
+    },
+    {
+      "line": 7,
+      "note": "`return t;` with **copy elision**: the object is built directly in `t1`. No copy, no move, no extra allocation.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "t1.taille_",
+              "value": "4",
+              "kind": "value"
+            },
+            {
+              "name": "t1.tab_",
+              "kind": "pointer",
+              "ref": "X",
+              "type": "double*",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "X",
+          "type": "double[4]",
+          "cells": [
+            {
+              "name": "…",
+              "value": "",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        }
+      ]
+    },
+    {
+      "line": 8,
+      "note": "`std::move(t1)` lets the move constructor **steal** the pointer. Then it sets `t1.tab_ = nullptr` and `t1.taille_ = 0`. One buffer, one owner.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "t1.taille_",
+              "value": "0",
+              "kind": "value",
+              "highlight": true
+            },
+            {
+              "name": "t1.tab_",
+              "kind": "pointer",
+              "value": "nullptr",
+              "type": "double*",
+              "highlight": true
+            },
+            {
+              "name": "t2.taille_",
+              "value": "4",
+              "kind": "value"
+            },
+            {
+              "name": "t2.tab_",
+              "kind": "pointer",
+              "ref": "X",
+              "type": "double*",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "X",
+          "type": "double[4]",
+          "cells": [
+            {
+              "name": "…",
+              "value": "",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        }
+      ]
+    },
+    {
+      "line": 9,
+      "note": "`t3` allocates its own buffer Y.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "t1.taille_",
+              "value": "0",
+              "kind": "value"
+            },
+            {
+              "name": "t1.tab_",
+              "kind": "pointer",
+              "value": "nullptr",
+              "type": "double*"
+            },
+            {
+              "name": "t2.taille_",
+              "value": "4",
+              "kind": "value"
+            },
+            {
+              "name": "t2.tab_",
+              "kind": "pointer",
+              "ref": "X",
+              "type": "double*"
+            },
+            {
+              "name": "t3.taille_",
+              "value": "2",
+              "kind": "value"
+            },
+            {
+              "name": "t3.tab_",
+              "kind": "pointer",
+              "ref": "Y",
+              "type": "double*",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "X",
+          "type": "double[4]",
+          "cells": [
+            {
+              "name": "…",
+              "value": "",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        },
+        {
+          "id": "Y",
+          "type": "double[2]",
+          "cells": [
+            {
+              "name": "…",
+              "value": "",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        }
+      ]
+    },
+    {
+      "line": 10,
+      "note": "Move assignment by **swap**: `t3` takes X, and `t2` takes Y (its destructor will free it). Nothing is copied or allocated.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "t1.taille_",
+              "value": "0",
+              "kind": "value"
+            },
+            {
+              "name": "t1.tab_",
+              "kind": "pointer",
+              "value": "nullptr",
+              "type": "double*"
+            },
+            {
+              "name": "t2.taille_",
+              "value": "2",
+              "kind": "value"
+            },
+            {
+              "name": "t2.tab_",
+              "kind": "pointer",
+              "ref": "Y",
+              "type": "double*",
+              "highlight": true
+            },
+            {
+              "name": "t3.taille_",
+              "value": "4",
+              "kind": "value"
+            },
+            {
+              "name": "t3.tab_",
+              "kind": "pointer",
+              "ref": "X",
+              "type": "double*",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "X",
+          "type": "double[4]",
+          "cells": [
+            {
+              "name": "…",
+              "value": "",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        },
+        {
+          "id": "Y",
+          "type": "double[2]",
+          "cells": [
+            {
+              "name": "…",
+              "value": "",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        }
+      ]
+    },
+    {
+      "line": 11,
+      "note": "End of scope: `~t3` frees X, `~t2` frees Y, and `~t1` does `delete[] nullptr`, which is a no-op. That's why a moved-from object must stay destructible.",
+      "stack": [],
+      "heap": [
+        {
+          "id": "X",
+          "type": "double[4]",
+          "cells": [],
+          "state": "freed"
+        },
+        {
+          "id": "Y",
+          "type": "double[2]",
+          "cells": [],
+          "state": "freed"
+        }
+      ]
+    }
+  ]
+}

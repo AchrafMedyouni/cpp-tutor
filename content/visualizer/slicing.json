@@ -1,0 +1,211 @@
+{
+  "title": "Object slicing",
+  "chapter": "05-inheritance",
+  "summary": "Slide 124: assigning a Cercle to a Forme copies only the Forme part. Pointers and references keep the whole object.",
+  "code": "struct Forme  { virtual ~Forme() = default; Point centre_; };\nstruct Cercle : Forme { int rayon_; };\n\nint main() {\n  Cercle c{ { 9, 9 }, 3 };\n  Forme  f{ { 0, 0 } };\n  f = c;               // slicing\n  Forme *pf{ &c };     // no slicing\n  Forme &rf{ c };      // no slicing\n}",
+  "steps": [
+    {
+      "line": 5,
+      "note": "A `Cercle` object: its hidden **vptr** (→ Cercle's vtable), the inherited `centre_`, and its own `rayon_`.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "c.vptr",
+              "value": "→ vtable Cercle",
+              "kind": "value",
+              "id": "c",
+              "highlight": true
+            },
+            {
+              "name": "c.centre_",
+              "value": "(9, 9)",
+              "kind": "value"
+            },
+            {
+              "name": "c.rayon_",
+              "value": "3",
+              "kind": "value"
+            }
+          ]
+        }
+      ],
+      "heap": []
+    },
+    {
+      "line": 6,
+      "note": "A plain `Forme`: vptr to Forme's vtable, and `centre_` only.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "c.vptr",
+              "value": "→ vtable Cercle",
+              "kind": "value",
+              "id": "c"
+            },
+            {
+              "name": "c.centre_",
+              "value": "(9, 9)",
+              "kind": "value"
+            },
+            {
+              "name": "c.rayon_",
+              "value": "3",
+              "kind": "value"
+            },
+            {
+              "name": "f.vptr",
+              "value": "→ vtable Forme",
+              "kind": "value",
+              "highlight": true
+            },
+            {
+              "name": "f.centre_",
+              "value": "(0, 0)",
+              "kind": "value"
+            }
+          ]
+        }
+      ],
+      "heap": []
+    },
+    {
+      "line": 7,
+      "note": "`f = c` uses `Forme::operator=`, which copies **only the Forme part**: `centre_`. `rayon_` is sliced off and `f.vptr` is unchanged, so `f` is still a plain `Forme` and virtual calls on `f` call `Forme`'s versions.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "c.vptr",
+              "value": "→ vtable Cercle",
+              "kind": "value",
+              "id": "c"
+            },
+            {
+              "name": "c.centre_",
+              "value": "(9, 9)",
+              "kind": "value"
+            },
+            {
+              "name": "c.rayon_",
+              "value": "3",
+              "kind": "value"
+            },
+            {
+              "name": "f.vptr",
+              "value": "→ vtable Forme",
+              "kind": "value"
+            },
+            {
+              "name": "f.centre_",
+              "value": "(9, 9)",
+              "kind": "value",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": []
+    },
+    {
+      "line": 8,
+      "note": "A `Forme*` to `c` points at the **whole** `Cercle`: dynamic binding works through it.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "c.vptr",
+              "value": "→ vtable Cercle",
+              "kind": "value",
+              "id": "c"
+            },
+            {
+              "name": "c.centre_",
+              "value": "(9, 9)",
+              "kind": "value"
+            },
+            {
+              "name": "c.rayon_",
+              "value": "3",
+              "kind": "value"
+            },
+            {
+              "name": "f.vptr",
+              "value": "→ vtable Forme",
+              "kind": "value"
+            },
+            {
+              "name": "f.centre_",
+              "value": "(9, 9)",
+              "kind": "value"
+            },
+            {
+              "name": "pf",
+              "kind": "pointer",
+              "ref": "c",
+              "type": "Forme*",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": []
+    },
+    {
+      "line": 9,
+      "note": "Same with a reference. Polymorphism needs pointers or references; values get sliced.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "c.vptr",
+              "value": "→ vtable Cercle",
+              "kind": "value",
+              "id": "c"
+            },
+            {
+              "name": "c.centre_",
+              "value": "(9, 9)",
+              "kind": "value"
+            },
+            {
+              "name": "c.rayon_",
+              "value": "3",
+              "kind": "value"
+            },
+            {
+              "name": "f.vptr",
+              "value": "→ vtable Forme",
+              "kind": "value"
+            },
+            {
+              "name": "f.centre_",
+              "value": "(9, 9)",
+              "kind": "value"
+            },
+            {
+              "name": "pf",
+              "kind": "pointer",
+              "ref": "c",
+              "type": "Forme*"
+            },
+            {
+              "name": "rf",
+              "kind": "reference",
+              "ref": "c",
+              "type": "Forme&",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": []
+    }
+  ]
+}

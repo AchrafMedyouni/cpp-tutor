@@ -1,0 +1,262 @@
+{
+  "title": "Dangling pointers",
+  "chapter": "03-memory",
+  "summary": "Two ways to point at memory that no longer belongs to you: a deleted heap object, and a local of a function that has returned.",
+  "code": "int* best_bid() {\n  int best = 995;\n  return &best;\n}\n\nint main() {\n  int *q = new int{ 42 };\n  int *alias = q;\n  delete q;\n  q = nullptr;\n  int *p = best_bid();\n}",
+  "steps": [
+    {
+      "line": 7,
+      "note": "A heap `int`, owned by `q`.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "q",
+              "kind": "pointer",
+              "ref": "h",
+              "type": "int*",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "h",
+          "type": "int",
+          "cells": [
+            {
+              "name": "value",
+              "value": "42",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        }
+      ]
+    },
+    {
+      "line": 8,
+      "note": "`alias` copies the **pointer**, not the int. Two pointers now share one object.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "q",
+              "kind": "pointer",
+              "ref": "h",
+              "type": "int*"
+            },
+            {
+              "name": "alias",
+              "kind": "pointer",
+              "ref": "h",
+              "type": "int*",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "h",
+          "type": "int",
+          "cells": [
+            {
+              "name": "value",
+              "value": "42",
+              "kind": "value"
+            }
+          ],
+          "state": "live"
+        }
+      ]
+    },
+    {
+      "line": 9,
+      "note": "`delete q` frees the object. **Both** pointers now dangle; `*alias` would be a use-after-free.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "q",
+              "kind": "pointer",
+              "ref": "h",
+              "type": "int*",
+              "highlight": true
+            },
+            {
+              "name": "alias",
+              "kind": "pointer",
+              "ref": "h",
+              "type": "int*",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "h",
+          "type": "int",
+          "cells": [
+            {
+              "name": "value",
+              "value": "42",
+              "kind": "value"
+            }
+          ],
+          "state": "freed"
+        }
+      ]
+    },
+    {
+      "line": 10,
+      "note": "`q = nullptr` makes `q` safe, but `alias` still dangles. Nulling one pointer doesn't fix its copies.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "q",
+              "kind": "pointer",
+              "value": "nullptr",
+              "type": "int*",
+              "highlight": true
+            },
+            {
+              "name": "alias",
+              "kind": "pointer",
+              "ref": "h",
+              "type": "int*"
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "h",
+          "type": "int",
+          "cells": [
+            {
+              "name": "value",
+              "value": "42",
+              "kind": "value"
+            }
+          ],
+          "state": "freed"
+        }
+      ]
+    },
+    {
+      "line": 2,
+      "note": "`best_bid()` has its own frame with a local `best`.",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "q",
+              "kind": "pointer",
+              "value": "nullptr",
+              "type": "int*"
+            },
+            {
+              "name": "alias",
+              "kind": "pointer",
+              "ref": "h",
+              "type": "int*"
+            }
+          ]
+        },
+        {
+          "frame": "best_bid()",
+          "vars": [
+            {
+              "name": "best",
+              "value": "995",
+              "kind": "value",
+              "type": "int",
+              "id": "best",
+              "highlight": true
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "id": "h",
+          "type": "int",
+          "cells": [
+            {
+              "name": "value",
+              "value": "42",
+              "kind": "value"
+            }
+          ],
+          "state": "freed"
+        }
+      ]
+    },
+    {
+      "line": 11,
+      "note": "It returns `&best`, but the frame is destroyed on return. `p` points into a dead frame (the compiler warns; ASan reports *stack-use-after-return*).",
+      "stack": [
+        {
+          "frame": "main()",
+          "vars": [
+            {
+              "name": "q",
+              "kind": "pointer",
+              "value": "nullptr",
+              "type": "int*"
+            },
+            {
+              "name": "alias",
+              "kind": "pointer",
+              "ref": "h",
+              "type": "int*"
+            },
+            {
+              "name": "p",
+              "kind": "pointer",
+              "ref": "best",
+              "type": "int*",
+              "highlight": true
+            }
+          ]
+        },
+        {
+          "frame": "best_bid()",
+          "vars": [
+            {
+              "name": "best",
+              "value": "995",
+              "kind": "value",
+              "type": "int",
+              "id": "best"
+            }
+          ],
+          "dead": true
+        }
+      ],
+      "heap": [
+        {
+          "id": "h",
+          "type": "int",
+          "cells": [
+            {
+              "name": "value",
+              "value": "42",
+              "kind": "value"
+            }
+          ],
+          "state": "freed"
+        }
+      ]
+    }
+  ]
+}
