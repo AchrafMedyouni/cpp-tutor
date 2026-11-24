@@ -1,0 +1,8 @@
+{
+  "title": "Factorial: compiled, not interpreted",
+  "expectedStdout": "0! = 1\n1! = 1\n2! = 2\n3! = 6\n4! = 24\n5! = 120\n6! = 720\n7! = 5040\n8! = 40320\n9! = 362880\n10! = 3628800\n11! = 39916800\n12! = 479001600",
+  "tryThis": [
+    "Change the loop to go up to 13 and run with **ASan + UBSan**: `13!` does not fit in a 32-bit `int`. Signed overflow is *undefined behaviour* in C++, and UBSan reports it. Python silently switches to big integers instead.",
+    "Replace `int` by `long long` (64-bit). How far can you go now? (Up to 20!)"
+  ]
+}

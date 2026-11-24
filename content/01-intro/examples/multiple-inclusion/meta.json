@@ -1,0 +1,10 @@
+{
+  "title": "The multiple-inclusion problem (slide 21)",
+  "files": ["main.cpp", "A.hpp", "B.hpp", "C.hpp"],
+  "expect": "compile-error",
+  "courseVersion": true,
+  "tryThis": [
+    "Read the error: the compiler lists the chain of `#include`s (`In file included from …`) that led to the second definition.",
+    "Fix it with `#ifndef`/`#define`/`#endif` in `A.hpp` only. It compiles. Should `B.hpp` and `C.hpp` get guards too? (Yes: something else may include them twice tomorrow.)"
+  ]
+}

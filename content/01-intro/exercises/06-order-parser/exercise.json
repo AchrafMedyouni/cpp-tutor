@@ -1,0 +1,11 @@
+{
+  "title": "Parse an order blotter",
+  "difficulty": 3,
+  "mode": "io",
+  "editable": ["main.cpp"],
+  "hints": [
+    "`#include <string>` and read the side with `std::string side; std::cin >> side;`, then compare with `side == \"BUY\"`.",
+    "Read the three fields of an order, then check the stream **before** using them: `if (!(std::cin >> qty >> price))`.",
+    "Distinguish \"no more orders\" from \"bad order\": try to read the side first. If that fails, the input is simply over."
+  ]
+}

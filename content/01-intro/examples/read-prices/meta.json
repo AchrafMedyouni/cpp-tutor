@@ -1,0 +1,9 @@
+{
+  "title": "Reading until end of input",
+  "stdin": "100.0 101.5 99.8\n102.25\n103.0",
+  "expectedStdout": "n = 5\nmean = 101.31\nreturn = 3.00 %",
+  "tryThis": [
+    "Insert `oops` in the middle of the input: reading stops there. Why are the later numbers ignored?",
+    "After the loop, print `std::cin.eof()` to tell \"input finished\" from \"invalid data\"."
+  ]
+}

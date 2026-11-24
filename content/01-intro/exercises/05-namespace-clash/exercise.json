@@ -1,0 +1,11 @@
+{
+  "title": "Two vendors, one name",
+  "difficulty": 2,
+  "editable": ["vendor_a.hpp", "vendor_b.hpp", "desk.hpp"],
+  "starterCompiles": false,
+  "hints": [
+    "Wrap the contents of `vendor_a.hpp` in `namespace vendor_a { ... }`, and the same for B.",
+    "Inside `desk::best_bid`, call the vendors with qualified names: `vendor_a::bid(spot)`.",
+    "For the alias, put `namespace va = vendor_a;` at namespace scope in `desk.hpp`."
+  ]
+}

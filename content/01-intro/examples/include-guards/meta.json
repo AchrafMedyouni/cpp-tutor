@@ -1,0 +1,5 @@
+{
+  "title": "Fixed with include guards",
+  "files": ["main.cpp", "A.hpp", "B.hpp", "C.hpp"],
+  "expectedStdout": "compiled: A was defined only once"
+}

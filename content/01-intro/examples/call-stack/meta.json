@@ -1,0 +1,8 @@
+{
+  "title": "Call frames on the stack (slide 13)",
+  "nondeterministic": true,
+  "tryThis": [
+    "Compare the addresses: is `bar`'s frame above or below `foo`'s? On most machines the stack grows **downwards**.",
+    "Add a recursive function `int depth(int n)` that prints `&n` at each level and calls `depth(n - 1)` until 0."
+  ]
+}

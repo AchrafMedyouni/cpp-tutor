@@ -1,0 +1,11 @@
+{
+  "title": "Split a module into header and implementation",
+  "difficulty": 2,
+  "editable": ["returns.hpp", "returns.cpp"],
+  "starterCompiles": false,
+  "hints": [
+    "A declaration is the signature followed by `;`, e.g. `double simple_return(double p0, double p1);`.",
+    "The tests include `returns.hpp` twice. A `constexpr` variable *definition* in the header needs an include guard.",
+    "`returns.cpp` must `#include \"returns.hpp\"` and then define the three functions (`<cmath>` provides `std::log` and `std::sqrt`)."
+  ]
+}

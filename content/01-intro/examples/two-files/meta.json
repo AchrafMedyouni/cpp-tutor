@@ -1,0 +1,9 @@
+{
+  "title": "Two translation units, one executable",
+  "files": ["main.cpp", "pricing.hpp", "pricing.cpp"],
+  "expectedStdout": "with fees: 100.25\nfee rate:  0.0025",
+  "tryThis": [
+    "In `pricing.cpp`, rename `with_fees` to `with_fee`. The compiler accepts every file, but the **linker** fails: open *show compiler output* to read the message.",
+    "Delete `#include \"pricing.hpp\"` from `main.cpp`: now the **compiler** fails, because `with_fees` is undeclared."
+  ]
+}

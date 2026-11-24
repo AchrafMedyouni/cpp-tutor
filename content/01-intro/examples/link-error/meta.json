@@ -1,0 +1,7 @@
+{
+  "title": "A link error: declared but never defined",
+  "expect": "compile-error",
+  "tryThis": [
+    "Fix it by adding a definition: `double spread(double bid, double ask) { return ask - bid; }`."
+  ]
+}

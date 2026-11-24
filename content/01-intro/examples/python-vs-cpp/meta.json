@@ -1,0 +1,9 @@
+{
+  "title": "Statements, blocks and comments",
+  "expectedStdout": "total = 10, a + b = 3",
+  "tryThis": [
+    "Remove one `;` and run: read the compiler's error, and click it to jump to the line.",
+    "Write `total = \"ten\";` to see a static type error at compile time.",
+    "Change the exit code with `return 3;`: the badge under the output shows `exit code 3`."
+  ]
+}

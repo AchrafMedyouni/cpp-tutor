@@ -1,0 +1,9 @@
+{
+  "title": "Conditional compilation with -DDEBUG",
+  "defines": ["DEBUG"],
+  "expectedStdout": "100\ndebug build",
+  "tryThis": [
+    "Add `#undef DEBUG` as the first line: the debug traces disappear from the compiled program entirely.",
+    "Notice the trace goes to `std::cerr` (stderr), not stdout: diagnostics and results stay separate."
+  ]
+}

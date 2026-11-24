@@ -1,0 +1,10 @@
+{
+  "title": "Square of an integer",
+  "difficulty": 1,
+  "mode": "io",
+  "editable": ["main.cpp"],
+  "hints": [
+    "Read with `std::cin >> n;` then test `std::cin.good()` (or simply `if (std::cin >> n)`).",
+    "The output format is exact: `square of 7 = 49` followed by a newline."
+  ]
+}

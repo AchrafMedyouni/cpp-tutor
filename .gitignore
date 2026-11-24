@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.DS_Store
+# School course material: kept locally, not committed
+course/*.pdf
+# Local progress + build caches
+data/
+.cache/
+*.log

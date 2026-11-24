@@ -1,0 +1,11 @@
+{
+  "title": "Price statistics from stdin",
+  "difficulty": 2,
+  "mode": "io",
+  "editable": ["main.cpp"],
+  "hints": [
+    "Loop with `while (std::cin >> p) { ... }`.",
+    "Initialise min/max from the **first** price, not from 0.",
+    "`#include <iomanip>` then `std::cout << std::fixed << std::setprecision(2);` once, before printing."
+  ]
+}

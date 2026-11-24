@@ -1,0 +1,12 @@
+{
+  "title": "Reading from std::cin (slide 25)",
+  "courseVersion": true,
+  "stdin": "12\n",
+  "expectedStdout": "carré de 12 = 144",
+  "tryThis": [
+    "Delete the newline after `12` in the stdin box and run again: **nothing is printed!** Reading `12` hit the end of input, which sets `eofbit`, so `good()` is false even though `n` was read correctly.",
+    "Replace the test by `if (std::cin >> n)` (or `!std::cin.fail()`): it checks only that the *read* succeeded, and is the idiomatic form.",
+    "Change the stdin to `abc`: now the read itself fails.",
+    "Try `100000`: the square overflows `int`. Run with **ASan + UBSan** to get it reported."
+  ]
+}

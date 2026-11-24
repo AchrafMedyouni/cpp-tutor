@@ -1,0 +1,8 @@
+[
+  { "name": "buys and sells", "stdin": "BUY 100 12.50\nSELL 50 12.10\nBUY 0 99", "expectedStdout": "position: 50\ncash: -645.00" },
+  { "name": "empty blotter", "stdin": "", "expectedStdout": "position: 0\ncash: 0.00" },
+  { "name": "short position", "stdin": "SELL 10 100\n", "expectedStdout": "position: -10\ncash: 1000.00" },
+  { "name": "bad side stops processing", "stdin": "BUY 10 10\nHOLD 5 3\nBUY 10 10", "expectedStdout": "error: bad order #2\nposition: 10\ncash: -100.00" },
+  { "name": "bad quantity", "stdin": "BUY 10 10\nSELL ten 3", "expectedStdout": "error: bad order #2\nposition: 10\ncash: -100.00" },
+  { "name": "missing price", "stdin": "BUY 10", "expectedStdout": "error: bad order #1\nposition: 0\ncash: 0.00" }
+]

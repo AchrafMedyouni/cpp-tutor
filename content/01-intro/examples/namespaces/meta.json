@@ -1,0 +1,8 @@
+{
+  "title": "Four ways to reach a name",
+  "expectedStdout": "Alan 2026\nAda, Grace, Edsger\n101 vs 99.5",
+  "tryThis": [
+    "Add `using namespace vendor_a; using namespace vendor_b;` and call plain `price(100)`: the compiler reports an *ambiguous* call.",
+    "Remove the braces around the `using namespace` block: does anything break? (No, but the names now leak into the rest of `main`.)"
+  ]
+}

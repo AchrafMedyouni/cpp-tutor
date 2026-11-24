@@ -1,0 +1,6 @@
+{
+  "number": 1,
+  "title": "Introduction & basics",
+  "slides": "1–25",
+  "summary": "How C++ code becomes a running program: compilation vs interpretation, the preprocessor → compiler → linker pipeline, headers and include guards, namespaces and stream I/O."
+}

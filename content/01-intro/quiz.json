@@ -1,0 +1,115 @@
+{
+  "questions": [
+    {
+      "id": "q1",
+      "kind": "concept",
+      "slides": "14–16",
+      "question": "CPython runs your `.py` files. How is it best described?",
+      "choices": ["A compiler that produces native machine code", "An interpreter: a C program that reads your source and performs the equivalent actions", "A virtual machine that executes C++ bytecode", "A linker"],
+      "answer": 1,
+      "explanation": "CPython is written in C. It compiles `.py` to its own bytecode internally, but no native code is produced for your program: an interpreter loop executes it."
+    },
+    {
+      "id": "q2",
+      "kind": "concept",
+      "slides": "17–18",
+      "question": "In which stage is `undefined reference to 'spread(double, double)'` (or `Undefined symbols … spread`) reported?",
+      "choices": ["Preprocessing", "Compilation", "Linking", "At run time"],
+      "answer": 2,
+      "explanation": "The compiler accepted the call because a declaration was visible. Only the **linker** discovers that no object file contains the definition."
+    },
+    {
+      "id": "q3",
+      "kind": "compiles",
+      "slides": "21",
+      "question": "Does this translation unit compile?",
+      "code": "class A { };\nclass A { };\n\nint main() { A a; (void)a; }",
+      "choices": ["Yes", "No: class A is defined twice in the same translation unit", "It compiles but fails to link", "Only with -DDEBUG"],
+      "answer": 1,
+      "explanation": "This is exactly what textual `#include` produces without include guards: two definitions of the same class in one translation unit. That's a compile error (`redefinition of 'A'`).",
+      "verify": { "expectCompile": false }
+    },
+    {
+      "id": "q4",
+      "kind": "concept",
+      "slides": "22",
+      "question": "What does an include guard (`#ifndef X / #define X / ... / #endif`) protect against?",
+      "choices": ["The same definition appearing in two different .cpp files", "A header's contents being pasted twice into the same translation unit", "Circular dependencies between .cpp files", "Name clashes between libraries"],
+      "answer": 1,
+      "explanation": "Guards work per translation unit. A function **defined** in a header and included by two `.cpp` files is a different problem, solved by `inline` (or by moving the definition into a `.cpp`)."
+    },
+    {
+      "id": "q5",
+      "kind": "output",
+      "slides": "22",
+      "question": "This file is compiled **without** `-DDEBUG`. What does it print?",
+      "code": "#include <iostream>\nint main() {\n#ifdef DEBUG\n  std::cout << \"debug \";\n#endif\n  std::cout << \"run\\n\";\n}",
+      "choices": ["`debug run`", "`run`", "Nothing: compile error", "`DEBUG run`"],
+      "answer": 1,
+      "explanation": "The preprocessor removes the `#ifdef DEBUG` block before compilation, because the macro isn't defined.",
+      "verify": { "expectStdout": "run" }
+    },
+    {
+      "id": "q6",
+      "kind": "compiles",
+      "slides": "23–24",
+      "question": "Does this compile?",
+      "code": "namespace a { int f() { return 1; } }\nnamespace b { int f() { return 2; } }\nusing namespace a;\nusing namespace b;\nint main() { return f(); }",
+      "choices": ["Yes, it returns 1 (first using wins)", "Yes, it returns 2 (last using wins)", "No: the call `f()` is ambiguous", "No: two functions named f"],
+      "answer": 2,
+      "explanation": "The two definitions are fine because they live in different namespaces. The **unqualified call** is ambiguous once both namespaces are pulled in. Write `a::f()` or `b::f()`.",
+      "verify": { "expectCompile": false }
+    },
+    {
+      "id": "q7",
+      "kind": "concept",
+      "slides": "24",
+      "question": "Which line creates an **alias** `cs` for `fr::centralesupelec`?",
+      "choices": ["`using cs = fr::centralesupelec;`", "`namespace cs = fr::centralesupelec;`", "`#define cs fr::centralesupelec`", "`typedef fr::centralesupelec cs;`"],
+      "answer": 1,
+      "explanation": "Namespace aliases use the `namespace` keyword. `using X = …;` creates **type** aliases, which you'll see in chapter 3. `#define` would work textually but is exactly the kind of macro to avoid."
+    },
+    {
+      "id": "q8",
+      "kind": "output",
+      "slides": "25",
+      "question": "The program receives the input `abc`. What does it print?",
+      "code": "#include <iostream>\nint main() {\n  int n = 7;\n  std::cin >> n;\n  std::cout << n << \" \" << std::cin.good() << \"\\n\";\n}",
+      "choices": ["`7 1`", "`7 0`", "`0 0`", "It crashes"],
+      "answer": 2,
+      "explanation": "Since C++11, a failed extraction writes `0` into the target and puts the stream in a fail state. `good()` returns `false`, printed as `0`.",
+      "verify": { "expectStdout": "0 0", "stdin": "abc" }
+    },
+    {
+      "id": "q9",
+      "kind": "output",
+      "slides": "25",
+      "question": "Input: `1 2 x 4`. What does this print?",
+      "code": "#include <iostream>\nint main() {\n  int v, sum = 0;\n  while (std::cin >> v) sum += v;\n  std::cout << sum << \"\\n\";\n}",
+      "choices": ["`7`", "`3`", "`0`", "It loops forever"],
+      "answer": 1,
+      "explanation": "Reading `x` as an `int` fails, so the loop condition becomes false. `4` is never read.",
+      "verify": { "expectStdout": "3", "stdin": "1 2 x 4" }
+    },
+    {
+      "id": "q10",
+      "kind": "concept",
+      "slides": "19",
+      "question": "Which statement about C++ syntax is **false**?",
+      "choices": ["A statement can span several lines", "Indentation defines blocks", "`/* */` comments can span lines", "A newline is just whitespace"],
+      "answer": 1,
+      "explanation": "Blocks are delimited by `{ }`. Indentation is purely for humans, unlike in Python."
+    },
+    {
+      "id": "q11",
+      "kind": "output",
+      "slides": "25",
+      "question": "What does this print?",
+      "code": "#include <iostream>\nint main() {\n  std::cout << 1 << 2 << \"3\" << '4' << \"\\n\";\n}",
+      "choices": ["`10`", "`1234`", "`3`", "Compile error: mixing types"],
+      "answer": 1,
+      "explanation": "`<<` is chained left to right and each overload prints its operand: int, int, string, char.",
+      "verify": { "expectStdout": "1234" }
+    }
+  ]
+}

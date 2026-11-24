@@ -1,0 +1,11 @@
+{
+  "title": "Fix the multiple inclusion",
+  "difficulty": 2,
+  "editable": ["money.hpp", "order.hpp", "portfolio.hpp"],
+  "starterCompiles": false,
+  "hints": [
+    "Click *Check* once and read the error: which type is defined twice, and through which chain of `#include`s?",
+    "Each header needs `#ifndef SOMETHING_HPP` / `#define SOMETHING_HPP` at the top and `#endif` at the bottom (or `#pragma once`).",
+    "Guard *every* header, not only `money.hpp`: the tests also include `order.hpp` twice."
+  ]
+}

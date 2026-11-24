@@ -1,0 +1,22 @@
+[
+  {
+    "name": "four prices",
+    "stdin": "100 102\n99 101.5",
+    "expectedStdout": "count: 4\ntotal: 402.50\nmean: 100.62\nmin: 99.00\nmax: 102.00"
+  },
+  {
+    "name": "single price",
+    "stdin": "42.126",
+    "expectedStdout": "count: 1\ntotal: 42.13\nmean: 42.13\nmin: 42.13\nmax: 42.13"
+  },
+  {
+    "name": "negative values (P&L)",
+    "stdin": "-5 3 -1",
+    "expectedStdout": "count: 3\ntotal: -3.00\nmean: -1.00\nmin: -5.00\nmax: 3.00"
+  },
+  {
+    "name": "no data",
+    "stdin": "",
+    "expectedStdout": "no data"
+  }
+]
