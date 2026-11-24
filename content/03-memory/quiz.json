@@ -1,0 +1,205 @@
+{
+  "questions": [
+    {
+      "id": "q1",
+      "kind": "output",
+      "question": "What does this print?",
+      "choices": [
+        "`5`",
+        "`-7`",
+        "`3`",
+        "An address"
+      ],
+      "answer": 2,
+      "explanation": "`p` points to `i` and `q` points to `p`, so `**q = 3` writes into `i`. The last assignment wins.",
+      "code": "#include <iostream>\nint main() { int i{ 5 }; int* p{ &i }; *p = -7; int** q{ &p }; **q = 3; std::cout << i << \"\\n\"; }",
+      "slides": "59–60",
+      "verify": {
+        "expectStdout": "3"
+      }
+    },
+    {
+      "id": "q2",
+      "kind": "compiles",
+      "question": "Does this compile?",
+      "choices": [
+        "Yes",
+        "No: `*a = 2` modifies through a pointer-to-const",
+        "No: `a` itself is const and can't be reassigned",
+        "No: you can't take the address of `i`"
+      ],
+      "answer": 2,
+      "explanation": "`int * const a` is a **constant pointer** to a modifiable int: `*a = 2` is fine, but `a = &j` isn't.",
+      "code": "int main() { int i{ 1 }, j{ 2 }; int * const a{ &i }; *a = 2; a = &j; return i; }",
+      "slides": "61",
+      "verify": {
+        "expectCompile": false
+      }
+    },
+    {
+      "id": "q3",
+      "kind": "concept",
+      "question": "In `int const * p`, what is constant?",
+      "choices": [
+        "The pointer `p`",
+        "The `int` pointed to (through `p`)",
+        "Both",
+        "Neither: `const` must come first"
+      ],
+      "answer": 1,
+      "explanation": "Read right to left: *p is a pointer to a const int*. `int const *` is the same as `const int *`."
+    },
+    {
+      "id": "q4",
+      "kind": "concept",
+      "question": "Which of these is **not** an lvalue (with `int i; int* p;`)?",
+      "choices": [
+        "`*p`",
+        "`++i`",
+        "`i++`",
+        "`i = 2`"
+      ],
+      "answer": 2,
+      "explanation": "`i++` returns a copy of the *old* value, a temporary. `++i` and `i = 2` return `i` itself, and `*p` designates the object pointed to (slide 69)."
+    },
+    {
+      "id": "q5",
+      "kind": "output",
+      "question": "What does this print?",
+      "choices": [
+        "`7 7`",
+        "`3 7`",
+        "`7 3`",
+        "`3 3`"
+      ],
+      "answer": 0,
+      "explanation": "`ri` is an alias of `i`. `ri = j` assigns **j's value** to `i`; it doesn't rebind the reference. A reference can never be re-seated.",
+      "code": "#include <iostream>\nint main() { int i{ 3 }; int& ri{ i }; int j{ 7 }; ri = j; std::cout << i << \" \" << ri << \"\\n\"; }",
+      "slides": "71",
+      "verify": {
+        "expectStdout": "7 7"
+      }
+    },
+    {
+      "id": "q6",
+      "kind": "compiles",
+      "question": "Does this compile?",
+      "choices": [
+        "Yes",
+        "No: a non-const lvalue reference can't bind to a temporary",
+        "No: `f` returns nothing",
+        "Only with `-fpermissive`"
+      ],
+      "answer": 1,
+      "explanation": "`j + 2` is an rvalue, and `int&` binds only to lvalues. Use `const int&` (or `int&&`) to accept temporaries.",
+      "code": "void f(int& i) { i = 3; }\nint main() { int j{ 8 }; f(j + 2); return j; }",
+      "slides": "72",
+      "verify": {
+        "expectCompile": false
+      }
+    },
+    {
+      "id": "q7",
+      "kind": "ub",
+      "question": "Is there undefined behaviour?",
+      "choices": [
+        "No",
+        "Yes: `delete` should be `delete[]`",
+        "Yes: the pointer is used after `delete`",
+        "Only if compiled without optimisation"
+      ],
+      "answer": 2,
+      "explanation": "After `delete p`, the memory is released and `*p` is a **use after free**: undefined behaviour, which ASan reports.",
+      "code": "#include <iostream>\nint main() { int* p = new int{ 5 }; delete p; std::cout << *p << \"\\n\"; }",
+      "slides": "68",
+      "verify": {
+        "expectSanitizer": true
+      }
+    },
+    {
+      "id": "q8",
+      "kind": "output",
+      "question": "On a 64-bit machine, what does this print?",
+      "choices": [
+        "`40 40`",
+        "`40 8`",
+        "`10 10`",
+        "`8 8`"
+      ],
+      "answer": 1,
+      "explanation": "`sizeof(tab)` is the size of the whole array (10 × 4 bytes). Passed to `f`, the array **decays** to a pointer, and `sizeof` gives the size of the pointer (8).",
+      "code": "#include <iostream>\nvoid f(const int* a) { std::cout << sizeof(a) << \"\\n\"; }\nint main() { int tab[10]{}; std::cout << sizeof(tab) << \" \"; f(tab); }",
+      "slides": "78",
+      "verify": {
+        "expectStdout": "40 8"
+      }
+    },
+    {
+      "id": "q9",
+      "kind": "output",
+      "question": "What does this print?",
+      "choices": [
+        "`1 10`",
+        "`10 10`",
+        "`10 0`",
+        "`1 0`"
+      ],
+      "answer": 0,
+      "explanation": "`v1{ 10 }` uses the **initializer-list** constructor: one element, 10. `v2( 10 )` creates 10 zero elements. Hence slide 80's warning: *Parenthèses !*",
+      "code": "#include <iostream>\n#include <vector>\nint main() { std::vector<int> v1{ 10 }; std::vector<int> v2( 10 ); std::cout << v1.size() << \" \" << v2.size() << \"\\n\"; }",
+      "slides": "80",
+      "verify": {
+        "expectStdout": "1 10"
+      }
+    },
+    {
+      "id": "q10",
+      "kind": "concept",
+      "question": "Which storage duration has **no default initialisation** and is released at the end of the enclosing block?",
+      "choices": [
+        "static",
+        "automatic",
+        "dynamic",
+        "thread"
+      ],
+      "answer": 1,
+      "explanation": "Automatic variables (ordinary locals) are created when their definition is reached and destroyed at the end of the block. Only static storage is zero-initialised by default (slides 66–68)."
+    },
+    {
+      "id": "q11",
+      "kind": "output",
+      "question": "What does this print?",
+      "choices": [
+        "`5`",
+        "`3`",
+        "`2`",
+        "`0`"
+      ],
+      "answer": 1,
+      "explanation": "`p2 - p1` is measured in **elements**, not bytes (slide 77).",
+      "code": "#include <iostream>\nint main() { double tab[10]; double* p1{ &tab[2] }; double* p2{ &tab[5] }; std::cout << p2 - p1 << \"\\n\"; }",
+      "slides": "77",
+      "verify": {
+        "expectStdout": "3"
+      }
+    },
+    {
+      "id": "q12",
+      "kind": "ub",
+      "question": "Is there undefined behaviour?",
+      "choices": [
+        "No, `at` throws",
+        "Yes: `v[3]` reads past the end",
+        "No: vectors grow automatically",
+        "Only if the vector is empty"
+      ],
+      "answer": 1,
+      "explanation": "`operator[]` does **not** check the index, so `v[3]` on a 3-element vector is out of bounds. `v.at(3)` would throw `std::out_of_range` instead.",
+      "code": "#include <iostream>\n#include <vector>\nint main() { std::vector<int> v{ 1, 2, 3 }; std::cout << v[3] << \"\\n\"; }",
+      "slides": "80",
+      "verify": {
+        "expectSanitizer": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,177 @@
+{
+  "questions": [
+    {
+      "id": "q1",
+      "kind": "output",
+      "question": "What does this print?",
+      "choices": [
+        "`Cercle`",
+        "`Forme`",
+        "Compile error",
+        "Undefined"
+      ],
+      "answer": 1,
+      "explanation": "`dessine` isn't `virtual`, so the call is bound **statically** from the type of the pointer, `Forme*` (slide 126).",
+      "code": "#include <iostream>\nstruct Forme { void dessine() { std::cout << \"Forme\\n\"; } };\nstruct Cercle : Forme { void dessine() { std::cout << \"Cercle\\n\"; } };\nint main() { Cercle c; Forme* pf = &c; pf->dessine(); }",
+      "slides": "126",
+      "verify": {
+        "expectStdout": "Forme"
+      }
+    },
+    {
+      "id": "q2",
+      "kind": "output",
+      "question": "Same code, with `virtual void dessine()` in `Forme`. What does it print?",
+      "choices": [
+        "`Cercle`",
+        "`Forme`",
+        "`Forme Cercle`",
+        "Compile error"
+      ],
+      "answer": 0,
+      "explanation": "A virtual call is resolved at run time from the **dynamic** type of the object (slide 127).",
+      "code": "#include <iostream>\nstruct Forme { virtual ~Forme() = default; virtual void dessine() { std::cout << \"Forme\\n\"; } };\nstruct Cercle : Forme { void dessine() override { std::cout << \"Cercle\\n\"; } };\nint main() { Cercle c; Forme* pf = &c; pf->dessine(); }",
+      "slides": "127",
+      "verify": {
+        "expectStdout": "Cercle"
+      }
+    },
+    {
+      "id": "q3",
+      "kind": "output",
+      "question": "What does this print?",
+      "choices": [
+        "`Cercle`",
+        "`Forme`",
+        "Compile error",
+        "Undefined"
+      ],
+      "answer": 1,
+      "explanation": "`Forme f = c;` **slices**: only the `Forme` part is copied into a genuine `Forme` object. Virtual dispatch can't bring back what was cut off.",
+      "code": "#include <iostream>\nstruct Forme { virtual ~Forme() = default; virtual const char* nom() const { return \"Forme\"; } };\nstruct Cercle : Forme { const char* nom() const override { return \"Cercle\"; } };\nint main() { Cercle c; Forme f = c; std::cout << f.nom() << \"\\n\"; }",
+      "slides": "124",
+      "verify": {
+        "expectStdout": "Forme"
+      }
+    },
+    {
+      "id": "q4",
+      "kind": "compiles",
+      "question": "Does this compile?",
+      "choices": [
+        "Yes",
+        "No: `Forme` is abstract",
+        "No: `Cercle` must call `Forme()`",
+        "No: pure virtual functions need a body"
+      ],
+      "answer": 1,
+      "explanation": "A class with a pure virtual function (`= 0`) is **abstract** and can't be instantiated (slide 128).",
+      "code": "struct Forme { virtual ~Forme() = default; virtual double aire() const = 0; };\nstruct Cercle : Forme { double aire() const override { return 1; } };\nint main() { Forme f; (void)f; }",
+      "slides": "128",
+      "verify": {
+        "expectCompile": false
+      }
+    },
+    {
+      "id": "q5",
+      "kind": "output",
+      "question": "In what order do these lines print?",
+      "choices": [
+        "`B A ~A ~B`",
+        "`A B ~B ~A`",
+        "`A B ~A ~B`",
+        "`B A ~B ~A`"
+      ],
+      "answer": 1,
+      "explanation": "The base is constructed first and destroyed last.",
+      "code": "#include <iostream>\nstruct A { A() { std::cout << \"A \"; } virtual ~A() { std::cout << \"~A \"; } };\nstruct B : A { B() { std::cout << \"B \"; } ~B() override { std::cout << \"~B \"; } };\nint main() { { B b; } std::cout << \"\\n\"; }",
+      "slides": "125",
+      "verify": {
+        "expectStdout": "A B ~B ~A"
+      }
+    },
+    {
+      "id": "q6",
+      "kind": "concept",
+      "question": "When must a base class destructor be `virtual`?",
+      "choices": [
+        "Always",
+        "When objects of derived classes may be `delete`d through a pointer to the base",
+        "Only for abstract classes",
+        "Only if the derived class has a destructor"
+      ],
+      "answer": 1,
+      "explanation": "Otherwise `delete base_ptr` runs only the base destructor: undefined behaviour, and in practice resources of the derived part leak (slide 127). Rule of thumb: any class with a virtual function gets a virtual destructor."
+    },
+    {
+      "id": "q7",
+      "kind": "output",
+      "question": "What does this print?",
+      "choices": [
+        "`1 1`",
+        "`1 0`",
+        "`0 1`",
+        "Compile error"
+      ],
+      "answer": 1,
+      "explanation": "`dynamic_cast` checks the dynamic type: `a` really points to a `Cercle`, while `b` points to a `Rectangle`, so its cast yields `nullptr`.",
+      "code": "#include <iostream>\nstruct Forme { virtual ~Forme() = default; };\nstruct Cercle : Forme {};\nstruct Rectangle : Forme {};\nint main() { Cercle c; Rectangle r; Forme* a = &c; Forme* b = &r;\n  std::cout << (dynamic_cast<Cercle*>(a) != nullptr) << \" \" << (dynamic_cast<Cercle*>(b) != nullptr) << \"\\n\"; }",
+      "slides": "132",
+      "verify": {
+        "expectStdout": "1 0"
+      }
+    },
+    {
+      "id": "q8",
+      "kind": "concept",
+      "question": "What does `dynamic_cast<Cercle&>(f)` do when `f` isn't a `Cercle`?",
+      "choices": [
+        "Returns a null reference",
+        "Throws `std::bad_cast`",
+        "Undefined behaviour",
+        "Returns `f` unchanged"
+      ],
+      "answer": 1,
+      "explanation": "There is no null reference, so the reference form throws (slide 133). Catch it by `const&`."
+    },
+    {
+      "id": "q9",
+      "kind": "concept",
+      "question": "Why does `Carre : public Rectangle` violate the Liskov substitution principle (with setters)?",
+      "choices": [
+        "Squares have fewer attributes",
+        "Code that relies on \"doubling the width doubles the area\" breaks for a `Carre`",
+        "Because `Carre` is not abstract",
+        "It doesn't violate it"
+      ],
+      "answer": 1,
+      "explanation": "Substitutability is about **behaviour**, not members: a mutable square can't keep the rectangle's promises (slides 129–130)."
+    },
+    {
+      "id": "q10",
+      "kind": "concept",
+      "question": "Where does a polymorphic object find which `dessine` to call?",
+      "choices": [
+        "In a switch generated by the compiler",
+        "Through a hidden pointer (vptr) to its class's virtual table",
+        "By name lookup at run time, as in Python",
+        "In the base class only"
+      ],
+      "answer": 1,
+      "explanation": "Each object of a polymorphic class carries a vptr to a per-class table of function pointers (slide 131)."
+    },
+    {
+      "id": "q11",
+      "kind": "concept",
+      "question": "Which cast removes `const`?",
+      "choices": [
+        "`static_cast`",
+        "`dynamic_cast`",
+        "`const_cast`",
+        "`reinterpret_cast`"
+      ],
+      "answer": 2,
+      "explanation": "`const_cast` is the only named cast that removes `const`/`volatile`. Writing through the result to an object that is *really* const is still undefined behaviour (slide 134)."
+    }
+  ]
+}

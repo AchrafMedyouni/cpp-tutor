@@ -1,0 +1,157 @@
+{
+  "questions": [
+    {
+      "id": "q1",
+      "kind": "concept",
+      "question": "In Flynn's taxonomy, a multi-core CPU running different threads on different data is…",
+      "choices": [
+        "SISD",
+        "SIMD",
+        "MISD",
+        "MIMD"
+      ],
+      "answer": 3,
+      "explanation": "Multiple Instruction streams, Multiple Data streams (slide 183). SIMD is vector units and GPUs."
+    },
+    {
+      "id": "q2",
+      "kind": "concept",
+      "question": "What do the threads of one process share?",
+      "choices": [
+        "Nothing",
+        "Their stacks",
+        "The address space (heap, globals) and open files, but each has its own stack and registers",
+        "Only the code"
+      ],
+      "answer": 2,
+      "explanation": "That's why threads are cheaper than processes, and why they need synchronisation (slide 191)."
+    },
+    {
+      "id": "q3",
+      "kind": "compiles",
+      "question": "Does this compile?",
+      "choices": [
+        "Yes",
+        "No: the thread stores a copy of `x`, which can't bind to `int&`. Use `std::ref(x)`",
+        "No: lambdas are required",
+        "Yes, but `x` is unchanged"
+      ],
+      "answer": 1,
+      "explanation": "`std::thread` copies its arguments (slide 193).",
+      "code": "#include <thread>\nvoid f(int& n) { n = 0; }\nint main() { int x = 1; std::thread t{ f, x }; t.join(); return x; }",
+      "slides": "193",
+      "verify": {
+        "expectCompile": false
+      }
+    },
+    {
+      "id": "q4",
+      "kind": "concept",
+      "question": "What happens if a joinable `std::thread` is destroyed without `join()` or `detach()`?",
+      "choices": [
+        "It's joined automatically",
+        "It's detached automatically",
+        "`std::terminate` is called",
+        "Nothing"
+      ],
+      "answer": 2,
+      "explanation": "`std::jthread` (C++20) fixes this by joining in its destructor."
+    },
+    {
+      "id": "q5",
+      "kind": "concept",
+      "question": "Two threads run `x += 1` 1,000,000 times each on a shared `int`, with no synchronisation. Which is true?",
+      "choices": [
+        "`x` is always 2,000,000",
+        "`x` can be less than 2,000,000, and formally it's undefined behaviour (a data race)",
+        "It doesn't compile",
+        "The program always deadlocks"
+      ],
+      "answer": 1,
+      "explanation": "`+=` is load/add/store, so concurrent updates get lost (slides 194–196). C++ makes any data race undefined behaviour."
+    },
+    {
+      "id": "q6",
+      "kind": "concept",
+      "question": "Which property says a waiting thread must not consume the CPU?",
+      "choices": [
+        "Safety",
+        "Liveness",
+        "Efficiency",
+        "Fairness"
+      ],
+      "answer": 2,
+      "explanation": "Efficiency means no busy waiting: the waiting thread is *blocked*. Safety means at most one thread in the critical section; liveness means access is eventually granted (slide 198)."
+    },
+    {
+      "id": "q7",
+      "kind": "concept",
+      "question": "Why does `condition_variable::wait` take a `std::unique_lock` rather than a `std::lock_guard`?",
+      "choices": [
+        "`lock_guard` is deprecated",
+        "`wait` must unlock the mutex while sleeping and relock it on wake-up, and `lock_guard` can't be unlocked",
+        "For performance",
+        "`unique_lock` is recursive"
+      ],
+      "answer": 1,
+      "explanation": "That's how the producer can take the lock while the consumer is waiting (slides 201, 205)."
+    },
+    {
+      "id": "q8",
+      "kind": "concept",
+      "question": "Why should the condition be re-checked in a `while` loop around `wait`?",
+      "choices": [
+        "To save CPU",
+        "Spurious wakeups are allowed, and another thread may have consumed the item first",
+        "`if` doesn't compile there",
+        "To avoid deadlocks"
+      ],
+      "answer": 1,
+      "explanation": "That's the caveat on slides 207–208. The predicate form `cv.wait(lock, pred)` writes the loop for you."
+    },
+    {
+      "id": "q9",
+      "kind": "concept",
+      "question": "Thread 1 locks A then B; thread 2 locks B then A. What can happen?",
+      "choices": [
+        "Nothing special",
+        "A deadlock: each holds one lock and waits forever for the other",
+        "Data race",
+        "Starvation only"
+      ],
+      "answer": 1,
+      "explanation": "That's a circular wait. Use a global lock order or `std::scoped_lock{ a, b }`."
+    },
+    {
+      "id": "q10",
+      "kind": "output",
+      "question": "What does this print?",
+      "choices": [
+        "Always `2000`",
+        "Anything from 1000 to 2000",
+        "Undefined",
+        "Compile error"
+      ],
+      "answer": 0,
+      "explanation": "`std::atomic_int::operator+=` is an indivisible read-modify-write: no update is lost (slide 203).",
+      "code": "#include <iostream>\n#include <atomic>\n#include <thread>\nint main() { std::atomic_int n{ 0 };\n  auto f = [&n] { for (int i = 0; i < 1000; ++i) n += 1; };\n  std::thread a{ f }, b{ f }; a.join(); b.join(); std::cout << n << \"\\n\"; }",
+      "slides": "203",
+      "verify": {
+        "expectStdout": "2000"
+      }
+    },
+    {
+      "id": "q11",
+      "kind": "concept",
+      "question": "With `std::for_each(std::execution::par, v.begin(), v.end(), f)`, what must `f` guarantee?",
+      "choices": [
+        "Nothing",
+        "That it doesn't create data races, e.g. by writing only to its own element",
+        "That it's a function pointer",
+        "That it locks a global mutex"
+      ],
+      "answer": 1,
+      "explanation": "Parallel policies run `f` concurrently on several threads. With `par_unseq`, `f` mustn't even take locks (slide 209)."
+    }
+  ]
+}

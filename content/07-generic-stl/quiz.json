@@ -1,0 +1,207 @@
+{
+  "questions": [
+    {
+      "id": "q1",
+      "kind": "compiles",
+      "question": "Does this compile?",
+      "choices": [
+        "Yes, `T = double`",
+        "Yes, `T = int`",
+        "No: `T` is deduced as both `int` and `double`",
+        "No: templates can't take `double`"
+      ],
+      "answer": 2,
+      "explanation": "Deduction must agree for every argument. Write `max<double>(1, 2.5)` to choose explicitly.",
+      "code": "template <typename T> T max(T a, T b) { return a > b ? a : b; }\nint main() { return static_cast<int>(max(1, 2.5)); }",
+      "slides": "150",
+      "verify": {
+        "expectCompile": false
+      }
+    },
+    {
+      "id": "q2",
+      "kind": "concept",
+      "question": "Why is a class template usually defined entirely in its header?",
+      "choices": [
+        "Templates are always `inline`",
+        "The compiler generates code for each type at the point of use, so it needs the whole definition there",
+        "Headers compile faster",
+        "The linker can't handle templates"
+      ],
+      "answer": 1,
+      "explanation": "Each translation unit that uses `Tableau<int>` instantiates it, and that requires the method bodies (slide 147)."
+    },
+    {
+      "id": "q3",
+      "kind": "output",
+      "question": "What does this print?",
+      "choices": [
+        "`24`",
+        "`120`",
+        "`0`",
+        "Compile error"
+      ],
+      "answer": 1,
+      "explanation": "The recursion `Factorial<5> → Factorial<4> → … → Factorial<0>` is evaluated by the compiler. The specialisation stops it (slide 152).",
+      "code": "#include <iostream>\ntemplate <unsigned N> struct F { static constexpr int value{ N * F<N - 1>::value }; };\ntemplate <> struct F<0> { static constexpr int value{ 1 }; };\nint main() { std::cout << F<5>::value << \"\\n\"; }",
+      "slides": "152",
+      "verify": {
+        "expectStdout": "120"
+      }
+    },
+    {
+      "id": "q4",
+      "kind": "concept",
+      "question": "What does `v.end()` designate?",
+      "choices": [
+        "The last element",
+        "One past the last element",
+        "A null iterator",
+        "The element before the first"
+      ],
+      "answer": 1,
+      "explanation": "Ranges are half-open, `[begin, end)`. `end()` must never be dereferenced (slide 155)."
+    },
+    {
+      "id": "q5",
+      "kind": "compiles",
+      "question": "Does this compile?",
+      "choices": [
+        "Yes",
+        "No: `std::sort` needs random-access iterators, and `std::list` only has bidirectional ones",
+        "No: you must include `<list>` twice",
+        "Yes, but it's slow"
+      ],
+      "answer": 1,
+      "explanation": "Lists sort themselves with the member function `l.sort()` (slide 166).",
+      "code": "#include <algorithm>\n#include <list>\nint main() { std::list<int> l{ 3, 1, 2 }; std::sort(l.begin(), l.end()); }",
+      "slides": "166",
+      "verify": {
+        "expectCompile": false
+      }
+    },
+    {
+      "id": "q6",
+      "kind": "concept",
+      "question": "You need lookups by ticker and want to iterate in alphabetical order. Which container?",
+      "choices": [
+        "`std::vector<std::pair<...>>`",
+        "`std::unordered_map<std::string, ...>`",
+        "`std::map<std::string, ...>`",
+        "`std::stack`"
+      ],
+      "answer": 2,
+      "explanation": "`map` is a balanced tree: O(log n) lookup and sorted iteration. `unordered_map` has faster average lookups but no ordering (slide 164)."
+    },
+    {
+      "id": "q7",
+      "kind": "ub",
+      "question": "Is there undefined behaviour?",
+      "choices": [
+        "No",
+        "Yes: `push_back` may reallocate and invalidate `it`",
+        "Only if the vector is empty",
+        "No: iterators update themselves"
+      ],
+      "answer": 1,
+      "explanation": "When a vector grows, its elements move to a new buffer, and iterators into the old one dangle.",
+      "code": "#include <iostream>\n#include <vector>\nint main() { std::vector<int> v{ 1, 2 }; auto it = v.begin(); v.push_back(3); std::cout << *it << \"\\n\"; }",
+      "verify": {
+        "expectSanitizer": true
+      }
+    },
+    {
+      "id": "q8",
+      "kind": "output",
+      "question": "What does this print?",
+      "choices": [
+        "`3 1 2`",
+        "`1 2 3`",
+        "`3 2 1`",
+        "`2 3 1`"
+      ],
+      "answer": 2,
+      "explanation": "`rbegin()`/`rend()` are reverse iterators, and `back_inserter` turns each assignment into a `push_back` (slide 166).",
+      "code": "#include <iostream>\n#include <algorithm>\n#include <iterator>\n#include <vector>\nint main() { std::vector<int> v{ 1, 2, 3 }, out; std::copy(v.rbegin(), v.rend(), std::back_inserter(out));\n  for (int x : out) std::cout << x << \" \"; std::cout << \"\\n\"; }",
+      "slides": "166",
+      "verify": {
+        "expectStdout": "3 2 1"
+      }
+    },
+    {
+      "id": "q9",
+      "kind": "concept",
+      "question": "What does `std::move(x)` actually do?",
+      "choices": [
+        "Moves `x`'s contents somewhere else",
+        "Casts `x` to an rvalue reference, allowing a move constructor or assignment to steal from it",
+        "Deletes `x`",
+        "Copies `x` cheaply"
+      ],
+      "answer": 1,
+      "explanation": "It's only a cast. The stealing happens in the move constructor or assignment that it selects (slide 171)."
+    },
+    {
+      "id": "q10",
+      "kind": "concept",
+      "question": "After `b = std::move(a);` with a well-written class, what can you safely do with `a`?",
+      "choices": [
+        "Use its old value",
+        "Destroy it or assign a new value to it",
+        "Nothing at all, not even destroy it",
+        "Read its size, which is guaranteed unchanged"
+      ],
+      "answer": 1,
+      "explanation": "A moved-from object is *valid but unspecified* (slide 171)."
+    },
+    {
+      "id": "q11",
+      "kind": "output",
+      "question": "What does this print?",
+      "choices": [
+        "`1 2 1`",
+        "`1 1 1`",
+        "`2 2 1`",
+        "`1 2 2`"
+      ],
+      "answer": 0,
+      "explanation": "Copying a `shared_ptr` increments the reference count, and destroying the copy decrements it.",
+      "code": "#include <iostream>\n#include <memory>\nint main() { auto p = std::make_shared<int>(7); std::cout << p.use_count() << \" \";\n  { auto q = p; std::cout << p.use_count() << \" \"; }\n  std::cout << p.use_count() << \"\\n\"; }",
+      "slides": "176–177",
+      "verify": {
+        "expectStdout": "1 2 1"
+      }
+    },
+    {
+      "id": "q12",
+      "kind": "compiles",
+      "question": "Does this compile?",
+      "choices": [
+        "Yes",
+        "No: `unique_ptr` can't be copied",
+        "No: `make_unique` needs `new`",
+        "Yes, both share ownership"
+      ],
+      "answer": 1,
+      "explanation": "`unique_ptr`'s copy constructor is `= delete`d. Transfer ownership with `std::move` (slide 179).",
+      "code": "#include <memory>\nint main() { auto a = std::make_unique<int>(1); auto b = a; return *b; }",
+      "slides": "179",
+      "verify": {
+        "expectCompile": false
+      }
+    },
+    {
+      "id": "q13",
+      "kind": "concept",
+      "question": "Two objects hold `shared_ptr`s to each other. What happens when the last external `shared_ptr` goes away?",
+      "choices": [
+        "Both are destroyed",
+        "Neither is destroyed: the counts never reach 0 (leak)",
+        "Undefined behaviour",
+        "The newer one is destroyed"
+      ],
+      "answer": 1,
+      "explanation": "Reference counting can't reclaim cycles. Make one direction a `weak_ptr` (slide 178)."
+    }
+  ]
+}

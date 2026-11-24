@@ -1,0 +1,190 @@
+{
+  "questions": [
+    {
+      "id": "q1",
+      "kind": "concept",
+      "question": "What is the only difference between `struct` and `class`?",
+      "choices": [
+        "`class` can have methods, `struct` can't",
+        "The default access level: `public` for `struct`, `private` for `class`",
+        "`struct` can't have constructors",
+        "`class` objects are allocated on the heap"
+      ],
+      "answer": 1,
+      "explanation": "That's the only difference (slide 93). Both can have methods, constructors, inheritance…"
+    },
+    {
+      "id": "q2",
+      "kind": "compiles",
+      "question": "Does this compile?",
+      "choices": [
+        "Yes",
+        "No: `module()` isn't const, so it can't be called on a const object",
+        "No: `c` must be initialised with parentheses",
+        "No: `real_` is private"
+      ],
+      "answer": 1,
+      "explanation": "`print` receives a `const Complexe&`, and only **const** methods can be called through it.",
+      "code": "#include <cmath>\nclass Complexe {\npublic:\n  Complexe(double r, double i) : real_{ r }, imag_{ i } {}\n  double module() { return std::sqrt(real_ * real_ + imag_ * imag_); }\nprivate:\n  double real_, imag_;\n};\ndouble print(const Complexe& c) { return c.module(); }\nint main() { return print(Complexe{ 3, 4 }) == 5 ? 0 : 1; }",
+      "slides": "89",
+      "verify": {
+        "expectCompile": false
+      }
+    },
+    {
+      "id": "q3",
+      "kind": "which-ctor",
+      "question": "Which constructor does `Tableau t2{ t1 };` call?",
+      "choices": [
+        "The default constructor",
+        "`Tableau(unsigned)`",
+        "The copy constructor `Tableau(const Tableau&)`",
+        "`operator=`"
+      ],
+      "answer": 2,
+      "explanation": "Initialising a new object from an existing one of the same type is **copy construction**. `operator=` is only used to assign to an object that already exists."
+    },
+    {
+      "id": "q4",
+      "kind": "which-ctor",
+      "question": "Which special member function runs on the second line?",
+      "choices": [
+        "copy constructor",
+        "copy assignment `operator=`",
+        "destructor then copy constructor",
+        "default constructor"
+      ],
+      "answer": 1,
+      "explanation": "`b` already exists, so `b = a;` is an **assignment**, not a construction.",
+      "code": "Tableau a{ 10 }, b{ 20 };\nb = a;"
+    },
+    {
+      "id": "q5",
+      "kind": "concept",
+      "question": "Why can't the copy constructor be declared `Tableau(Tableau t)`?",
+      "choices": [
+        "Because `t` would be const",
+        "Passing by value would itself need the copy constructor: infinite recursion",
+        "Because constructors can't take parameters of their own type",
+        "It can; it's just slower"
+      ],
+      "answer": 1,
+      "explanation": "Initialising a by-value parameter **is** a copy construction (slide 105). The compiler rejects this declaration."
+    },
+    {
+      "id": "q6",
+      "kind": "ub",
+      "question": "`Tableau` owns `new double[n]`, deletes it in its destructor, and has **no** copy constructor. What happens here?",
+      "choices": [
+        "Nothing special",
+        "A leak",
+        "Double delete: undefined behaviour",
+        "Compile error"
+      ],
+      "answer": 2,
+      "explanation": "The implicit copy constructor copies the **pointer**, so both objects delete the same buffer at the end of `main` (slide 104).",
+      "code": "#include <iostream>\nclass Tableau {\npublic:\n  explicit Tableau(unsigned n) : tab_{ new double[n] } {}\n  ~Tableau() { delete[] tab_; }\nprivate:\n  double* tab_;\n};\nint main() { Tableau a{ 10 }; Tableau b{ a }; std::cout << \"copied\\n\"; }",
+      "slides": "104",
+      "verify": {
+        "expectSanitizer": true
+      }
+    },
+    {
+      "id": "q7",
+      "kind": "compiles",
+      "question": "Slide 113: which line does **not** create a `Tableau` object?",
+      "choices": [
+        "`Tableau t1( 10 );`",
+        "`Tableau t3();`",
+        "`Tableau t4{};`",
+        "`Tableau t5;`"
+      ],
+      "answer": 1,
+      "explanation": "`Tableau t3();` declares a **function** named `t3` returning a `Tableau`: the *most vexing parse*. Use `{}`."
+    },
+    {
+      "id": "q8",
+      "kind": "compiles",
+      "question": "Does this compile?",
+      "choices": [
+        "Yes",
+        "No: `taille_` is const and must be initialised in the initialiser list",
+        "No: `const` members are forbidden",
+        "No: the constructor needs a return type"
+      ],
+      "answer": 1,
+      "explanation": "By the time the constructor body runs, members are already initialised, and a `const` can't be assigned. Write `: taille_{ taille }` (slides 116–117).",
+      "code": "class Tableau {\npublic:\n  explicit Tableau(unsigned taille) { taille_ = taille; }\nprivate:\n  const unsigned taille_;\n};\nint main() { Tableau t{ 3 }; (void)t; }",
+      "slides": "116–117",
+      "verify": {
+        "expectCompile": false
+      }
+    },
+    {
+      "id": "q9",
+      "kind": "compiles",
+      "question": "Does `foo( 3 );` compile?",
+      "choices": [
+        "Yes: 3 converts implicitly to `Nombre`",
+        "No: the constructor is `explicit`",
+        "No: `foo` takes a reference",
+        "Yes, with a warning"
+      ],
+      "answer": 1,
+      "explanation": "`explicit` forbids using the constructor as an implicit conversion (slide 118). Write `foo( Nombre{ 3 } )`.",
+      "code": "class Nombre { public: explicit Nombre(int n) : n_{ n } {} private: int n_; };\nvoid foo(Nombre) {}\nint main() { foo( 3 ); }",
+      "slides": "118",
+      "verify": {
+        "expectCompile": false
+      }
+    },
+    {
+      "id": "q10",
+      "kind": "output",
+      "question": "What does this print?",
+      "choices": [
+        "`0 1`",
+        "`1 2`",
+        "`2 1`",
+        "`2 2`"
+      ],
+      "answer": 2,
+      "explanation": "The static counter is shared by all instances. Two objects exist inside the block, and after it only `a` remains.",
+      "code": "#include <iostream>\nclass A {\npublic:\n  A() { ++n_; }\n  ~A() { --n_; }\n  static int n() { return n_; }\nprivate:\n  inline static int n_{ 0 };\n};\nint main() { A a; { A b; std::cout << A::n() << \" \"; } std::cout << A::n() << \"\\n\"; }",
+      "slides": "119",
+      "verify": {
+        "expectStdout": "2 1"
+      }
+    },
+    {
+      "id": "q11",
+      "kind": "output",
+      "question": "In which order are the destructors called?",
+      "choices": [
+        "`a b`",
+        "`b a`",
+        "unspecified",
+        "`a` only"
+      ],
+      "answer": 1,
+      "explanation": "Automatic objects are destroyed in **reverse order of construction** at the end of their scope.",
+      "code": "#include <iostream>\nstruct N { char c; ~N() { std::cout << c << \" \"; } };\nint main() { N a{ 'a' }; N b{ 'b' }; }",
+      "verify": {
+        "expectStdout": "b a"
+      }
+    },
+    {
+      "id": "q12",
+      "kind": "concept",
+      "question": "What does `RAII` guarantee?",
+      "choices": [
+        "Objects are always allocated on the heap",
+        "A resource acquired in a constructor is released by the destructor, automatically and even when an exception is thrown",
+        "No copies are ever made",
+        "Garbage collection"
+      ],
+      "answer": 1,
+      "explanation": "*Resource Acquisition Is Initialisation* (slide 103): resource lifetime is tied to object lifetime, and destructors run deterministically during stack unwinding."
+    }
+  ]
+}

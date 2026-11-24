@@ -1,0 +1,211 @@
+{
+  "questions": [
+    {
+      "id": "q1",
+      "kind": "output",
+      "question": "What does this print?",
+      "choices": [
+        "`2 -3 -1`",
+        "`2 -4 1`",
+        "`2.5 -3.5 -1`",
+        "`2 -3 1`"
+      ],
+      "answer": 0,
+      "explanation": "Integer division truncates **towards zero** (`-7 / 2 == -3`), and `%` takes the sign of the dividend (`-7 % 2 == -1`). Python's `//` floors instead.",
+      "code": "#include <iostream>\nint main() { std::cout << 5 / 2 << \" \" << -7 / 2 << \" \" << -7 % 2 << \"\\n\"; }",
+      "slides": "32",
+      "verify": {
+        "expectStdout": "2 -3 -1"
+      }
+    },
+    {
+      "id": "q2",
+      "kind": "output",
+      "question": "What does this print?",
+      "choices": [
+        "`5 5 5`",
+        "`6 6 6`",
+        "`6 6 5`",
+        "`5 6 6`"
+      ],
+      "answer": 2,
+      "explanation": "`++i` increments then yields 6, so `j == 6`. `i--` yields the old value 6 (`k == 6`), then `i` becomes 5.",
+      "code": "#include <iostream>\nint main() { int i{ 5 }; int j{ ++i }; int k{ i-- }; std::cout << j << \" \" << k << \" \" << i << \"\\n\"; }",
+      "slides": "33",
+      "verify": {
+        "expectStdout": "6 6 5"
+      }
+    },
+    {
+      "id": "q3",
+      "kind": "compiles",
+      "question": "Does this compile?",
+      "choices": [
+        "Yes, `x` is 3",
+        "Yes, `x` is 4",
+        "No: narrowing conversion inside braces",
+        "No: `x` must be a double"
+      ],
+      "answer": 2,
+      "explanation": "Brace initialisation rejects *narrowing* conversions such as `double` → `int`. `int x = 3.7;` would compile (with a warning) and truncate to 3.",
+      "code": "int main() { int x{ 3.7 }; return x; }",
+      "slides": "29",
+      "verify": {
+        "expectCompile": false
+      }
+    },
+    {
+      "id": "q4",
+      "kind": "concept",
+      "question": "What is the type of `v` in `auto v = { 1 };`?",
+      "choices": [
+        "`int`",
+        "`std::vector<int>`",
+        "`std::initializer_list<int>`",
+        "`int[1]`"
+      ],
+      "answer": 2,
+      "explanation": "`auto` with `= { ... }` deduces an `std::initializer_list`. That's why slide 29 says to avoid it. `auto v{ 1 };` gives an `int`."
+    },
+    {
+      "id": "q5",
+      "kind": "output",
+      "question": "What does this print?",
+      "choices": [
+        "`one two three`",
+        "`two`",
+        "`two three`",
+        "`two three default`"
+      ],
+      "answer": 3,
+      "explanation": "Without `break`, execution **falls through** into every following case, including `default`.",
+      "code": "#include <iostream>\nint main() {\n  switch (2) {\n    case 1: std::cout << \"one \";\n    case 2: std::cout << \"two \";\n    case 3: std::cout << \"three \";\n    default: std::cout << \"default\";\n  }\n  std::cout << \"\\n\";\n}",
+      "slides": "41",
+      "verify": {
+        "expectStdout": "two three default"
+      }
+    },
+    {
+      "id": "q6",
+      "kind": "output",
+      "question": "What does this print?",
+      "choices": [
+        "`8`",
+        "`3`",
+        "`11`",
+        "Compile error"
+      ],
+      "answer": 0,
+      "explanation": "`f` receives a **copy** of `j` (pass by value), so assigning to the parameter doesn't change `j`.",
+      "code": "#include <iostream>\nvoid f(int i) { i = 3; }\nint main() { int j{ 8 }; f(j); std::cout << j << \"\\n\"; }",
+      "slides": "44",
+      "verify": {
+        "expectStdout": "8"
+      }
+    },
+    {
+      "id": "q7",
+      "kind": "compiles",
+      "question": "Does this compile?",
+      "choices": [
+        "Yes",
+        "No: two functions can't share a name",
+        "No: the signatures only differ by return type",
+        "No: default arguments must be at the start"
+      ],
+      "answer": 2,
+      "explanation": "The return type is **not** part of the signature, so these two declarations have the same signature `f(int)`.",
+      "code": "int f(int x) { return x; }\ndouble f(int x) { return x * 1.5; }\nint main() { return f(1); }",
+      "slides": "46",
+      "verify": {
+        "expectCompile": false
+      }
+    },
+    {
+      "id": "q8",
+      "kind": "compiles",
+      "question": "Does this compile?",
+      "choices": [
+        "Yes",
+        "No: once a parameter has a default, all the following ones need one",
+        "No: defaults are only allowed in declarations",
+        "No: `rate` can't default to a double literal"
+      ],
+      "answer": 1,
+      "explanation": "Default values must be at the **end** of the parameter list (slide 48).",
+      "code": "double fv(double pv, double rate = 0.05, int years) { return pv * rate * years; }\nint main() { return 0; }",
+      "slides": "48",
+      "verify": {
+        "expectCompile": false
+      }
+    },
+    {
+      "id": "q9",
+      "kind": "output",
+      "question": "What does this print?",
+      "choices": [
+        "`3 4`",
+        "`3 3`",
+        "`4 4`",
+        "`2 4`"
+      ],
+      "answer": 0,
+      "explanation": "`i` is captured **by value** when the lambda is created (1), and `j` **by reference**. After `++i; ++j;` the lambda still sees `i == 1` but `j == 3`: `1 + 3 = 4`.",
+      "code": "#include <iostream>\nint main() {\n  int i{ 1 }, j{ 2 };\n  auto sum = [i, &j]() { return i + j; };\n  std::cout << sum() << \" \";\n  ++i; ++j;\n  std::cout << sum() << \"\\n\";\n}",
+      "slides": "54",
+      "verify": {
+        "expectStdout": "3 4"
+      }
+    },
+    {
+      "id": "q10",
+      "kind": "concept",
+      "question": "Which variable must be known at compile time?",
+      "choices": [
+        "`const int a{ x };`",
+        "`constexpr int b{ 10 };`",
+        "both",
+        "neither"
+      ],
+      "answer": 1,
+      "explanation": "`const` only means *read-only after initialisation*: the value may come from run time. `constexpr` requires a compile-time constant."
+    },
+    {
+      "id": "q11",
+      "kind": "ub",
+      "question": "This program receives `2147483647` (INT_MAX) on stdin. What is printing `n + 1`?",
+      "choices": [
+        "`-2147483648`, guaranteed",
+        "`2147483648`",
+        "Undefined behaviour",
+        "A compile error"
+      ],
+      "answer": 2,
+      "explanation": "Signed integer overflow is **undefined behaviour**: any outcome is allowed. UBSan reports it. (Unsigned arithmetic, by contrast, wraps around by definition.)",
+      "code": "#include <iostream>\nint main() { int n; std::cin >> n; std::cout << n + 1 << \"\\n\"; }",
+      "slides": "31",
+      "verify": {
+        "expectSanitizer": true,
+        "stdin": "2147483647"
+      }
+    },
+    {
+      "id": "q12",
+      "kind": "output",
+      "question": "What does this print?",
+      "choices": [
+        "`0.3`",
+        "`equal`",
+        "`different`",
+        "It depends on the optimisation level"
+      ],
+      "answer": 2,
+      "explanation": "`0.1` and `0.2` aren't exactly representable in binary floating point. `0.1 + 0.2` is `0.30000000000000004`, which isn't `0.3`.",
+      "code": "#include <iostream>\nint main() { std::cout << (0.1 + 0.2 == 0.3 ? \"equal\" : \"different\") << \"\\n\"; }",
+      "slides": "31",
+      "verify": {
+        "expectStdout": "different"
+      }
+    }
+  ]
+}

@@ -1,0 +1,154 @@
+{
+  "questions": [
+    {
+      "id": "q1",
+      "kind": "concept",
+      "question": "Which of these operators **cannot** be overloaded?",
+      "choices": [
+        "`[]`",
+        "`()`",
+        "`?:`",
+        "`->`"
+      ],
+      "answer": 2,
+      "explanation": "`?:`, `.`, `::`, `sizeof` and the casts can't be overloaded. `[]`, `()` and `->` can (slides 139–140)."
+    },
+    {
+      "id": "q2",
+      "kind": "compiles",
+      "question": "`Money` has a converting constructor from `long` and a **member** `operator+`. Does `100 + fee` compile?",
+      "choices": [
+        "Yes",
+        "No: implicit conversions don't apply to the left operand of a member operator",
+        "Yes, but it calls `long::operator+`",
+        "No: `Money` must be explicit"
+      ],
+      "answer": 1,
+      "explanation": "For `a.operator+(b)`, `a` must already be a `Money`. A free (friend) `operator+` treats both operands alike (slide 141).",
+      "code": "struct Money { Money(long c) : c_{ c } {} Money operator+(const Money& m) const { return { c_ + m.c_ }; } long c_; };\nint main() { Money fee{ 250 }; Money b = 100 + fee; return int(b.c_); }",
+      "slides": "141",
+      "verify": {
+        "expectCompile": false
+      }
+    },
+    {
+      "id": "q3",
+      "kind": "concept",
+      "question": "What should `operator+=` return?",
+      "choices": [
+        "`void`",
+        "A copy of the result",
+        "`*this` by reference (`T&`)",
+        "A `bool` telling whether it succeeded"
+      ],
+      "answer": 2,
+      "explanation": "Like the built-in operators, compound assignment yields the left operand as an lvalue, so `(a += b) += c` works."
+    },
+    {
+      "id": "q4",
+      "kind": "concept",
+      "question": "Why is `operator<<` for `std::ostream` written as a free function?",
+      "choices": [
+        "It's faster",
+        "Its left operand is the stream, and we can't add members to `std::ostream`",
+        "Member operators can't return references",
+        "It must be `static`"
+      ],
+      "answer": 1,
+      "explanation": "`os << x` calls `operator<<(os, x)`, or `os.operator<<(x)`, which only the standard library can define (slide 145)."
+    },
+    {
+      "id": "q5",
+      "kind": "output",
+      "question": "What does this print (C++17 or later)?",
+      "choices": [
+        "`000 1`",
+        "`010 1`",
+        "`000 0`",
+        "Undefined behaviour"
+      ],
+      "answer": 0,
+      "explanation": "Since C++17, the right operand of `=` is evaluated first: `i++` yields 0 and sets `i` to 1, then `tab[1] = 0`. The array stays all zeros. Before C++17 this was UB (slide 137).",
+      "code": "#include <iostream>\nint main() { int tab[3] = { 0, 0, 0 }; int i = 0; tab[i] = i++; std::cout << tab[0] << tab[1] << tab[2] << \" \" << i << \"\\n\"; }",
+      "slides": "137",
+      "verify": {
+        "expectStdout": "000 1"
+      }
+    },
+    {
+      "id": "q6",
+      "kind": "output",
+      "question": "What does this print?",
+      "choices": [
+        "`1 1`",
+        "`1 0`",
+        "`0 1`",
+        "Compile error: no `operator<`"
+      ],
+      "answer": 1,
+      "explanation": "A defaulted `<=>` compares the members **in declaration order**, like tuples: `(1, 2) < (1, 10)`, and `(2, 0) < (1, 9)` is false. `<` is synthesised from `<=>`.",
+      "code": "#include <iostream>\n#include <compare>\nstruct V { int major, minor; auto operator<=>(const V&) const = default; };\nint main() { std::cout << (V{ 1, 2 } < V{ 1, 10 }) << \" \" << (V{ 2, 0 } < V{ 1, 9 }) << \"\\n\"; }",
+      "slides": "136",
+      "verify": {
+        "expectStdout": "1 0"
+      }
+    },
+    {
+      "id": "q7",
+      "kind": "concept",
+      "question": "Why provide **two** `operator[]` overloads (const and non-const)?",
+      "choices": [
+        "For speed",
+        "So that indexing works on const objects (read-only) as well as mutable ones (read/write)",
+        "The compiler requires it",
+        "To allow negative indices"
+      ],
+      "answer": 1,
+      "explanation": "A `const Tableau&` can only call const members, and the const overload returns `const double&` so that the elements can't be modified through it (slide 143)."
+    },
+    {
+      "id": "q8",
+      "kind": "concept",
+      "question": "In `std::istream& operator>>(std::istream& in, Complexe& c)`, what should happen on a parse error?",
+      "choices": [
+        "Throw an exception",
+        "Print an error message",
+        "Set `in`'s failbit (`in.setstate(std::ios::failbit)`) and leave `c` unchanged",
+        "Return `nullptr`"
+      ],
+      "answer": 2,
+      "explanation": "That's what the built-in extractors do, and it keeps `while (in >> c)` loops working."
+    },
+    {
+      "id": "q9",
+      "kind": "output",
+      "question": "What does this print?",
+      "choices": [
+        "`1`",
+        "`3`",
+        "`6`",
+        "Compile error"
+      ],
+      "answer": 2,
+      "explanation": "An object with `operator()` is a **function object**, and it keeps its state between calls.",
+      "code": "#include <iostream>\nstruct Acc { int total = 0; int operator()(int x) { return total += x; } };\nint main() { Acc a; a(1); a(2); std::cout << a(3) << \"\\n\"; }",
+      "slides": "162",
+      "verify": {
+        "expectStdout": "6"
+      }
+    },
+    {
+      "id": "q10",
+      "kind": "concept",
+      "question": "Overloading `&&` for your type…",
+      "choices": [
+        "is forbidden",
+        "keeps short-circuit evaluation",
+        "loses short-circuit evaluation: both operands are always evaluated",
+        "makes it a member automatically"
+      ],
+      "answer": 2,
+      "explanation": "An overloaded operator is a function call, so all of its arguments are evaluated first. Don't overload `&&`, `||` or `,`."
+    }
+  ]
+}
