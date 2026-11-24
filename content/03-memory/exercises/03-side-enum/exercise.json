@@ -1,0 +1,11 @@
+{
+  "title": "An enum class for order sides",
+  "difficulty": 2,
+  "editable": [
+    "side.hpp"
+  ],
+  "hints": [
+    "`switch (s) { case Side::Buy: ... }` works on an enum class.",
+    "Throw with `throw std::invalid_argument{ \"bad side: \" + text };` (`<stdexcept>`)."
+  ]
+}

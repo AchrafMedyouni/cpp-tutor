@@ -1,0 +1,11 @@
+{
+  "title": "Filtering with dynamic_cast",
+  "difficulty": 2,
+  "editable": [
+    "filter.hpp"
+  ],
+  "hints": [
+    "`if (auto* c = dynamic_cast<const Cercle*>(f)) { ... }` declares and tests in one go.",
+    "For the reference version, catch `std::bad_cast` by const reference."
+  ]
+}

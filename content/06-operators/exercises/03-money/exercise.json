@@ -1,0 +1,13 @@
+{
+  "title": "Money in integer cents",
+  "difficulty": 3,
+  "editable": [
+    "Money.hpp"
+  ],
+  "starterCompiles": false,
+  "hints": [
+    "Store `long cents_` and `std::string ccy_`; never a `double`.",
+    "`+`/`-` throw `std::invalid_argument` if the currencies differ.",
+    "For `<<`, print `cents / 100`, a dot, then `std::abs(cents % 100)` padded to 2 digits with `std::setw(2)` and `std::setfill('0')`. Handle the sign of small negative amounts like -0.05."
+  ]
+}

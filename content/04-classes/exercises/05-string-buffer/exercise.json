@@ -1,0 +1,12 @@
+{
+  "title": "Rule of three: a string buffer",
+  "difficulty": 4,
+  "editable": [
+    "Buffer.hpp"
+  ],
+  "hints": [
+    "Store `size_` and `data_` (a `char*` of `size_ + 1` chars, the last one `'\\0'`).",
+    "Copy constructor: allocate a new array and copy the characters (a deep copy, as in Tableau v3).",
+    "Assignment: copy-and-swap (Tableau v4). `append`: allocate a bigger array, copy both parts, then release the old one."
+  ]
+}

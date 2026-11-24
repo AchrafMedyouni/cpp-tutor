@@ -1,0 +1,11 @@
+{
+  "title": "Strong types with explicit",
+  "difficulty": 2,
+  "editable": [
+    "types.hpp"
+  ],
+  "hints": [
+    "Add `explicit` in front of each single-argument constructor.",
+    "`notional(Price p, Quantity q)` returns `p.value() * q.value()`: with explicit constructors, swapped arguments no longer compile."
+  ]
+}

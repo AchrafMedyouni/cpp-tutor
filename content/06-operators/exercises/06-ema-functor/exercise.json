@@ -1,0 +1,12 @@
+{
+  "title": "An EMA function object",
+  "difficulty": 2,
+  "editable": [
+    "ema.hpp"
+  ],
+  "starterCompiles": false,
+  "hints": [
+    "Store `alpha_`, the current value and a `bool started_`.",
+    "`double operator()(double x)`: the first call returns `x`; after that, `value = alpha * x + (1 - alpha) * value`."
+  ]
+}

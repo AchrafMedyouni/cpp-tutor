@@ -1,0 +1,13 @@
+{
+  "title": "An abstract Forme hierarchy",
+  "difficulty": 2,
+  "editable": [
+    "formes.hpp"
+  ],
+  "starterCompiles": false,
+  "hints": [
+    "In `Forme`: `virtual ~Forme() = default;` and `virtual double aire() const = 0;`.",
+    "Use `override` in each derived class; π is `3.14159265358979`.",
+    "Make `Carre` derive from `Forme` directly (see the LSP lesson), not from `Rectangle`."
+  ]
+}

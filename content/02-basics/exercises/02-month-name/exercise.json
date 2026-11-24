@@ -1,0 +1,11 @@
+{
+  "title": "Month names with switch",
+  "difficulty": 1,
+  "editable": [
+    "months.hpp"
+  ],
+  "hints": [
+    "`switch (m) { case 1: return \"January\"; ... default: return \"unknown\"; }`. Because every case returns, no `break` is needed.",
+    "For `days_in_month`, let several `case` labels fall through to the same `return`."
+  ]
+}

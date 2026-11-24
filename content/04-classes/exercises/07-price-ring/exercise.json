@@ -1,0 +1,12 @@
+{
+  "title": "A ring buffer of the last N prices",
+  "difficulty": 4,
+  "editable": [
+    "PriceRing.hpp"
+  ],
+  "hints": [
+    "Keep `capacity_`, `count_` (≤ capacity) and `head_` (where the next push goes) plus a `double*` buffer.",
+    "The oldest element is at `(head_ + capacity_ - count_) % capacity_`; `at(i)` adds `i` to that, modulo capacity.",
+    "It owns memory, so write the rule of three: destructor, deep copy, copy-and-swap assignment."
+  ]
+}

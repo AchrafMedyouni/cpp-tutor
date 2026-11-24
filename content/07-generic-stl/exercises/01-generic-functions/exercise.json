@@ -1,0 +1,12 @@
+{
+  "title": "Function templates",
+  "difficulty": 2,
+  "editable": [
+    "generic.hpp"
+  ],
+  "hints": [
+    "`template <typename T> T max_of(const std::vector<T>& v)`: throw `std::invalid_argument` when empty.",
+    "`clamp_to` needs only `<`: `v < lo ? lo : (hi < v ? hi : v)`.",
+    "For `count_equal`, deduce the element type from the vector."
+  ]
+}

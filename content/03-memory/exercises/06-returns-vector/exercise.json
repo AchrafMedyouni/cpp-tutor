@@ -1,0 +1,12 @@
+{
+  "title": "Returns, volatility and drawdown with std::vector",
+  "difficulty": 3,
+  "editable": [
+    "stats.hpp"
+  ],
+  "hints": [
+    "Take the input by `const std::vector<double>&`: no copy, no modification.",
+    "Sample standard deviation divides by `n - 1`.",
+    "Max drawdown: track the running peak; the drawdown at each point is `1 - price / peak`; keep the largest."
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "title": "VWAP per symbol with std::map",
+  "difficulty": 3,
+  "editable": [
+    "vwap.hpp"
+  ],
+  "hints": [
+    "Accumulate `notional` and `volume` per symbol in a `std::map<std::string, std::pair<double, long>>`, then divide.",
+    "`most_traded`: copy the (symbol, volume) pairs into a vector and `std::sort` it with a lambda: higher volume first, then alphabetical."
+  ]
+}

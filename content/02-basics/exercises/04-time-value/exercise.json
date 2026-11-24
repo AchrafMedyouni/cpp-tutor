@@ -1,0 +1,12 @@
+{
+  "title": "Time value of money (default arguments)",
+  "difficulty": 2,
+  "editable": [
+    "tvm.hpp"
+  ],
+  "hints": [
+    "`#include <cmath>` and use `std::pow(base, exponent)`.",
+    "Present value is the inverse of future value: `fv / pow(1 + r/m, years*m)`.",
+    "Annuity payment: `P = PV * r / (1 - (1 + r)^-n)`; return `PV / n` when `r == 0`."
+  ]
+}

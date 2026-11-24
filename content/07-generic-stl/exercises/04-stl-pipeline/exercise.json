@@ -1,0 +1,12 @@
+{
+  "title": "Price analytics with STL algorithms",
+  "difficulty": 3,
+  "editable": [
+    "analytics.hpp"
+  ],
+  "hints": [
+    "`std::transform` with two input ranges computes the returns in one call.",
+    "`top_n`: copy, then `std::partial_sort` (or sort) with `std::greater<>{}`, then resize.",
+    "`max_drawdown`: `std::max` of `1 - p / running_peak`. Try writing the running peak with `std::partial_sum(..., [](double a, double b){ return std::max(a, b); })`."
+  ]
+}

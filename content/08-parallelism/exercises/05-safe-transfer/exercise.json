@@ -1,0 +1,13 @@
+{
+  "title": "Transfers without deadlock",
+  "difficulty": 3,
+  "editable": [
+    "bank.hpp"
+  ],
+  "sanitizer": "tsan",
+  "hints": [
+    "`std::scoped_lock lock{ from.m, to.m };` (C++17) locks both mutexes with a deadlock-avoidance algorithm.",
+    "Or always lock the account with the smaller `id` first.",
+    "A transfer from an account to itself must not lock the same mutex twice: return early."
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "title": "A factory returning std::unique_ptr",
+  "difficulty": 3,
+  "editable": [
+    "factory.hpp"
+  ],
+  "hints": [
+    "Parse with an `std::istringstream`: read the kind, then the numbers. Return `nullptr` if anything fails.",
+    "`std::make_unique<Bond>(face, coupon)` converts to `std::unique_ptr<Instrument>` automatically.",
+    "`take_largest` must `std::move` the element out of the vector, then `erase` the empty slot."
+  ]
+}

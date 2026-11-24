@@ -1,0 +1,12 @@
+{
+  "title": "Compile-time computation",
+  "difficulty": 3,
+  "editable": [
+    "meta.hpp"
+  ],
+  "hints": [
+    "Recursive template: `Fib<N>::value = Fib<N-1>::value + Fib<N-2>::value`, with specialisations `Fib<0>` and `Fib<1>`.",
+    "The `constexpr` function can use a plain loop (C++14 onwards).",
+    "`Power<B, E>`: `B * Power<B, E-1>::value`, with `Power<B, 0>` as a partial specialisation."
+  ]
+}

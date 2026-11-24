@@ -1,0 +1,13 @@
+{
+  "title": "A Payoff class hierarchy",
+  "difficulty": 3,
+  "editable": [
+    "payoff.hpp"
+  ],
+  "hints": [
+    "Make `operator()(double) const` pure virtual in `Payoff`, and override it in each option.",
+    "`Straddle` can hold a `Call` and a `Put` as members, and add them up.",
+    "`expected_payoff` takes a `const Payoff&` and calls `p(s)` for each scenario: dynamic binding through a reference."
+  ],
+  "starterCompiles": false
+}

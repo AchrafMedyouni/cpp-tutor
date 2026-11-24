@@ -1,0 +1,3 @@
+Write `std::function<long()> make_id_generator(long start, long step)`. Each call of the returned function yields the next id: `start`, `start + step`, `start + 2·step`, …
+
+Two generators must be **independent**, so the state lives *inside* each lambda (captured by value, modified, which requires `mutable`). It must not live in a global or `static` variable.

@@ -1,0 +1,11 @@
+{
+  "title": "Functions on struct Complexe",
+  "difficulty": 1,
+  "editable": [
+    "complexe.hpp"
+  ],
+  "hints": [
+    "`std::sqrt` and `std::fabs` are in `<cmath>`.",
+    "Return a new aggregate with braces: `return { c.real, -c.imag };`."
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "title": "operator[] with const overload",
+  "difficulty": 2,
+  "editable": [
+    "Tableau.hpp"
+  ],
+  "starterCompiles": false,
+  "hints": [
+    "Two overloads: `double& operator[](unsigned)` and `const double& operator[](unsigned) const`.",
+    "Throw `std::out_of_range` from both when the index is too large."
+  ]
+}

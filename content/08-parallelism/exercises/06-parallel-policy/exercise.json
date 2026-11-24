@@ -1,0 +1,15 @@
+{
+  "title": "Parallel algorithms with execution policies",
+  "difficulty": 2,
+  "editable": [
+    "par.hpp"
+  ],
+  "sanitizer": "asan_ubsan",
+  "requires": [
+    "par"
+  ],
+  "hints": [
+    "`std::transform_reduce(std::execution::par, v.begin(), v.end(), 0.0, std::plus<>{}, [](double x){ return x * x; })`.",
+    "For `normalize`, compute the mean first, then `std::transform(std::execution::par, ...)` in place. The lambda writes only to its own element, so there is no race."
+  ]
+}

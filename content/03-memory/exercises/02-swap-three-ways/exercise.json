@@ -1,0 +1,11 @@
+{
+  "title": "Swapping by pointer and by reference",
+  "difficulty": 2,
+  "editable": [
+    "swaps.hpp"
+  ],
+  "hints": [
+    "With pointers, the body uses `*a` and `*b`; with references, just `a` and `b`.",
+    "`rotate3` can be done with two swaps."
+  ]
+}

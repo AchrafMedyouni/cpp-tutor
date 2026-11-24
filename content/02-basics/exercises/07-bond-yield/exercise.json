@@ -1,0 +1,12 @@
+{
+  "title": "Yield to maturity by bisection",
+  "difficulty": 4,
+  "editable": [
+    "yield.hpp"
+  ],
+  "hints": [
+    "`bond_price`: sum the discounted coupons `c·F / (1+y)^t` for t = 1..n, plus `F / (1+y)^n`.",
+    "`bisect`: keep the half where the sign changes; loop while `hi - lo > tol`.",
+    "`yield_to_maturity`: bisect the lambda `[&](double y) { return bond_price(face, coupon, years, y) - price; }` on [0, 1]."
+  ]
+}

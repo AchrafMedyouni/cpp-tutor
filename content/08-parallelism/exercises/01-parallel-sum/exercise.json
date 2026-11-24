@@ -1,0 +1,13 @@
+{
+  "title": "Parallel sum with std::thread",
+  "difficulty": 2,
+  "editable": [
+    "psum.hpp"
+  ],
+  "sanitizer": "tsan",
+  "hints": [
+    "Give each thread its own slice `[i*n/k, (i+1)*n/k)` and its own slot in a `std::vector<long long> partial(k)`: no shared writes, so no race.",
+    "Start the threads in a `std::vector<std::thread>` (with `emplace_back` and a lambda), join them all, then add up the partial sums.",
+    "Handle `nthreads == 0` by treating it as 1."
+  ]
+}

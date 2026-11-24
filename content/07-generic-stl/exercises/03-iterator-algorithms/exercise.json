@@ -1,0 +1,12 @@
+{
+  "title": "Write your own iterator algorithms",
+  "difficulty": 2,
+  "editable": [
+    "algos.hpp"
+  ],
+  "hints": [
+    "Template on the iterator type: `template <typename It, typename F> void for_each_(It first, It last, F f)`.",
+    "For `sum_`, the accumulator type is a template parameter with an initial value: `T sum_(It first, It last, T init)`.",
+    "Return the iterator itself (not an index), so the algorithms work on lists too."
+  ]
+}

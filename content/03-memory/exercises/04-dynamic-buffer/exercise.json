@@ -1,0 +1,12 @@
+{
+  "title": "A growable buffer with new[] / delete[]",
+  "difficulty": 3,
+  "editable": [
+    "buffer.hpp"
+  ],
+  "hints": [
+    "`new double[n]` gives a `double*`; release it with `delete[]`, never `delete`.",
+    "`grow`: allocate the new array, copy `old_n` elements, **free the old array**, return the new pointer.",
+    "The tests count live allocations: every `new[]` needs exactly one `delete[]`."
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "title": "Template method: account withdrawal rules",
+  "difficulty": 3,
+  "editable": [
+    "accounts.hpp"
+  ],
+  "hints": [
+    "`withdraw` in the base is **not** virtual: it calls the virtual `can_withdraw(amount)` and only then updates `balance_`.",
+    "`Savings` counts successful withdrawals in an attribute and refuses the 4th.",
+    "`balance_` must be `protected` (or have a protected setter) for derived classes to read it."
+  ]
+}

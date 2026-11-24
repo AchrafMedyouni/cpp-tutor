@@ -1,0 +1,11 @@
+{
+  "title": "A non-copyable id generator",
+  "difficulty": 2,
+  "editable": [
+    "IdGenerator.hpp"
+  ],
+  "hints": [
+    "`IdGenerator(const IdGenerator&) = delete;` and the same for `operator=`.",
+    "Build the id with `prefix_ + std::to_string(++counter_)`."
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "title": "Complexe as a real class",
+  "difficulty": 2,
+  "editable": [
+    "Complexe.hpp",
+    "Complexe.cpp"
+  ],
+  "hints": [
+    "Click *Check* first: each `no member named …` error is a member you still have to write.",
+    "Getters must be `const` (the tests call them on a `const Complexe&`).",
+    "Overload the setters: `void real(double v)` next to `double real() const`.",
+    "Define `module()` in `Complexe.cpp` as `double Complexe::module() const { ... }`."
+  ],
+  "starterCompiles": false
+}

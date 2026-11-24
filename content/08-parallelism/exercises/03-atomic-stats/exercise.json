@@ -1,0 +1,12 @@
+{
+  "title": "Lock-free statistics with std::atomic",
+  "difficulty": 3,
+  "editable": [
+    "stats.hpp"
+  ],
+  "sanitizer": "tsan",
+  "hints": [
+    "`std::atomic<long> count_{0}, sum_{0};` then `count_ += 1; sum_ += x;`, or `fetch_add`.",
+    "A maximum can't be updated with `+=`. Use a compare-exchange loop: `long cur = max_.load(); while (x > cur && !max_.compare_exchange_weak(cur, x)) {}`."
+  ]
+}

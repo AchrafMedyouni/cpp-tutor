@@ -1,0 +1,13 @@
+{
+  "title": "Stream operators for a Trade",
+  "difficulty": 3,
+  "editable": [
+    "trade_io.hpp"
+  ],
+  "starterCompiles": false,
+  "hints": [
+    "`<<`: `os << t.symbol << ' ' << (t.buy ? \"BUY\" : \"SELL\") << ' ' << t.qty << \" @ \"` then the price with 2 decimals. Restore the stream's flags afterwards, or format through an `std::ostringstream`.",
+    "`>>`: read `symbol side qty at price`, check that `at == \"@\"` and the side is valid, otherwise `is.setstate(std::ios::failbit)`.",
+    "Only modify `t` once everything has been read successfully."
+  ]
+}

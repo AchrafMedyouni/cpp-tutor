@@ -1,0 +1,12 @@
+{
+  "title": "Move operations for Tableau",
+  "difficulty": 4,
+  "editable": [
+    "Tableau.hpp"
+  ],
+  "hints": [
+    "Move constructor: take `other.tab_` and `other.taille_`, then set `other.tab_ = nullptr; other.taille_ = 0;`.",
+    "Move assignment: `swap(other); return *this;`. The old buffer dies with `other`.",
+    "Mark both `noexcept`: the tests check `std::is_nothrow_move_constructible_v`."
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "title": "A bank account with invariants",
+  "difficulty": 2,
+  "editable": [
+    "Account.hpp"
+  ],
+  "hints": [
+    "Check the arguments first, then throw `std::invalid_argument` (from `<stdexcept>`).",
+    "`withdraw` returns `false` and changes nothing when the balance is insufficient.",
+    "Count operations in a private member, incremented only on success."
+  ]
+}

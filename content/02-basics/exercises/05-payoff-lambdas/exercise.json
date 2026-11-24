@@ -1,0 +1,12 @@
+{
+  "title": "Payoffs as lambdas",
+  "difficulty": 3,
+  "editable": [
+    "payoffs.hpp"
+  ],
+  "hints": [
+    "Return a lambda that captures the strike **by value**: `return [K](double S) { return std::max(S - K, 0.0); };`.",
+    "A spread is the difference of two calls: capture the two `std::function`s by value.",
+    "Capturing by reference here would capture parameters that die when the function returns: a dangling capture."
+  ]
+}

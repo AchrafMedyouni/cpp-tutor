@@ -1,0 +1,1 @@
+Replace `get` by indexing (slide 143). `Tableau` must support `t[i] = x;` on a mutable object, **and** `t[i]` on a `const Tableau&`. Out-of-range indices throw `std::out_of_range`. Also add `double sum() const`.

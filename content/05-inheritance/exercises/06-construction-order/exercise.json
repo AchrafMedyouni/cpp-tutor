@@ -1,0 +1,12 @@
+{
+  "title": "Base constructors and construction order",
+  "difficulty": 2,
+  "editable": [
+    "instruments.hpp"
+  ],
+  "starterCompiles": false,
+  "hints": [
+    "`Bond(std::string name, double coupon) : Instrument{ std::move(name) }, coupon_{ coupon }`: the base goes first in the initialiser list.",
+    "Each constructor and destructor appends to `trace()`."
+  ]
+}

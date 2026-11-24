@@ -1,0 +1,13 @@
+{
+  "title": "A bounded blocking queue",
+  "difficulty": 4,
+  "editable": [
+    "queue.hpp"
+  ],
+  "sanitizer": "tsan",
+  "hints": [
+    "Use one `std::mutex`, two `std::condition_variable`s (`not_full_`, `not_empty_`) and a `std::deque<T>`.",
+    "Always wait with a predicate: `not_full_.wait(lock, [&]{ return q_.size() < cap_ || closed_; });`, which handles spurious wakeups.",
+    "`close()` sets the flag and calls `notify_all()` on both condition variables. `pop` returns `std::nullopt` once the queue is closed **and** empty."
+  ]
+}

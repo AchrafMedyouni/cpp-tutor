@@ -1,0 +1,13 @@
+{
+  "title": "Complete arithmetic for Complexe",
+  "difficulty": 2,
+  "editable": [
+    "Complexe.hpp"
+  ],
+  "starterCompiles": false,
+  "hints": [
+    "Write `+=`, `-=`, `*=` as members returning `*this` by reference.",
+    "Then `+`, `-`, `*` as free functions built from them: `Complexe res{ a }; return res += b;` (slide 142).",
+    "`==` can be defaulted in C++20: `bool operator==(const Complexe&) const = default;`."
+  ]
+}

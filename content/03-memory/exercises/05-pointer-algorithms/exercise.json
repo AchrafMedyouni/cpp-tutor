@@ -1,0 +1,12 @@
+{
+  "title": "Algorithms with pointers only",
+  "difficulty": 3,
+  "editable": [
+    "ptr_algos.hpp"
+  ],
+  "hints": [
+    "`[first, last)` is half-open: `last` points one past the end and must never be dereferenced.",
+    "Reverse: `while (first < last) { --last; swap(*first, *last); ++first; }`.",
+    "Return `last` when nothing is found, exactly like `std::find`."
+  ]
+}

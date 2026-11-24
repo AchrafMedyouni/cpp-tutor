@@ -1,0 +1,11 @@
+{
+  "title": "Counters with captured state",
+  "difficulty": 3,
+  "editable": [
+    "counter.hpp"
+  ],
+  "hints": [
+    "A lambda that modifies its captured copy must be declared `mutable`: `[n = start, step]() mutable { ... }`.",
+    "Return the current value, then advance it (or advance first: just make the tests pass)."
+  ]
+}

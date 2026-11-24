@@ -1,0 +1,11 @@
+{
+  "title": "Fix the missing virtual destructor",
+  "difficulty": 2,
+  "editable": [
+    "feed.hpp"
+  ],
+  "hints": [
+    "Only one word is missing.",
+    "Deleting a `MarketFeed*` that points to an `EquityFeed` must run `~EquityFeed`, otherwise its buffer leaks."
+  ]
+}

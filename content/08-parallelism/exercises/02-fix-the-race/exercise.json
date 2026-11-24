@@ -1,0 +1,12 @@
+{
+  "title": "Fix the race with a mutex",
+  "difficulty": 2,
+  "editable": [
+    "counter.hpp"
+  ],
+  "sanitizer": "tsan",
+  "hints": [
+    "Add a `std::mutex` member (mutable, so the const `count()` can lock it too).",
+    "Lock with `std::lock_guard<std::mutex> lock{ m_ };` at the start of every member function that touches the map."
+  ]
+}

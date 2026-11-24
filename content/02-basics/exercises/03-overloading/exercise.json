@@ -1,0 +1,11 @@
+{
+  "title": "Overloaded max3",
+  "difficulty": 2,
+  "editable": [
+    "max3.hpp"
+  ],
+  "hints": [
+    "Three functions with the same name and different parameter types: the compiler picks one from the argument types.",
+    "Pass `std::string` by `const&` to avoid copies, and return a `std::string` by value."
+  ]
+}

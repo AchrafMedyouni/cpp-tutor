@@ -1,0 +1,12 @@
+{
+  "title": "Static members: ids and live count",
+  "difficulty": 2,
+  "editable": [
+    "Trade.hpp"
+  ],
+  "hints": [
+    "`inline static long next_id_{ 1 };` lets you initialise a static member inside the class (C++17).",
+    "Every constructor (including the copy constructor) increments the live count; the destructor decrements it.",
+    "A copy is a new trade: give it a fresh id."
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "title": "Break a shared_ptr cycle with weak_ptr",
+  "difficulty": 3,
+  "editable": [
+    "desk.hpp"
+  ],
+  "hints": [
+    "A trader doesn't own their desk: make `desk` a `std::weak_ptr<Desk>`.",
+    "`desk_name()`: `if (auto d = desk.lock()) return d->name; return \"(none)\";`."
+  ]
+}

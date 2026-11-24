@@ -1,0 +1,13 @@
+{
+  "title": "A Fraction class with <=>",
+  "difficulty": 3,
+  "editable": [
+    "Fraction.hpp"
+  ],
+  "starterCompiles": false,
+  "hints": [
+    "Normalise in the constructor: divide by `std::gcd` (`<numeric>`) and keep the denominator positive.",
+    "Compare `a/b` and `c/d` by comparing `a*d` and `c*b` (denominators are positive), returning `std::strong_ordering`.",
+    "`operator<<` is a free function: `os << num << '/' << den`, and just `num` when `den == 1`."
+  ]
+}

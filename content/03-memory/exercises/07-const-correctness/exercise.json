@@ -1,0 +1,13 @@
+{
+  "title": "Fix the const-correctness",
+  "difficulty": 2,
+  "editable": [
+    "positions.hpp"
+  ],
+  "starterCompiles": false,
+  "hints": [
+    "Read the first error: the tests pass a `const Position*` (a const array) to a function expecting `Position*`.",
+    "A function that only reads should take `const T*` or `const T&`. One that modifies needs a non-const one.",
+    "`best` returns a pointer into a const array, so it must return `const Position*`."
+  ]
+}

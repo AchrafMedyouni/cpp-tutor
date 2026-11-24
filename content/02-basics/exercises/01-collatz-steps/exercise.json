@@ -1,0 +1,11 @@
+{
+  "title": "Collatz step count",
+  "difficulty": 1,
+  "editable": [
+    "collatz.hpp"
+  ],
+  "hints": [
+    "Use a loop: while `n != 1`, apply the rule and count.",
+    "Use `long long` for `n`: the sequence from 27 climbs to 9232, but bigger starts overflow `int`."
+  ]
+}
