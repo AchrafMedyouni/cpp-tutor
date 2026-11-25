@@ -7,6 +7,7 @@ import { Markdown } from "../components/Markdown";
 import { Badge, OutputPanel } from "../components/OutputPanel";
 import { RunControls, type RunSettings } from "../components/RunControls";
 import { TestResults } from "../components/TestResults";
+import { TestsPanel } from "../components/TestsPanel";
 import { api, type Exercise, type GradeResponse, type RunResponse, type SourceFile } from "../lib/api";
 import { CAP_HELP, missingCaps, useCaps } from "../lib/caps";
 import { useCourse } from "../lib/course";
@@ -150,6 +151,7 @@ function ExerciseView({ ex }: { ex: Exercise }) {
         </div>
       )}
       <Markdown chapter={ex.chapter}>{ex.statement}</Markdown>
+      <TestsPanel tests={ex.tests} io={ex.ioTests} />
       <CodeEditor
         files={files}
         onChange={onChange}

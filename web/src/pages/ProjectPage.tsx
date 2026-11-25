@@ -6,6 +6,7 @@ import { inlineMd } from "../components/ExampleRunner";
 import { Markdown } from "../components/Markdown";
 import { Badge, OutputPanel } from "../components/OutputPanel";
 import { TestResults } from "../components/TestResults";
+import { TestsPanel } from "../components/TestsPanel";
 import { api, type GradeResponse, type Project, type SourceFile } from "../lib/api";
 import { CAP_HELP, missingCaps, useCaps } from "../lib/caps";
 import { useCourse } from "../lib/course";
@@ -151,6 +152,11 @@ function ProjectView({ project }: { project: Project }) {
         </h2>
         <Markdown chapter={project.chapter}>{step.statement}</Markdown>
       </section>
+      <TestsPanel
+        key={current}
+        tests={step.tests}
+        note={current > 1 && step.cumulative ? "These are this step's new tests. The tests of the earlier steps run too, so don't break what already works." : undefined}
+      />
 
       <CodeEditor
         files={files}

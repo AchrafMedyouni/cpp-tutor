@@ -118,6 +118,34 @@ export const quizQuestion = z.object({
 export const quizSchema = z.object({ questions: z.array(quizQuestion).min(1) });
 export type QuizQuestion = z.infer<typeof quizQuestion>;
 
+export const drillSchema = z.object({
+  title: z.string(),
+  intro: z.string(),
+  sections: z
+    .array(
+      z.object({
+        title: z.string(),
+        /** Short reminder of the rule this section trains (Markdown). */
+        rule: z.string(),
+        /** Code every card of the section is judged against ("Given:"). */
+        prelude: z.string(),
+        cards: z
+          .array(
+            z.object({
+              code: z.string(),
+              /** "main" (default): the card is a statement inside main(); "global": a definition at file scope. */
+              scope: z.enum(["main", "global"]).default("main"),
+              compiles: z.boolean(),
+              explanation: z.string().min(1),
+            }),
+          )
+          .min(1),
+      }),
+    )
+    .min(1),
+});
+export type Drill = z.infer<typeof drillSchema>;
+
 const vizVar = z.object({
   name: z.string(),
   type: z.string().optional(),

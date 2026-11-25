@@ -6,6 +6,7 @@ export interface ChapterStats {
   exercises: [number, number];
   projectSteps: [number, number];
   quiz: [number, number]; // best score / count
+  drill: [number, number]; // cards answered right (best per section) / count
   pct: number;
 }
 
@@ -15,11 +16,14 @@ export function chapterStats(ch: ChapterOverview, p: Progress): ChapterStats {
   const stepsTotal = ch.projects.reduce((n, pr) => n + pr.steps, 0);
   const stepsDone = ch.projects.reduce((n, pr) => n + Math.min(p.projects[`${ch.id}/${pr.id}`]?.stepsDone ?? 0, pr.steps), 0);
   const quizBest = p.quiz[ch.id]?.best ?? 0;
+  const drillTotal = ch.drill?.count ?? 0;
+  const drillBest = Math.min(drillTotal, Object.values(p.drills?.[ch.id]?.best ?? {}).reduce((n, b) => n + b, 0));
   const parts: [number, number][] = [
     [lessons, ch.lessons.length],
     [exercises, ch.exercises.length],
     [stepsDone, stepsTotal],
     [quizBest, ch.quizCount],
+    [drillBest, drillTotal],
   ];
   const done = parts.reduce((n, [d]) => n + d, 0);
   const total = parts.reduce((n, [, t]) => n + t, 0);
@@ -28,6 +32,7 @@ export function chapterStats(ch: ChapterOverview, p: Progress): ChapterStats {
     exercises: [exercises, ch.exercises.length],
     projectSteps: [stepsDone, stepsTotal],
     quiz: [quizBest, ch.quizCount],
+    drill: [drillBest, drillTotal],
     pct: total ? Math.round((100 * done) / total) : 0,
   };
 }

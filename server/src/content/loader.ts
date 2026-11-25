@@ -7,6 +7,7 @@ import { REPO_ROOT } from "../compiler/pipeline.js";
 import {
   chapterSchema,
   courseSchema,
+  drillSchema,
   exampleMeta,
   exerciseMeta,
   ioTests,
@@ -156,6 +157,8 @@ export async function loadProject(ch: string, id: string) {
       ...s,
       number: i + 1,
       statement: await readFile(path.join(dir, "steps", String(i + 1), "statement.md"), "utf8"),
+      /** This step's own test files (shown to the learner). */
+      tests: await readSources(path.join(dir, "steps", String(i + 1), "tests")),
     })),
   );
   return { id, chapter: ch, meta, starter, steps, dir };
@@ -181,6 +184,17 @@ export async function loadQuiz(ch: string) {
   return readJson(file, quizSchema);
 }
 
+export async function loadDrill(ch: string) {
+  const file = path.join(chapterDir(ch), "drill.json");
+  if (!existsSync(file)) throw new HttpError(404, `No drill for ${ch}`);
+  return readJson(file, drillSchema);
+}
+async function drillSummary(ch: string) {
+  if (!existsSync(path.join(chapterDir(ch), "drill.json"))) return null;
+  const d = await loadDrill(ch);
+  return { title: d.title, count: d.sections.reduce((n, s) => n + s.cards.length, 0) };
+}
+
 const VIZ_DIR = () => path.join(CONTENT_DIR, "visualizer");
 export async function listViz() {
   if (!existsSync(VIZ_DIR())) return [];
@@ -202,14 +216,15 @@ export async function loadOverview() {
   const course = await loadCourse();
   const chapters = await Promise.all(
     course.chapters.map(async (id) => {
-      const [chapter, lessons, exercises, projects, quiz] = await Promise.all([
+      const [chapter, lessons, exercises, projects, quiz, drill] = await Promise.all([
         loadChapter(id),
         listLessons(id),
         listExercises(id),
         listProjects(id),
         loadQuiz(id),
+        drillSummary(id),
       ]);
-      return { id, ...chapter, lessons, exercises, projects, quizCount: quiz.questions.length };
+      return { id, ...chapter, lessons, exercises, projects, quizCount: quiz.questions.length, drill };
     }),
   );
   return { ...course, chapters };

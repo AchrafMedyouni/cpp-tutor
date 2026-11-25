@@ -1,5 +1,5 @@
 /**
- * npm run verify-content [-- <chapter-id>... ] [--only=examples,exercises,projects,quizzes,viz] [-j N]
+ * npm run verify-content [-- <chapter-id>... ] [--only=examples,exercises,projects,quizzes,drills,viz,lessons] [-j N]
  *
  * Compiles and checks every piece of course content:
  *  - examples: "clean" ones compile with zero warnings and run clean under ASan+UBSan (or TSan),
@@ -9,6 +9,7 @@
  *    the starter fails step 1.
  *  - quizzes: answers in range; questions with a `verify` block are compiled and checked.
  *  - visualizer scenarios: schema-valid, line numbers in range, refs resolve.
+ *  - drills: every card compiles (or not) exactly as its answer claims, and errors point into the card itself.
  *  - lessons: every ::example / ::visualize id resolves; every example is used by some lesson.
  */
 import { existsSync } from "node:fs";
@@ -16,6 +17,7 @@ import { readdir } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import type { SanitizerMode, SourceFile } from "../shared/api.js";
+import { drillProgram } from "../shared/drill.js";
 import { getCapabilities } from "../server/src/compiler/detect.js";
 import { build, runBinary } from "../server/src/compiler/pipeline.js";
 import { withTempDir } from "../server/src/compiler/sandbox.js";
@@ -25,6 +27,7 @@ import {
   listExercises,
   listProjects,
   loadCourse,
+  loadDrill,
   loadExample,
   loadExerciseInternals,
   loadLesson,
@@ -231,6 +234,42 @@ async function checkQuiz(ch: string): Promise<string | null> {
   return problems.length ? problems.join("\n") : null;
 }
 
+// ---------------------------------------------------------------- drills
+async function compileOnly(source: string) {
+  return withTempDir(async (dir) => (await build(dir, [{ name: "main.cpp", content: source }], { sanitizer: "none", trackAllocs: false })).compile);
+}
+async function checkDrill(ch: string): Promise<string | null> {
+  const drill = await loadDrill(ch);
+  const problems: string[] = [];
+  for (const [si, sec] of drill.sections.entries()) {
+    const base = await compileOnly(drillProgram(sec.prelude, { code: "" }));
+    if (!base.ok) {
+      problems.push(`section ${si + 1} prelude does not compile:\n${clip(base.raw, 400)}`);
+      continue;
+    }
+    const w = warningsOf(base);
+    if (w.length) problems.push(`section ${si + 1} prelude has warnings:\n${w.join("\n")}`);
+    const results = await Promise.all(
+      sec.cards.map(async (card) => {
+        const src = drillProgram(sec.prelude, card);
+        const c = await compileOnly(src);
+        const tag = `section ${si + 1} card ${JSON.stringify(card.code.split("\n")[0])}`;
+        if (c.ok !== card.compiles) return `${tag}: answer says compiles=${card.compiles}, compiler says ${c.ok}\n${clip(c.raw, 400)}`;
+        if (!c.ok) {
+          const lines = src.split("\n");
+          const first = lines.findIndex((l) => l.includes("// ---- Card ----")) + 2; // 1-based line of the card's first line
+          const last = first + card.code.trimEnd().split("\n").length - 1;
+          const err = c.diagnostics.find((d) => d.severity === "error");
+          if (err && (err.line < first || err.line > last)) return `${tag}: first error is outside the card (line ${err.line}: ${err.message})`;
+        }
+        return null;
+      }),
+    );
+    problems.push(...results.filter((r): r is string => !!r));
+  }
+  return problems.length ? problems.join("\n") : null;
+}
+
 // ---------------------------------------------------------------- visualizer
 async function checkViz(id: string): Promise<string | null> {
   const s = await loadViz(id);
@@ -283,6 +322,7 @@ for (const ch of chapters) {
   if (want("exercises")) for (const e of await listExercises(ch)) task("exercise", `${ch}/${e.id}`, () => checkExercise(ch, e.id));
   if (want("projects")) for (const p of await listProjects(ch)) task("project", `${ch}/${p.id}`, () => checkProject(ch, p.id));
   if (want("quizzes")) task("quiz", ch, () => checkQuiz(ch));
+  if (want("drills") && existsSync(path.join(CONTENT_DIR, ch, "drill.json"))) task("drill", ch, () => checkDrill(ch));
 }
 if (want("viz") && !chapterFilter.length) for (const v of vizList) task("viz", v.id, () => checkViz(v.id));
 

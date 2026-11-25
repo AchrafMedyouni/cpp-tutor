@@ -125,11 +125,12 @@ function Runner({ example }: { example: Example }) {
 
 /** Minimal inline markdown for short strings: `code`, **bold**, *italic*. Escapes HTML first. */
 export function inlineMd(s: string): string {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/`([^`]+)`/g, '<code class="rounded bg-black/5 px-1 font-mono text-[0.85em] dark:bg-white/10">$1</code>')
+  const esc = (t: string) => t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  // Code spans are swapped for placeholders before emphasis is parsed, so the `*` in `int*` is never
+  // taken for italics, while **bold with `code` inside** still works.
+  const codes: string[] = [];
+  return esc(s.replace(/`([^`]+)`/g, (_, c: string) => `\u0000${codes.push(c) - 1}\u0000`))
     .replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>")
-    .replace(/\*([^*]+)\*/g, "<i>$1</i>");
+    .replace(/\*([^*\s][^*]*)\*/g, "<i>$1</i>")
+    .replace(/\u0000(\d+)\u0000/g, (_, i: string) => `<code class="rounded bg-black/5 px-1 font-mono text-[0.85em] dark:bg-white/10">${esc(codes[Number(i)])}</code>`);
 }

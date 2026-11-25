@@ -1,0 +1,10 @@
+{
+  "title": "const left of * vs right of *",
+  "expectedStdout": "x = 20, *p = 2, *r = 20, *view = 20",
+  "tryThis": [
+    "Uncomment `*p = 5;` and read the error: which variable does the compiler say is read-only?",
+    "Uncomment `q = &y;`. Compare the error with the previous one.",
+    "Replace `const int* p` with `int const* p`: nothing changes, only the side of `*` matters.",
+    "Uncomment `int* sneaky = p;`: removing const is refused even though `y` itself isn't const."
+  ]
+}

@@ -9,6 +9,7 @@ import { CourseProvider } from "./lib/course";
 import { ProgressProvider } from "./lib/progress";
 import { ChapterPage } from "./pages/ChapterPage";
 import { Dashboard } from "./pages/Dashboard";
+import { DrillPage } from "./pages/DrillPage";
 import { ExercisePage } from "./pages/ExercisePage";
 import { LessonPage } from "./pages/LessonPage";
 import { ProjectPage } from "./pages/ProjectPage";
@@ -23,6 +24,7 @@ const router = createBrowserRouter([
       { path: "/ch/:ch", element: <ChapterPage /> },
       { path: "/ch/:ch/lesson/:id", element: <LessonPage /> },
       { path: "/ch/:ch/quiz", element: <QuizPage /> },
+      { path: "/ch/:ch/drill", element: <DrillPage /> },
       { path: "/ch/:ch/exercise/:id", element: <ExercisePage /> },
       { path: "/ch/:ch/project/:id", element: <ProjectPage /> },
       { path: "/visualizer", element: <VisualizerList /> },

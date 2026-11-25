@@ -50,6 +50,16 @@ export function ChapterPage() {
           {progress.quiz[c.id] && <span className="ml-3 text-sm text-zinc-500">best score {progress.quiz[c.id].best}/{c.quizCount}</span>}
         </Section>
       )}
+      {c.drill && (
+        <Section title="⚡ Drill">
+          <Link to={`/ch/${c.id}/drill`} className="text-sky-600 hover:underline dark:text-sky-400">
+            {c.drill.title}
+          </Link>
+          <span className="ml-3 text-sm text-zinc-500">
+            {c.drill.count} rapid-fire "does it compile?" cards{st.drill[0] > 0 && ` · ${st.drill[0]}/${c.drill.count} right`}
+          </span>
+        </Section>
+      )}
       {c.exercises.length > 0 && (
         <Section title="🏋️ Exercises">
           <ul className="space-y-1">

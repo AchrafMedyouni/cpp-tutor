@@ -1,0 +1,9 @@
+{
+  "title": "Four ways to pass a Position",
+  "expectedStdout": "byValue:    modified a different object\n  -> pos.qty = 100  (unchanged: the function changed its copy)\nbyConstRef: read pos itself, notional 250\nbyRef:      modified pos itself\n  -> pos.qty = 0\nbyPtr:      modified pos itself\n  -> pos.qty = 0\nbyPtr:      got nullptr, nothing to do\nbyConstRef: read a different object, notional 10",
+  "tryThis": [
+    "Uncomment the last line: why is a temporary refused by `Position&` but accepted by `const Position&`?",
+    "Add `p.qty = 1;` inside `byConstRef` and read the error.",
+    "Call `byRef(pos)` with a `const Position cpos{ 1, 1.0 };` instead: which signatures still accept `cpos`?"
+  ]
+}

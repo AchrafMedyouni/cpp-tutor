@@ -6,10 +6,11 @@ A local web app that teaches CentraleSupélec's **C++ course (3MD1080, D. Marcad
 
 | Feature | Details |
 |---|---|
-| **8 chapters, 44 lessons** | slides 1–213 in order: intro and toolchain → basics → memory → classes → inheritance → operators → templates and the STL → parallelism |
-| **137 runnable examples** | editable in Monaco, with stdin, sanitizers and allocation tracking. Slide code is reproduced verbatim ("as on the slides"), and slide errata are pointed out |
+| **8 chapters, 45 lessons** | slides 1–213 in order: intro and toolchain → basics → memory → classes → inheritance → operators → templates and the STL → parallelism |
+| **139 runnable examples** | editable in Monaco, with stdin, sanitizers and allocation tracking. Slide code is reproduced verbatim ("as on the slides"), and slide errata are pointed out |
 | **92 quiz questions** | "what does this print / does it compile / is it UB / which constructor", all machine-checked |
-| **53 exercises** | auto-graded with hidden doctest tests (behaviour, leaks, copy/move counts, TSan), progressive hints, reference solutions |
+| **53 exercises** | auto-graded by doctest tests shown next to the statement (behaviour, leaks, copy/move counts, TSan), progressive hints, reference solutions |
+| **Signatures & const drill** | 72 rapid-fire "does it compile?" cards (chapter 3) on const/pointers/references/parameters/function pointers; each answer is proven by the compiler, and the real compiler output is one click away |
 | **10 mini-projects, 30 steps** | Portfolio v1/v2, Tableau v1→v4, financial instruments (Black–Scholes, book delta), Money, Vector/Matrix, TimeSeries\<T\>, limit order book, multithreaded Monte Carlo, market-data pipeline |
 | **Memory visualizer** | 10 step-through scenarios showing stack frames, heap blocks and pointer/reference arrows |
 | **Progress dashboard** | completion per chapter, "continue where you left off", reset |
@@ -63,6 +64,7 @@ content/
     lessons/NN-name.md             Markdown + frontmatter {title, slides}
     examples/<id>/                 main.cpp (+ more files) and meta.json
     quiz.json                      questions with explanations (+ optional machine checks)
+    drill.json                     optional: sections of {prelude, cards: [{code, compiles, explanation}]}
     exercises/NN-name/             exercise.json, statement.md, starter/, solution/, tests/ or io-tests.json
     projects/NN-name/              project.json, starter/, steps/<n>/{statement.md, tests/, solution/}
   visualizer/<scenario>.json       hand-authored memory states, one per step
@@ -87,7 +89,7 @@ Key fields of an example's `meta.json`: `title`, `files` (tab order), `stdin`, `
 
 ### Exercises and grading
 
-- `mode: "doctest"` (default): your files are compiled with the hidden `tests/*.cpp`, which use [doctest](https://github.com/doctest/doctest) (vendored in `server/cpp-support/doctest.h`). They are linked with a precompiled doctest `main` (cached in `.cache/`), and results come from doctest's XML reporter.
+- `mode: "doctest"` (default): your files are compiled with `tests/*.cpp` (shown to the learner, so nothing is guesswork; only the solution stays server-side), which use [doctest](https://github.com/doctest/doctest) (vendored in `server/cpp-support/doctest.h`). They are linked with a precompiled doctest `main` (cached in `.cache/`), and results come from doctest's XML reporter.
 - `mode: "io"`: `io-tests.json` lists `{name, stdin, expectedStdout, match: exact|trim|regex}`.
 - Tests can check behaviour rather than output. `cpplab/tracked.h` provides `cpplab::Tracked`, which counts constructions, copies, moves and destructions. `cpplab/alloc_tracker.h` provides `cpplab::live_allocations()`, which counts heap blocks still allocated.
 - Only the files listed in `editable` are taken from the learner. Other starter files are read-only.
@@ -101,6 +103,7 @@ Key fields of an example's `meta.json`: `title`, `files` (tab order), `stdin`, `
 - every exercise's reference solution passes all its tests under its sanitizer with zero warnings, and the **starter fails** at least one test (no vacuous tests);
 - every project step's solution passes that step's tests, plus earlier steps' tests when `cumulative`;
 - every quiz question with a `verify` block has the claimed behaviour (compiles or not, prints X, triggers a sanitizer);
+- every drill card compiles (or fails to) exactly as its answer says, with the error located in the card rather than in the shared prelude;
 - every `::example`/`::visualize` reference resolves, every example is used by a lesson, and every visualizer step is consistent.
 
 ## Design decisions

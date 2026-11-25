@@ -13,10 +13,12 @@ export interface Progress {
     { stepsDone: number; current?: number; code?: SourceFile[]; hintsShown?: Record<number, number>; attempts?: Record<number, number> }
   >;
   vizSeen: Record<string, boolean>;
+  /** Best score per drill section, by chapter: drills["03-memory"].best["0"] = 17 */
+  drills: Record<string, { best: Record<string, number> }>;
   last?: { route: string; title: string; at: number };
 }
 
-export const emptyProgress = (): Progress => ({ lessonsRead: {}, quiz: {}, exercises: {}, projects: {}, vizSeen: {} });
+export const emptyProgress = (): Progress => ({ lessonsRead: {}, quiz: {}, exercises: {}, projects: {}, vizSeen: {}, drills: {} });
 
 interface Ctx {
   progress: Progress;

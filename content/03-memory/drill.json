@@ -1,0 +1,410 @@
+{
+  "title": "Signatures & const drill",
+  "intro": "Rapid-fire: for each card, decide whether it **compiles** together with the section's *Given* code. Keys: **C** = compiles, **E** = error, **Enter** = next. After answering you can see what the real compiler says. Every answer here is checked by the compiler in `verify-content`, so none of them is a guess.",
+  "sections": [
+    {
+      "title": "Reading `const` with pointers",
+      "rule": "Read the declaration **right to left**, starting at the name. A `const` **left of `*`** protects the **pointee**: you can't modify it *through this pointer*. A `const` **right of `*`** protects the **pointer itself**: it can't be re-aimed. References only have the first kind.",
+      "prelude": "int x = 1;\nint y = 2;\nconst int cx = 3;",
+      "cards": [
+        {
+          "code": "const int* p = &x;\n*p = 5;",
+          "compiles": false,
+          "explanation": "`p` is a *pointer to const int*: you can't modify the pointee **through `p`**. (`x` itself isn't const: `x = 5;` would be fine.)"
+        },
+        {
+          "code": "const int* p = &x;\np = &y;",
+          "compiles": true,
+          "explanation": "The `const` is left of `*`, so it protects the int, not the pointer. Re-aiming `p` is allowed."
+        },
+        {
+          "code": "int* const p = &x;\n*p = 5;",
+          "compiles": true,
+          "explanation": "Read right to left: `p` is a **const pointer** to int. The pointer is fixed, but the int it points to can be modified."
+        },
+        {
+          "code": "int* const p = &x;\np = &y;",
+          "compiles": false,
+          "explanation": "`p` is a const pointer: once aimed, it can't be re-aimed."
+        },
+        {
+          "code": "int const* p = &x;\n*p = 5;",
+          "compiles": false,
+          "explanation": "`int const*` is exactly `const int*`. Only the position of `const` **relative to `*`** matters."
+        },
+        {
+          "code": "int* const p;",
+          "compiles": false,
+          "explanation": "A const object must be initialised. A const pointer has to be aimed when it's created."
+        },
+        {
+          "code": "const int* p;",
+          "compiles": true,
+          "explanation": "A *pointer to const* is not itself const, so it can be left uninitialised (but don't dereference it before aiming it)."
+        },
+        {
+          "code": "const int* const p = &x;\np = &y;",
+          "compiles": false,
+          "explanation": "Const on both sides: neither the pointee nor the pointer can change."
+        },
+        {
+          "code": "const int* const p = &cx;\nint v = *p;",
+          "compiles": true,
+          "explanation": "Reading is always allowed. `const` only forbids writing."
+        },
+        {
+          "code": "int* p = &cx;",
+          "compiles": false,
+          "explanation": "`&cx` has type `const int*`. Storing it in an `int*` would let you modify a const, i.e. **remove** const. Never implicit."
+        },
+        {
+          "code": "const int* p = &cx;",
+          "compiles": true,
+          "explanation": "The types match: a read-only view of a read-only int."
+        },
+        {
+          "code": "int* p = &x;\nconst int* q = p;",
+          "compiles": true,
+          "explanation": "**Adding** const is always allowed: `q` is a read-only view of `x`."
+        },
+        {
+          "code": "const int* q = &x;\nint* p = q;",
+          "compiles": false,
+          "explanation": "Removing const is never implicit. `x` isn't const, but the compiler only knows `q`'s type: `const int*`."
+        },
+        {
+          "code": "int* const p = &x;\nint* q = p;",
+          "compiles": true,
+          "explanation": "This copies the **value** of the pointer (an address) into a new pointer. The `const` was about `p` itself, not about the int, so nothing is lost."
+        },
+        {
+          "code": "const int* p = &x;\nx = 7;",
+          "compiles": true,
+          "explanation": "`p` is a read-only *view*. It doesn't freeze `x`, which can still change by other paths. \"Pointer to const\" means \"I won't modify it through here\", not \"this data is constant\"."
+        },
+        {
+          "code": "int& r = cx;",
+          "compiles": false,
+          "explanation": "Same rule for references: a non-const `int&` to a `const int` would allow modifying it."
+        },
+        {
+          "code": "const int& r = x;\nr = 4;",
+          "compiles": false,
+          "explanation": "`r` is a read-only alias of `x`, so you can't assign through it."
+        },
+        {
+          "code": "int& r = x;\nr = 4;",
+          "compiles": true,
+          "explanation": "A plain reference is just another name for `x`: this sets `x` to 4."
+        }
+      ]
+    },
+    {
+      "title": "Passing arguments: which calls compile?",
+      "rule": "**You can add `const`, never remove it.** A temporary (`42`, `x + 1`, `make()`) binds to a by-value parameter, a `const T&` or a `T&&`, but **never** to a plain `T&`. It also has no address to take with `&`.",
+      "prelude": "void byValue(int v) {}\nvoid byRef(int& r) {}\nvoid byConstRef(const int& r) {}\nvoid byPtr(int* p) {}\nvoid byConstPtr(const int* p) {}\nvoid byRvalueRef(int&& r) {}\nint make() { return 42; }\n\nint x = 1;\nconst int cx = 2;",
+      "cards": [
+        {
+          "code": "byValue(x);",
+          "compiles": true,
+          "explanation": "By value: the function gets its own copy. It accepts anything convertible to `int`."
+        },
+        {
+          "code": "byValue(cx);",
+          "compiles": true,
+          "explanation": "A copy of a const is a fresh, modifiable `int`, so passing by value never conflicts with `const`."
+        },
+        {
+          "code": "byValue(42);",
+          "compiles": true,
+          "explanation": "Temporaries can be copied too."
+        },
+        {
+          "code": "byRef(x);",
+          "compiles": true,
+          "explanation": "`r` becomes another name for `x`. The function can modify the caller's variable."
+        },
+        {
+          "code": "byRef(cx);",
+          "compiles": false,
+          "explanation": "`byRef` could modify `r`, i.e. `cx`. Binding `int&` to a `const int` would **remove const**."
+        },
+        {
+          "code": "byRef(42);",
+          "compiles": false,
+          "explanation": "A non-const reference can't bind to a temporary (an rvalue). Modifying \"the 42\" would be meaningless."
+        },
+        {
+          "code": "byRef(x + 1);",
+          "compiles": false,
+          "explanation": "`x + 1` is a temporary value, not a variable. Same reason as `byRef(42)`."
+        },
+        {
+          "code": "byRef(make());",
+          "compiles": false,
+          "explanation": "A function returning `int` by value yields a temporary, which can't bind to `int&`."
+        },
+        {
+          "code": "byConstRef(x);",
+          "compiles": true,
+          "explanation": "Adding const is fine: the function just promises not to modify `x`."
+        },
+        {
+          "code": "byConstRef(cx);",
+          "compiles": true,
+          "explanation": "A const alias of a const object."
+        },
+        {
+          "code": "byConstRef(42);",
+          "compiles": true,
+          "explanation": "Special rule: a **`const&` can bind to a temporary**, which lives until the end of the call. That's why `const T&` is the default for read-only parameters: it accepts *everything*, with no copy."
+        },
+        {
+          "code": "byConstRef(make());",
+          "compiles": true,
+          "explanation": "Same rule: `const int&` accepts temporaries."
+        },
+        {
+          "code": "byPtr(&x);",
+          "compiles": true,
+          "explanation": "`&x` has type `int*`, which matches exactly."
+        },
+        {
+          "code": "byPtr(x);",
+          "compiles": false,
+          "explanation": "`byPtr` wants an **address**, and `x` is an `int`. Write `byPtr(&x)`. Unlike references, pointers make the `&` visible at the call site."
+        },
+        {
+          "code": "byPtr(&cx);",
+          "compiles": false,
+          "explanation": "`&cx` is a `const int*`. Passing it as `int*` would remove const."
+        },
+        {
+          "code": "byConstPtr(&cx);",
+          "compiles": true,
+          "explanation": "A `const int*` parameter accepts the address of a const."
+        },
+        {
+          "code": "byConstPtr(&x);",
+          "compiles": true,
+          "explanation": "`int*` → `const int*` adds const, which is always allowed."
+        },
+        {
+          "code": "byPtr(&42);",
+          "compiles": false,
+          "explanation": "A temporary has no address: `&` needs an lvalue."
+        },
+        {
+          "code": "byPtr(nullptr);",
+          "compiles": true,
+          "explanation": "A pointer parameter can receive \"no object\". That is **the** reason to choose `T*` over `T&`."
+        },
+        {
+          "code": "byRef(nullptr);",
+          "compiles": false,
+          "explanation": "There is no null reference: a reference always names an existing object."
+        },
+        {
+          "code": "int* p = &x;\nbyRef(*p);",
+          "compiles": true,
+          "explanation": "`*p` is an lvalue naming `x`, so it binds to `int&` (and `byRef` can modify `x`)."
+        },
+        {
+          "code": "const int* q = &x;\nbyRef(*q);",
+          "compiles": false,
+          "explanation": "Seen through `q`, `*q` has type `const int`. Binding it to `int&` would remove const."
+        },
+        {
+          "code": "int& r = x;\nbyPtr(&r);",
+          "compiles": true,
+          "explanation": "A reference is just another name for `x`, so `&r` is `&x`."
+        },
+        {
+          "code": "byRvalueRef(x);",
+          "compiles": false,
+          "explanation": "`int&&` binds **only** to rvalues (temporaries). Chapter 7: `std::move(x)` turns `x` into one."
+        },
+        {
+          "code": "byRvalueRef(42);",
+          "compiles": true,
+          "explanation": "`42` is a temporary, exactly what `int&&` accepts."
+        }
+      ]
+    },
+    {
+      "title": "Inside the function: what may the body do?",
+      "rule": "A parameter type is a **promise**. With `const T&` or `const T*` the body may only **read**. With `T* const` the local pointer can't be re-aimed (rarely useful). You can't **return** a non-const handle (`T&`, `T*`) to something you only received as const.",
+      "prelude": "struct Position { long qty; double price; };",
+      "cards": [
+        {
+          "code": "void f(const Position& p) {\n  p.qty = 0;\n}",
+          "compiles": false,
+          "explanation": "`p` is a read-only alias: you can't modify its members.",
+          "scope": "global"
+        },
+        {
+          "code": "double notional(const Position& p) {\n  return p.qty * p.price;\n}",
+          "compiles": true,
+          "explanation": "Reading through a `const&` is always fine. This is the right signature for a read-only function.",
+          "scope": "global"
+        },
+        {
+          "code": "void f(Position p) {\n  p.qty = 0;\n}",
+          "compiles": true,
+          "explanation": "It compiles, but it modifies a **copy**: the caller's `Position` is unchanged. This was the bug in the const-correctness exercise's `scale`.",
+          "scope": "global"
+        },
+        {
+          "code": "void scale(Position& p, double k) {\n  p.qty = static_cast<long>(p.qty * k);\n}",
+          "compiles": true,
+          "explanation": "A non-const reference: the body modifies the caller's object. Use it when modifying is the function's job.",
+          "scope": "global"
+        },
+        {
+          "code": "void f(const Position* p) {\n  p->qty = 0;\n}",
+          "compiles": false,
+          "explanation": "The `const` is left of `*`: the `Position` can't be modified through `p`.",
+          "scope": "global"
+        },
+        {
+          "code": "void f(const Position* p) {\n  p = nullptr;\n}",
+          "compiles": true,
+          "explanation": "The `Position` is protected, but the local pointer `p` (a copy of the caller's pointer) is not. Re-aiming it is allowed and has no effect on the caller.",
+          "scope": "global"
+        },
+        {
+          "code": "void f(Position* const p) {\n  p->qty = 0;\n}",
+          "compiles": true,
+          "explanation": "`const` right of `*`: the pointer is fixed, but the pointee can be modified.",
+          "scope": "global"
+        },
+        {
+          "code": "void f(Position* const p) {\n  p = nullptr;\n}",
+          "compiles": false,
+          "explanation": "`p` is a const pointer, so it can't be re-aimed.",
+          "scope": "global"
+        },
+        {
+          "code": "void f(const Position& p) {\n  Position copy = p;\n  copy.qty = 0;\n}",
+          "compiles": true,
+          "explanation": "You can always make your **own** modifiable copy of something const.",
+          "scope": "global"
+        },
+        {
+          "code": "void f(const Position& p) {\n  Position& alias = p;\n}",
+          "compiles": false,
+          "explanation": "A non-const alias of a const object would remove const.",
+          "scope": "global"
+        },
+        {
+          "code": "Position& first(const Position& p) {\n  return p;\n}",
+          "compiles": false,
+          "explanation": "Returning a non-const `Position&` would give the caller write access to something you only had read access to.",
+          "scope": "global"
+        },
+        {
+          "code": "const Position& first(const Position& p) {\n  return p;\n}",
+          "compiles": true,
+          "explanation": "Const in, const out.",
+          "scope": "global"
+        },
+        {
+          "code": "Position* best(const Position* ps, int n) {\n  return ps;\n}",
+          "compiles": false,
+          "explanation": "Same as in the exercise: a function given a `const Position*` can only hand back a `const Position*`.",
+          "scope": "global"
+        },
+        {
+          "code": "const Position* best(const Position* ps, int n) {\n  return ps + 1;\n}",
+          "compiles": true,
+          "explanation": "Pointer arithmetic on a pointer to const gives another pointer to const.",
+          "scope": "global"
+        },
+        {
+          "code": "double total(const Position ps[], int n) {\n  double t = 0;\n  for (int i = 0; i < n; ++i) t += ps[i].qty * ps[i].price;\n  return t;\n}",
+          "compiles": true,
+          "explanation": "As a parameter, `const Position ps[]` means **exactly** `const Position* ps` (array decay). The `[]` is only documentation.",
+          "scope": "global"
+        },
+        {
+          "code": "int& bad() {\n  int local = 1;\n  return local;\n}",
+          "compiles": true,
+          "explanation": "It **compiles** (with a warning), but it returns a **dangling reference**: `local` dies when the function returns. Compiling is not the same as being correct.",
+          "scope": "global"
+        }
+      ]
+    },
+    {
+      "title": "Function pointers and `std::function`",
+      "rule": "Start at the name and read outwards: `double (*f)(double)` reads \"`f` is a pointer to a function taking a `double` and returning a `double`\". The parentheses around `*f` are mandatory. A lambda **without captures** converts to a function pointer. `std::function` accepts anything that can be **called** with the right types.",
+      "prelude": "#include <functional>\n\ndouble square(double x) { return x * x; }\nlong twice(long n) { return 2 * n; }",
+      "cards": [
+        {
+          "code": "double (*f)(double) = square;",
+          "compiles": true,
+          "explanation": "A function's name decays to a pointer to it, as an array's name does."
+        },
+        {
+          "code": "double (*f)(double) = &square;",
+          "compiles": true,
+          "explanation": "For functions the `&` is optional: `square` and `&square` both work."
+        },
+        {
+          "code": "double (*f)(double) = twice;",
+          "compiles": false,
+          "explanation": "Function pointer types must match **exactly**: `long(long)` is not `double(double)`."
+        },
+        {
+          "code": "double* f(double) = square;",
+          "compiles": false,
+          "explanation": "Without the parentheses, this declares a **function** `f` returning `double*`, and a function can't be initialised."
+        },
+        {
+          "code": "double (*f)(double) = square;\ndouble r = f(3.0);",
+          "compiles": true,
+          "explanation": "Call through the pointer directly. `(*f)(3.0)` (the slides' spelling) means the same."
+        },
+        {
+          "code": "using Fn = double (*)(double);\nFn f = square;",
+          "compiles": true,
+          "explanation": "A type alias makes function pointer types readable. Recommended."
+        },
+        {
+          "code": "std::function<double(double)> f = square;",
+          "compiles": true,
+          "explanation": "`std::function` can hold any callable with a compatible signature."
+        },
+        {
+          "code": "std::function<double(double)> f = twice;",
+          "compiles": true,
+          "explanation": "Surprise: `std::function` only needs the call to *work*. `double → long → double` conversions are implicit, so `twice` is accepted, with silent truncation! A raw function pointer refuses it (3rd card)."
+        },
+        {
+          "code": "std::function<double(double)> f = [](int* p) { return 1.0; };",
+          "compiles": false,
+          "explanation": "Here the call can't work: a `double` can't be passed as an `int*`, so `std::function` refuses it."
+        },
+        {
+          "code": "double (*f)(double) = [](double x) { return x + 1; };",
+          "compiles": true,
+          "explanation": "A lambda **with no captures** converts to a plain function pointer."
+        },
+        {
+          "code": "int k = 2;\ndouble (*f)(double) = [k](double x) { return k * x; };",
+          "compiles": false,
+          "explanation": "A capturing lambda carries data (`k`), so it can't be a bare function pointer. Use `std::function` or `auto`."
+        },
+        {
+          "code": "int k = 2;\nstd::function<double(double)> f = [k](double x) { return k * x; };",
+          "compiles": true,
+          "explanation": "`std::function` can hold capturing lambdas: that's what it's for."
+        },
+        {
+          "code": "std::function<double(double)> f;\ndouble r = f(1.0);",
+          "compiles": true,
+          "explanation": "It compiles, but calling an **empty** `std::function` throws `std::bad_function_call` at run time."
+        }
+      ]
+    }
+  ]
+}

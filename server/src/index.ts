@@ -6,8 +6,8 @@ import { getCapabilities } from "./compiler/detect.js";
 import { REPO_ROOT } from "./compiler/pipeline.js";
 import {
   HttpError,
+  loadDrill,
   loadExample,
-  loadExercise,
   loadExerciseInternals,
   loadLesson,
   loadOverview,
@@ -64,11 +64,13 @@ app.get("/api/course", h(() => loadOverview()));
 app.get("/api/chapters/:ch/lessons/:id", h((req) => loadLesson(p(req, "ch"), p(req, "id"))));
 app.get("/api/chapters/:ch/examples/:id", h((req) => loadExample(p(req, "ch"), p(req, "id"))));
 app.get("/api/chapters/:ch/quiz", h((req) => loadQuiz(p(req, "ch"))));
+app.get("/api/chapters/:ch/drill", h((req) => loadDrill(p(req, "ch"))));
 app.get(
   "/api/chapters/:ch/exercises/:id",
   h(async (req) => {
-    const { dir: _dir, ...ex } = await loadExercise(p(req, "ch"), p(req, "id"));
-    return ex;
+    // Tests are shown to the learner (no guessing); only the solution stays server-side.
+    const { dir: _dir, solution: _solution, io, ...ex } = await loadExerciseInternals(p(req, "ch"), p(req, "id"));
+    return { ...ex, ioTests: io };
   }),
 );
 app.get(

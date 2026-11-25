@@ -41,6 +41,7 @@ export interface ChapterOverview {
   exercises: ExerciseRef[];
   projects: ProjectRef[];
   quizCount: number;
+  drill: { title: string; count: number } | null;
 }
 export interface Overview { title: string; subtitle?: string; chapters: ChapterOverview[] }
 
@@ -75,14 +76,19 @@ export interface Exercise {
   };
   statement: string;
   starter: SourceFile[];
+  /** Test files the solution is graded against (doctest mode). */
+  tests: SourceFile[];
+  /** stdin/stdout cases (io mode). */
+  ioTests?: IoTest[];
 }
+export interface IoTest { name: string; stdin: string; expectedStdout: string; match: "exact" | "trim" | "regex" }
 
 export interface Project {
   id: string;
   chapter: string;
   meta: { title: string; summary: string; sanitizer: SanitizerMode; editable: string[]; requires?: Capability[] };
   starter: SourceFile[];
-  steps: { number: number; title: string; statement: string; hints: string[]; cumulative: boolean }[];
+  steps: { number: number; title: string; statement: string; hints: string[]; cumulative: boolean; tests: SourceFile[] }[];
 }
 
 export interface QuizQuestion {
@@ -95,6 +101,10 @@ export interface QuizQuestion {
   explanation: string;
   slides?: string;
 }
+
+export interface DrillCard { code: string; scope: "main" | "global"; compiles: boolean; explanation: string }
+export interface DrillSection { title: string; rule: string; prelude: string; cards: DrillCard[] }
+export interface Drill { title: string; intro: string; sections: DrillSection[] }
 
 export interface VizVar {
   name: string;
@@ -121,6 +131,7 @@ export const api = {
   lesson: (ch: string, id: string) => get<Lesson>(`/api/chapters/${ch}/lessons/${id}`),
   example: (ch: string, id: string) => get<Example>(`/api/chapters/${ch}/examples/${id}`),
   quiz: (ch: string) => get<{ questions: QuizQuestion[] }>(`/api/chapters/${ch}/quiz`),
+  drill: (ch: string) => get<Drill>(`/api/chapters/${ch}/drill`),
   exercise: (ch: string, id: string) => get<Exercise>(`/api/chapters/${ch}/exercises/${id}`),
   exerciseSolution: (ch: string, id: string) => get<{ files: SourceFile[] }>(`/api/chapters/${ch}/exercises/${id}/solution`),
   project: (ch: string, id: string) => get<Project>(`/api/chapters/${ch}/projects/${id}`),

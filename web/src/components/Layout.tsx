@@ -86,6 +86,11 @@ export function Layout() {
                         📝 Quiz
                       </SideLink>
                     )}
+                    {c.drill && (
+                      <SideLink to={`/ch/${c.id}/drill`} done={chapterStats(c, progress).drill[0] === c.drill.count}>
+                        ⚡ {c.drill.title}
+                      </SideLink>
+                    )}
                     {c.exercises.map((e) => (
                       <SideLink key={e.id} to={`/ch/${c.id}/exercise/${e.id}`} done={progress.exercises[`${c.id}/${e.id}`]?.passed}>
                         🏋️ {e.title}
